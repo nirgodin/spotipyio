@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "spotipyio"
+version = "0.1.0"
+description = ""
+authors = ["nirgodin <70273595+nirgodin@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiohttp = "3.8.3"
+asyncio-pool = "0.6.0"
+tqdm = "4.65.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
