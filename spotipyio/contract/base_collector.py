@@ -19,8 +19,8 @@ class BaseCollector(ABC):
     # def collect_sync(self, ids: List[str]):
     #     raise NotImplementedError
 
-    @abstractmethod
     @property
+    @abstractmethod
     def _route(self) -> str:
         raise NotImplementedError
 
