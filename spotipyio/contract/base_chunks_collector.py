@@ -3,7 +3,7 @@ from typing import List
 
 from aiohttp import ClientSession
 
-from spotipyio.consts.spotify_consts import IDS
+from spotipyio.consts.spotify_consts import IDS, SPOTIFY_API_BASE_URL
 from spotipyio.contract.base_collector import BaseCollector
 from spotipyio.tools.data_chunks_generator import DataChunksGenerator
 from spotipyio.utils.general_utils import chain_iterable
@@ -23,11 +23,20 @@ class BaseChunksCollector(ABC, BaseCollector):
         )
         return chain_iterable(artists)
 
-    async def _collect_single(self, chunk: List[str]) -> List[dict]:
-        response = await self._get(params={IDS: ','.join(chunk)})
+    async def _collect_single(self, ids: List[str]) -> List[dict]:
+        response = await self._get(url=self._url, params={IDS: ','.join(ids)})
         return response[self._formatted_route]
 
     @abstractmethod
     @property
     def _chunk_size(self) -> int:
         raise NotImplementedError
+
+    @abstractmethod
+    @property
+    def _route(self) -> str:
+        raise NotImplementedError
+
+    @property
+    def _url(self) -> str:
+        return f"{SPOTIFY_API_BASE_URL}/{self._route}"
