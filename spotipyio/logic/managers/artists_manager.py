@@ -7,6 +7,11 @@ from spotipyio.logic.collectors.singles_collectors.artists_top_tracks_collector 
 
 
 class ArtistsManager(BaseManager):
+    def __init__(self, info: ArtistsCollector, top_tracks: ArtistsTopTracksCollector):
+        super().__init__()
+        self.info = info
+        self.top_tracks = top_tracks
+
     @staticmethod
     def _collectors() -> Dict[str, Type[BaseCollector]]:
         return {

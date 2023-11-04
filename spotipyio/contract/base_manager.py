@@ -8,8 +8,7 @@ from spotipyio.contract.collectors.base_collector import BaseCollector
 
 class BaseManager(ABC):
     def __init__(self, **named_collectors: Dict[str, BaseCollector]):
-        for name, collector in named_collectors.items():
-            setattr(self, name, collector)
+        pass
 
     @classmethod
     def create(cls, session: ClientSession) -> "BaseManager":
