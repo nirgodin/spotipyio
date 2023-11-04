@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Union
+from typing import List, Union, Optional
 
 from aiohttp import ClientSession
 
@@ -19,21 +19,12 @@ class BaseCollector(ABC):
     # def collect_sync(self, ids: List[str]):
     #     raise NotImplementedError
 
-    @property
-    @abstractmethod
-    def _route(self) -> str:
-        raise NotImplementedError
-
-    @property
-    def _url(self) -> str:
-        return f"{SPOTIFY_API_BASE_URL}/{self._route}"
-
-    async def _get(self, params: dict) -> Json:
-        async with self._session.get(url=self._url, params=params) as raw_response:
+    async def _get(self, url: str, params: Optional[dict] = None) -> Json:
+        async with self._session.get(url=url, params=params) as raw_response:
             raw_response.raise_for_status()  # TODO: Add more accurate error handling
             return await raw_response.json()
 
-    async def _post(self, payload: dict) -> Json:
-        async with self._session.post(url=self._url, json=payload) as raw_response:
+    async def _post(self, url: str, payload: dict) -> Json:
+        async with self._session.post(url=url, json=payload) as raw_response:
             raw_response.raise_for_status()  # TODO: Add more accurate error handling
             return await raw_response.json()
