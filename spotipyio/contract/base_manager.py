@@ -15,7 +15,7 @@ class BaseManager(ABC):
     def create(cls, session: ClientSession) -> "BaseManager":
         named_collectors = {}
 
-        for name, collector in cls._collectors():
+        for name, collector in cls._collectors().items():
             named_collectors[name] = collector(session)
 
         return cls(**named_collectors)
