@@ -1,16 +1,16 @@
 from aiohttp import ClientSession
 
-from spotipyio.contract.base_chunks_collector import BaseChunksCollector
+from spotipyio.contract.collectors.base_chunks_collector import BaseChunksCollector
 
 
-class TracksCollector(BaseChunksCollector):
+class AudioFeaturesCollector(BaseChunksCollector):
     def __init__(self, session: ClientSession):
         super().__init__(session)
 
     @property
     def _route(self) -> str:
-        return "tracks"
+        return "audio-features"
 
     @property
     def _chunk_size(self) -> int:
-        return 50
+        return 100

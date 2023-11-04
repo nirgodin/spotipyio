@@ -1,6 +1,6 @@
 from aiohttp import ClientSession
 
-from spotipyio.contract.base_chunks_collector import BaseChunksCollector
+from spotipyio.contract.collectors.base_chunks_collector import BaseChunksCollector
 
 
 class ArtistsCollector(BaseChunksCollector):

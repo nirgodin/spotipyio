@@ -4,7 +4,7 @@ from typing import List
 from aiohttp import ClientSession
 
 from spotipyio.consts.spotify_consts import IDS, SPOTIFY_API_BASE_URL
-from spotipyio.contract.base_collector import BaseCollector
+from spotipyio.contract.collectors.base_collector import BaseCollector
 from spotipyio.tools.data_chunks_generator import DataChunksGenerator
 from spotipyio.utils.general_utils import chain_iterable
 
