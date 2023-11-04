@@ -9,7 +9,7 @@ from spotipyio.tools.data_chunks_generator import DataChunksGenerator
 from spotipyio.utils.general_utils import chain_iterable
 
 
-class BaseChunksCollector(ABC, BaseCollector):
+class BaseChunksCollector(BaseCollector, ABC):
     def __init__(self, session: ClientSession):
         super().__init__(session)
         self._chunks_generator = DataChunksGenerator(self._chunk_size)

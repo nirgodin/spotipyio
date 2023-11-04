@@ -8,7 +8,7 @@ from spotipyio.contract.collectors.base_collector import BaseCollector
 from spotipyio.tools.pool_executor import PoolExecutor
 
 
-class BaseSingleCollector(ABC, BaseCollector):
+class BaseSingleCollector(BaseCollector, ABC):
     def __init__(self, session: ClientSession):
         super().__init__(session)
 
