@@ -21,7 +21,7 @@ class BaseSingleCollector(ABC, BaseCollector):
 
         return await self._get(url)
 
-    @abstractmethod
     @property
+    @abstractmethod
     def _route_format(self) -> str:
         raise NotImplementedError

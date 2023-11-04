@@ -27,13 +27,13 @@ class BaseChunksCollector(ABC, BaseCollector):
         response = await self._get(url=self._url, params={IDS: ','.join(ids)})
         return response[self._formatted_route]
 
-    @abstractmethod
     @property
+    @abstractmethod
     def _chunk_size(self) -> int:
         raise NotImplementedError
 
-    @abstractmethod
     @property
+    @abstractmethod
     def _route(self) -> str:
         raise NotImplementedError
 
