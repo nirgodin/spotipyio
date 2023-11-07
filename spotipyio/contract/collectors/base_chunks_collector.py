@@ -16,12 +16,12 @@ class BaseChunksCollector(BaseCollector, ABC):
         self._formatted_route = self._route.replace("-", "-")
 
     async def collect(self, ids: List[str]) -> List[dict]:
-        artists = await self._chunks_generator.execute_by_chunk_in_parallel(
+        results = await self._chunks_generator.execute_by_chunk_in_parallel(
             lst=ids,
             filtering_list=[],
             func=self._collect_single
         )
-        return chain_iterable(artists)
+        return chain_iterable(results)
 
     async def _collect_single(self, ids: List[str]) -> List[dict]:
         response = await self._get(url=self._url, params={IDS: ','.join(ids)})
