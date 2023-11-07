@@ -13,7 +13,7 @@ class BaseChunksCollector(BaseCollector, ABC):
     def __init__(self, session: ClientSession):
         super().__init__(session)
         self._chunks_generator = DataChunksGenerator(self._chunk_size)
-        self._formatted_route = self._route.replace("-", "-")
+        self._formatted_route = self._route.replace("-", "_")
 
     async def collect(self, ids: List[str]) -> List[dict]:
         results = await self._chunks_generator.execute_by_chunk_in_parallel(
