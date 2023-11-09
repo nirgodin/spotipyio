@@ -2,7 +2,6 @@ from typing import List
 
 from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL
 from spotipyio.contract.collectors.base_collector import BaseCollector
-from spotipyio.contract.collectors.base_single_collector import BaseSingleCollector
 from spotipyio.logic.collectors.search_collectors.search_item import SearchItem
 from spotipyio.tools.pool_executor import PoolExecutor
 
