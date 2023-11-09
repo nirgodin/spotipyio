@@ -12,7 +12,7 @@ class BaseCollector(ABC):
         self._session = session
 
     @abstractmethod
-    async def collect(self, ids: List[str]):  # TODO: Add output typing
+    async def collect(self, *args, **kwargs):  # TODO: Add output typing
         raise NotImplementedError
 
     # @abstractmethod  # TODO: Think how to do it
