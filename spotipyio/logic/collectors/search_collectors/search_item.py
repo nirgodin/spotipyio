@@ -24,7 +24,7 @@ class SearchItem:
         query = self._build_query()
         return {
             "q": query,
-            "types": ",".join(types)
+            "type": ",".join(types)
         }
 
     def _build_query(self) -> str:
