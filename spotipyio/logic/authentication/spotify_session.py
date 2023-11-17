@@ -42,3 +42,4 @@ class SpotifySession:
             "Content-Type": "application/json",
             "Authorization": f"Bearer {access_token}"
         }
+
