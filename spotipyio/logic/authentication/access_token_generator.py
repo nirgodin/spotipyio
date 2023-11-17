@@ -59,9 +59,9 @@ class AccessTokenGenerator:
         else:
             raise ValueError('Did not recognize grant type')
 
-    def __aenter__(self) -> "AccessTokenGenerator":
+    async def __aenter__(self) -> "AccessTokenGenerator":
         session = await ClientSession().__aenter__()
         return AccessTokenGenerator(session)
 
-    def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self._session.close()
