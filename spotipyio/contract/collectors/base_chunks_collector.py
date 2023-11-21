@@ -1,16 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import List
-
-from aiohttp import ClientSession
+from typing import List, Optional
 
 from spotipyio.consts.spotify_consts import IDS, SPOTIFY_API_BASE_URL
 from spotipyio.contract.collectors.base_collector import BaseCollector
+from spotipyio.logic.authentication.spotify_session import SpotifySession
 from spotipyio.tools.data_chunks_generator import DataChunksGenerator
 from spotipyio.utils.general_utils import chain_iterable
 
 
 class BaseChunksCollector(BaseCollector, ABC):
-    def __init__(self, session: ClientSession):
+    def __init__(self, session: Optional[SpotifySession] = None):
         super().__init__(session)
         self._chunks_generator = DataChunksGenerator(self._chunk_size)
         self._formatted_route = self._route.replace("-", "_")
@@ -27,7 +26,7 @@ class BaseChunksCollector(BaseCollector, ABC):
         return [result for result in results if isinstance(result, dict)]
 
     async def _collect_single(self, ids: List[str]) -> List[dict]:
-        response = await self._get(url=self._url, params={IDS: ','.join(ids)})
+        response = await self._session.get(url=self._url, params={IDS: ','.join(ids)})
         return response[self._formatted_route]
 
     @property

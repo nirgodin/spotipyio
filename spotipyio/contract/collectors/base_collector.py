@@ -1,14 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import List, Union, Optional
+from typing import Optional
 
-from aiohttp import ClientSession
-
-from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.authentication.spotify_grant_type import SpotifyGrantType
+from spotipyio.logic.authentication.spotify_session import SpotifySession
 
 
 class BaseCollector(ABC):
-    def __init__(self, session: ClientSession):
+    def __init__(self, session: Optional[SpotifySession] = None):
         self._session = session
 
     @abstractmethod
@@ -19,12 +17,11 @@ class BaseCollector(ABC):
     # def collect_sync(self, ids: List[str]):
     #     raise NotImplementedError
 
-    async def _get(self, url: str, params: Optional[dict] = None) -> Json:
-        async with self._session.get(url=url, params=params) as raw_response:
-            raw_response.raise_for_status()  # TODO: Add more accurate error handling
-            return await raw_response.json()
+    def __aenter__(self,
+                   grant_type: SpotifyGrantType = SpotifyGrantType.CLIENT_CREDENTIALS,
+                   access_code: Optional[str] = None) -> "BaseCollector":
+        self._session = await SpotifySession().__aenter__(grant_type, access_code)
+        return self
 
-    async def _post(self, url: str, payload: dict) -> Json:
-        async with self._session.post(url=url, json=payload) as raw_response:
-            raw_response.raise_for_status()  # TODO: Add more accurate error handling
-            return await raw_response.json()
+    def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        await self._session.__aexit__(exc_type, exc_val, exc_tb)

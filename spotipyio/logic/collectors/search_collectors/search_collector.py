@@ -11,7 +11,7 @@ class SearchCollector(BaseCollector):
         return await PoolExecutor.run(iterable=search_items, func=self.collect_single)
 
     async def collect_single(self, search_item: SearchItem) -> dict:
-        return await self._get(url=self._url, params=search_item.to_query_params())
+        return await self._session.get(url=self._url, params=search_item.to_query_params())
 
     @property
     def _route(self) -> str:

@@ -22,15 +22,15 @@ class SpotifySession:
             raw_response.raise_for_status()  # TODO: Add more accurate error handling
             return await raw_response.json()
 
-    async def __aenter__(self, grant_type: SpotifyGrantType, access_code: Optional[str] = None) -> "SpotifySession":
+    async def __aenter__(self, grant_type: SpotifyGrantType, access_code: Optional[str]) -> "SpotifySession":
         async with AccessTokenGenerator() as token_generator:
             response = await token_generator.generate(grant_type, access_code)
 
         access_token = response[ACCESS_TOKEN]
         headers = self._build_spotify_headers(access_token)
-        session = ClientSession(headers=headers)
+        self._session = await ClientSession(headers=headers).__aenter__()
 
-        return SpotifySession(session)
+        return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self._session.close()
@@ -42,4 +42,3 @@ class SpotifySession:
             "Content-Type": "application/json",
             "Authorization": f"Bearer {access_token}"
         }
-
