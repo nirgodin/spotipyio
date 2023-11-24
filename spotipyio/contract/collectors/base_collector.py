@@ -17,11 +17,11 @@ class BaseCollector(ABC):
     # def collect_sync(self, ids: List[str]):
     #     raise NotImplementedError
 
-    def __aenter__(self,
-                   grant_type: SpotifyGrantType = SpotifyGrantType.CLIENT_CREDENTIALS,
-                   access_code: Optional[str] = None) -> "BaseCollector":
+    async def __aenter__(self,
+                         grant_type: SpotifyGrantType = SpotifyGrantType.CLIENT_CREDENTIALS,
+                         access_code: Optional[str] = None) -> "BaseCollector":
         self._session = await SpotifySession().__aenter__(grant_type, access_code)
         return self
 
-    def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self._session.__aexit__(exc_type, exc_val, exc_tb)
