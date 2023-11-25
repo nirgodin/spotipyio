@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Type, Dict
 
-from aiohttp import ClientSession
-
 from spotipyio.contract.collectors.base_collector import BaseCollector
+from spotipyio.logic.authentication.spotify_session import SpotifySession
 
 
 class BaseManager(ABC):
@@ -11,7 +10,7 @@ class BaseManager(ABC):
         pass
 
     @classmethod
-    def create(cls, session: ClientSession) -> "BaseManager":
+    def create(cls, session: SpotifySession) -> "BaseManager":
         named_collectors = {}
 
         for name, collector in cls._collectors().items():

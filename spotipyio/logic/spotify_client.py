@@ -1,5 +1,4 @@
-from aiohttp import ClientSession
-
+from spotipyio.logic.authentication.spotify_session import SpotifySession
 from spotipyio.logic.collectors.chunks_collectors.albums_collector import AlbumsCollector
 from spotipyio.logic.collectors.chunks_collectors.audio_features_collector import AudioFeaturesCollector
 from spotipyio.logic.collectors.chunks_collectors.tracks_collector import TracksCollector
@@ -24,7 +23,7 @@ class SpotifyClient:
         self.search = search_collector
 
     @classmethod
-    def create(cls, session: ClientSession) -> "SpotifyClient":
+    def create(cls, session: SpotifySession) -> "SpotifyClient":
         return SpotifyClient(
             artists_manager=ArtistsManager.create(session),
             albums_collector=AlbumsCollector(session),
