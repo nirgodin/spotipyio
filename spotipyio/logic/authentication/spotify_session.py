@@ -10,9 +10,15 @@ from spotipyio.logic.authentication.spotify_grant_type import SpotifyGrantType
 
 class SpotifySession:
     def __init__(self,
-                 grant_type: Optional[SpotifyGrantType] = None,
+                 client_id: Optional[str] = None,
+                 client_secret: Optional[str] = None,
+                 redirect_uri: Optional[str] = None,
+                 grant_type: SpotifyGrantType = SpotifyGrantType.CLIENT_CREDENTIALS,
                  access_code: Optional[str] = None,
                  session: Optional[ClientSession] = None):
+        self._client_id = client_id
+        self._client_secret = client_secret
+        self._redirect_uri = redirect_uri
         self._grant_type = grant_type
         self._access_code = access_code
         self._session = session
@@ -28,7 +34,7 @@ class SpotifySession:
             return await raw_response.json()
 
     async def __aenter__(self) -> "SpotifySession":
-        async with AccessTokenGenerator() as token_generator:
+        async with AccessTokenGenerator(self._client_id, self._client_secret, self._redirect_uri) as token_generator:
             response = await token_generator.generate(self._grant_type, self._access_code)
 
         access_token = response[ACCESS_TOKEN]

@@ -12,7 +12,14 @@ from spotipyio.logic.authentication.spotify_grant_type import SpotifyGrantType
 
 
 class AccessTokenGenerator:
-    def __init__(self, session: Optional[ClientSession] = None):
+    def __init__(self,
+                 client_id: Optional[str] = None,
+                 client_secret: Optional[str] = None,
+                 redirect_uri: Optional[str] = None,
+                 session: Optional[ClientSession] = None):
+        self._client_id = client_id or os.environ[SPOTIPY_CLIENT_ID]
+        self._client_secret = client_secret or os.environ[SPOTIPY_CLIENT_SECRET]
+        self._redirect_uri = redirect_uri or os.environ[SPOTIPY_REDIRECT_URI]
         self._session = session
 
     async def generate(self, grant_type: SpotifyGrantType, access_code: Optional[str]) -> Dict[str, str]:
@@ -24,22 +31,18 @@ class AccessTokenGenerator:
             raw_response.raise_for_status()
             return await raw_response.json()
 
-    @staticmethod
-    def _get_encoded_header() -> str:
-        client_id = os.environ[SPOTIPY_CLIENT_ID]
-        client_secret = os.environ[SPOTIPY_CLIENT_SECRET]
-        bytes_auth = bytes(f"{client_id}:{client_secret}", "ISO-8859-1")
+    def _get_encoded_header(self) -> str:
+        bytes_auth = bytes(f"{self._client_id}:{self._client_secret}", "ISO-8859-1")
         b64_auth = base64.b64encode(bytes_auth)
 
         return b64_auth.decode('ascii')
 
-    @staticmethod
-    def _build_request_payload(access_code: str, grant_type: SpotifyGrantType) -> dict:
+    def _build_request_payload(self, access_code: str, grant_type: SpotifyGrantType) -> dict:
         if grant_type == SpotifyGrantType.AUTHORIZATION_CODE:
             return {
                 GRANT_TYPE: grant_type.value,
                 CODE: access_code,
-                REDIRECT_URI: os.environ[SPOTIPY_REDIRECT_URI],
+                REDIRECT_URI: self._redirect_uri,
                 JSON: True
             }
 
@@ -47,7 +50,7 @@ class AccessTokenGenerator:
             return {
                 GRANT_TYPE: grant_type.value,
                 REFRESH_TOKEN: access_code,
-                CLIENT_ID: os.environ[SPOTIPY_CLIENT_ID]
+                CLIENT_ID: self._client_id
             }
 
         elif grant_type == SpotifyGrantType.CLIENT_CREDENTIALS:
@@ -60,10 +63,8 @@ class AccessTokenGenerator:
             raise ValueError('Did not recognize grant type')
 
     async def __aenter__(self) -> "AccessTokenGenerator":
-        session = await ClientSession().__aenter__()
-        self._session = session
-
+        self._session = await ClientSession().__aenter__()
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
-        await self._session.close()
+        await self._session.__aexit__(exc_type, exc_val, exc_tb)
