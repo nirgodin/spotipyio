@@ -9,7 +9,12 @@ from spotipyio.logic.authentication.spotify_grant_type import SpotifyGrantType
 
 
 class SpotifySession:
-    def __init__(self, session: Optional[ClientSession] = None):
+    def __init__(self,
+                 grant_type: Optional[SpotifyGrantType] = None,
+                 access_code: Optional[str] = None,
+                 session: Optional[ClientSession] = None):
+        self._grant_type = grant_type
+        self._access_code = access_code
         self._session = session
 
     async def get(self, url: str, params: Optional[dict] = None) -> Json:
@@ -22,9 +27,9 @@ class SpotifySession:
             raw_response.raise_for_status()  # TODO: Add more accurate error handling
             return await raw_response.json()
 
-    async def __aenter__(self, grant_type: SpotifyGrantType, access_code: Optional[str]) -> "SpotifySession":
+    async def __aenter__(self) -> "SpotifySession":
         async with AccessTokenGenerator() as token_generator:
-            response = await token_generator.generate(grant_type, access_code)
+            response = await token_generator.generate(self._grant_type, self._access_code)
 
         access_token = response[ACCESS_TOKEN]
         headers = self._build_spotify_headers(access_token)
@@ -33,7 +38,7 @@ class SpotifySession:
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
-        await self._session.close()
+        await self._session.__aexit__(exc_type, exc_val, exc_tb)
 
     @staticmethod
     def _build_spotify_headers(access_token: str) -> Dict[str, str]:
