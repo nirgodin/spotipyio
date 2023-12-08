@@ -8,7 +8,7 @@ from spotipyio.tools.logging import logger
 
 
 class PoolExecutor:
-    def __init__(self, pool_size: int, validate_results: bool):
+    def __init__(self, pool_size: int = 5, validate_results: bool = True):
         self._pool_size = pool_size
         self._validate_results = validate_results
 

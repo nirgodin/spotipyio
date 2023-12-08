@@ -8,7 +8,7 @@ from spotipyio.tools.pool_executor import PoolExecutor
 
 
 class SearchCollector(BaseCollector):
-    def __init__(self, pool_executor: PoolExecutor, session: Optional[SpotifySession] = None):
+    def __init__(self, pool_executor: PoolExecutor = PoolExecutor(), session: Optional[SpotifySession] = None):
         super().__init__(session)
         self._pool_executor = pool_executor
 
