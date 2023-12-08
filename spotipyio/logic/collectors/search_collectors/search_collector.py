@@ -1,14 +1,19 @@
-from typing import List
+from typing import List, Optional
 
 from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL
 from spotipyio.contract.collectors.base_collector import BaseCollector
+from spotipyio.logic.authentication.spotify_session import SpotifySession
 from spotipyio.logic.collectors.search_collectors.search_item import SearchItem
 from spotipyio.tools.pool_executor import PoolExecutor
 
 
 class SearchCollector(BaseCollector):
+    def __init__(self, pool_executor: PoolExecutor, session: Optional[SpotifySession] = None):
+        super().__init__(session)
+        self._pool_executor = pool_executor
+
     async def collect(self, search_items: List[SearchItem]):
-        return await PoolExecutor.run(iterable=search_items, func=self.collect_single)
+        return await self._pool_executor.run(iterable=search_items, func=self.collect_single, expected_type=dict)
 
     async def collect_single(self, search_item: SearchItem) -> dict:
         return await self._session.get(url=self._url, params=search_item.to_query_params())

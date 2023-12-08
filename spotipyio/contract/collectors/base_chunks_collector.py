@@ -20,8 +20,7 @@ class BaseChunksCollector(BaseCollector, ABC):
             filtering_list=[],
             func=self._collect_single
         )
-        valid_chunks = [chunk for chunk in chunks if isinstance(chunk, list)]
-        results = chain_iterable(valid_chunks)
+        results = chain_iterable(chunks)
 
         return [result for result in results if isinstance(result, dict)]
 
