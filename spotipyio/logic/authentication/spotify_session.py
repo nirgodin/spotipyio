@@ -6,6 +6,7 @@ from spotipyio.consts.api_consts import ACCESS_TOKEN
 from spotipyio.consts.typing_consts import Json
 from spotipyio.logic.authentication.access_token_generator import AccessTokenGenerator
 from spotipyio.logic.authentication.spotify_grant_type import SpotifyGrantType
+from spotipyio.utils.web_utils import create_client_session
 
 
 class SpotifySession:
@@ -44,7 +45,8 @@ class SpotifySession:
 
         access_token = response[ACCESS_TOKEN]
         headers = self._build_spotify_headers(access_token)
-        self._session = await ClientSession(headers=headers).__aenter__()
+        raw_session = create_client_session(headers)
+        self._session = await raw_session.__aenter__()
 
         return self
 
