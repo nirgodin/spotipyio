@@ -4,17 +4,20 @@ from spotipyio.contract.base_manager import BaseManager
 from spotipyio.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.logic.collectors.singles_collectors.playlists_collector import PlaylistsCollector
 from spotipyio.logic.creators.playlists.playlists_creator import PlaylistsCreator
+from spotipyio.logic.updaters.playlist_items_adder import PlaylistItemsAdder
 
 
 class PlaylistsManager(BaseManager):
-    def __init__(self, info: PlaylistsCollector, creator: PlaylistsCreator):
+    def __init__(self, info: PlaylistsCollector, create: PlaylistsCreator, add_items: PlaylistItemsAdder):
         super().__init__()
         self.info = info
-        self.creator = creator
+        self.create = create
+        self.add_items = add_items
 
     @staticmethod
     def _components() -> Dict[str, Type[ISpotifyComponent]]:
         return {
             "info": PlaylistsCollector,
-            "creator": PlaylistsCreator
+            "creator": PlaylistsCreator,
+            "add_items": PlaylistItemsAdder
         }
