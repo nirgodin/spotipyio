@@ -13,5 +13,6 @@ class PlaylistItemsAdder(BasePlaylistsUpdater):
 
         return await self._session.post(url=url, payload=payload)
 
+    @property
     def _route(self) -> str:
         return TRACKS
