@@ -13,7 +13,7 @@ class CurrentUserManager(BaseManager):
         self.profile = profile
 
     @staticmethod
-    def _collectors() -> Dict[str, Type[BaseCollector]]:
+    def _components() -> Dict[str, Type[BaseCollector]]:
         return {
             "top_items": TopItemsCollector,
             "profile": CurrentProfileCollector

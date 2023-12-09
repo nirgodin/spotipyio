@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Type, Dict
+from typing import Type, Dict, Union
 
+from spotipyio.contract.base_creator import BaseCreator
 from spotipyio.contract.collectors.base_collector import BaseCollector
 from spotipyio.logic.authentication.spotify_session import SpotifySession
 
@@ -11,14 +12,14 @@ class BaseManager(ABC):
 
     @classmethod
     def create(cls, session: SpotifySession) -> "BaseManager":
-        named_collectors = {}
+        named_components = {}
 
-        for name, collector in cls._collectors().items():
-            named_collectors[name] = collector(session)
+        for name, component in cls._components().items():
+            named_components[name] = component(session)
 
-        return cls(**named_collectors)
+        return cls(**named_components)
 
     @staticmethod
     @abstractmethod
-    def _collectors() -> Dict[str, Type[BaseCollector]]:
+    def _components() -> Dict[str, Type[Union[BaseCollector, BaseCreator]]]:
         raise NotImplementedError

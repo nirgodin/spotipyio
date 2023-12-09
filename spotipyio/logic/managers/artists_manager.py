@@ -13,7 +13,7 @@ class ArtistsManager(BaseManager):
         self.top_tracks = top_tracks
 
     @staticmethod
-    def _collectors() -> Dict[str, Type[BaseCollector]]:
+    def _components() -> Dict[str, Type[BaseCollector]]:
         return {
             "info": ArtistsCollector,
             "top_tracks": ArtistsTopTracksCollector
