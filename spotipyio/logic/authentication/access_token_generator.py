@@ -9,6 +9,7 @@ from spotipyio.consts.api_consts import TOKEN_REQUEST_URL, REDIRECT_URI, CODE, G
 from spotipyio.consts.env_consts import SPOTIPY_CLIENT_SECRET, SPOTIPY_CLIENT_ID, SPOTIPY_REDIRECT_URI
 
 from spotipyio.logic.authentication.spotify_grant_type import SpotifyGrantType
+from spotipyio.utils.web_utils import create_client_session
 
 
 class AccessTokenGenerator:
@@ -63,7 +64,9 @@ class AccessTokenGenerator:
             raise ValueError('Did not recognize grant type')
 
     async def __aenter__(self) -> "AccessTokenGenerator":
-        self._session = await ClientSession().__aenter__()
+        raw_session = create_client_session()
+        self._session = await raw_session.__aenter__()
+
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
