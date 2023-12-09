@@ -1,20 +1,20 @@
 from typing import Dict, Type
 
 from spotipyio.contract.base_manager import BaseManager
-from spotipyio.contract.collectors.base_collector import BaseCollector
+from spotipyio.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.logic.collectors.singles_collectors.playlists_collector import PlaylistsCollector
 from spotipyio.logic.creators.playlists.playlists_creator import PlaylistsCreator
 
 
 class PlaylistsManager(BaseManager):
-    def __init__(self, info: PlaylistsCollector, create: PlaylistsCreator):
+    def __init__(self, info: PlaylistsCollector, creator: PlaylistsCreator):
         super().__init__()
         self.info = info
-        self.create = create
+        self.creator = creator
 
     @staticmethod
-    def _components() -> Dict[str, Type[BaseCollector]]:
+    def _components() -> Dict[str, Type[ISpotifyComponent]]:
         return {
             "info": PlaylistsCollector,
-            "create": PlaylistsCreator
+            "creator": PlaylistsCreator
         }

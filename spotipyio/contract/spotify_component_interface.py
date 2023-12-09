@@ -1,11 +1,13 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
+from spotipyio.consts.typing_consts import Json
 from spotipyio.logic.authentication.spotify_session import SpotifySession
 
 
-class BaseCreator(ABC):
+class ISpotifyComponent(ABC):
     def __init__(self, session: SpotifySession):
         self._session = session
 
-    async def create(self, *args, **kwargs):  # TODO: Add output typing
+    @abstractmethod
+    async def run(self, *args, **kwargs) -> Json:
         raise NotImplementedError

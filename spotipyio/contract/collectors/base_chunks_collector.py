@@ -2,20 +2,20 @@ from abc import ABC, abstractmethod
 from typing import List, Optional
 
 from spotipyio.consts.spotify_consts import IDS, SPOTIFY_API_BASE_URL
-from spotipyio.contract.collectors.base_collector import BaseCollector
+from spotipyio.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.logic.authentication.spotify_session import SpotifySession
 from spotipyio.tools.data_chunks_generator import DataChunksGenerator
 from spotipyio.tools.pool_executor import PoolExecutor
 from spotipyio.utils.general_utils import chain_iterable
 
 
-class BaseChunksCollector(BaseCollector, ABC):
+class BaseChunksCollector(ISpotifyComponent, ABC):
     def __init__(self, pool_executor: PoolExecutor = PoolExecutor(), session: Optional[SpotifySession] = None):
         super().__init__(session)
         self._chunks_generator = DataChunksGenerator(pool_executor, self._chunk_size)
         self._formatted_route = self._route.replace("-", "_")
 
-    async def collect(self, ids: List[str]) -> List[dict]:
+    async def run(self, ids: List[str]) -> List[dict]:
         chunks = await self._chunks_generator.execute_by_chunk_in_parallel(
             lst=ids,
             filtering_list=[],
