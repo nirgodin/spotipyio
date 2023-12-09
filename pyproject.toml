@@ -11,6 +11,7 @@ aiohttp = ">=3.6.3,<3.9.0"
 asyncio-pool = ">=0.6,<1.0"
 tqdm = ">=4.65,<5.0"
 dataclasses-json = ">=0.6,<1.0"
+pillow = ">=10.1,<11.0"
 
 
 [build-system]
