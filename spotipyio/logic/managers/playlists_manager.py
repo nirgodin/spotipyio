@@ -24,7 +24,7 @@ class PlaylistsManager(BaseManager):
     def _components() -> Dict[str, Type[ISpotifyComponent]]:
         return {
             "info": PlaylistsCollector,
-            "creator": PlaylistsCreator,
+            "create": PlaylistsCreator,
             "add_items": PlaylistItemsAdder,
             "update_cover": PlaylistCoverUpdater
         }
