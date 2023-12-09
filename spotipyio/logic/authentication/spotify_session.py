@@ -1,4 +1,4 @@
-from typing import Optional, Dict
+from typing import Optional, Dict, Any
 
 from aiohttp import ClientSession
 
@@ -30,6 +30,11 @@ class SpotifySession:
 
     async def post(self, url: str, payload: dict) -> Json:
         async with self._session.post(url=url, json=payload) as raw_response:
+            raw_response.raise_for_status()  # TODO: Add more accurate error handling
+            return await raw_response.json()
+
+    async def put(self, url: str, data: Any) -> Json:
+        async with self._session.put(url=url, data=data) as raw_response:
             raw_response.raise_for_status()  # TODO: Add more accurate error handling
             return await raw_response.json()
 
