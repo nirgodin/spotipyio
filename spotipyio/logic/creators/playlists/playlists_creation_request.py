@@ -12,4 +12,4 @@ class PlaylistCreationRequest:
     public: bool
 
     def to_payload(self) -> dict:
-        return {k: v for k, v in self.to_dict() if k != "user_id"}
+        return {k: v for k, v in self.to_dict().items() if k != "user_id"}
