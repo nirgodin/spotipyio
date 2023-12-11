@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import List, Optional
+from typing import List
 
 from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL
 from spotipyio.contract.spotify_component_interface import ISpotifyComponent
@@ -8,7 +8,7 @@ from spotipyio.tools.pool_executor import PoolExecutor
 
 
 class BaseSingleCollector(ISpotifyComponent, ABC):
-    def __init__(self, pool_executor: PoolExecutor = PoolExecutor(), session: Optional[SpotifySession] = None):
+    def __init__(self, session: SpotifySession, pool_executor: PoolExecutor = PoolExecutor()):
         super().__init__(session)
         self._pool_executor = pool_executor
 
