@@ -13,9 +13,9 @@ class SearchCollector(ISpotifyComponent):
         self._pool_executor = pool_executor
 
     async def run(self, search_items: List[SearchItem]):
-        return await self._pool_executor.run(iterable=search_items, func=self.collect_single, expected_type=dict)
+        return await self._pool_executor.run(iterable=search_items, func=self.run_single, expected_type=dict)
 
-    async def collect_single(self, search_item: SearchItem) -> dict:
+    async def run_single(self, search_item: SearchItem) -> dict:
         return await self._session.get(url=self._url, params=search_item.to_query_params())
 
     @property
