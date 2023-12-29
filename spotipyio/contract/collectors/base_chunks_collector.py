@@ -4,8 +4,7 @@ from typing import List
 from spotipyio.consts.spotify_consts import IDS, SPOTIFY_API_BASE_URL
 from spotipyio.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.logic.authentication.spotify_session import SpotifySession
-from spotipyio.tools.data_chunks_generator import DataChunksGenerator
-from spotipyio.tools.pool_executor import PoolExecutor
+from spotipyio.tools import DataChunksGenerator, PoolExecutor
 from spotipyio.utils.general_utils import chain_iterable
 
 
