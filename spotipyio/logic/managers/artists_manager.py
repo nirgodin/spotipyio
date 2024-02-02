@@ -1,7 +1,6 @@
 from typing import Type, Dict
 
-from spotipyio.contract.base_manager import BaseManager
-from spotipyio.contract.spotify_component_interface import ISpotifyComponent
+from spotipyio.contract import BaseManager, ISpotifyComponent
 from spotipyio.logic.collectors.chunks_collectors.artists_collector import ArtistsCollector
 from spotipyio.logic.collectors.singles_collectors.artists_top_tracks_collector import ArtistsTopTracksCollector
 

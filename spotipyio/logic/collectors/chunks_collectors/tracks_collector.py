@@ -1,5 +1,5 @@
 from spotipyio.consts.spotify_consts import TRACKS
-from spotipyio.contract.collectors.base_chunks_collector import BaseChunksCollector
+from spotipyio.contract import BaseChunksCollector
 
 
 class TracksCollector(BaseChunksCollector):

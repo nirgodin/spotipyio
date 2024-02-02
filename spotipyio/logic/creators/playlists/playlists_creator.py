@@ -1,5 +1,5 @@
 from spotipyio.consts.spotify_consts import SPOTIFY_USERS_BASE_URL
-from spotipyio.contract.spotify_component_interface import ISpotifyComponent
+from spotipyio.contract import ISpotifyComponent
 from spotipyio.logic.creators.playlists.playlists_creation_request import PlaylistCreationRequest
 
 

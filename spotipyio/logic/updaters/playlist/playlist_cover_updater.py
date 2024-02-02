@@ -1,7 +1,7 @@
 from typing import Dict
 
 from spotipyio.consts.spotify_consts import IMAGES
-from spotipyio.contract.updaters.base_playlist_updater import BasePlaylistsUpdater
+from spotipyio.contract import BasePlaylistsUpdater
 from spotipyio.logic.authentication.spotify_session import SpotifySession
 from spotipyio.tools import ImageCompressor
 

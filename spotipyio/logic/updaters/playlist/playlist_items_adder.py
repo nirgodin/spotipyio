@@ -1,7 +1,7 @@
 from typing import List, Dict
 
 from spotipyio.consts.spotify_consts import URIS, TRACKS
-from spotipyio.contract.updaters.base_playlist_updater import BasePlaylistsUpdater
+from spotipyio.contract import BasePlaylistsUpdater
 
 
 class PlaylistItemsAdder(BasePlaylistsUpdater):

@@ -1,7 +1,6 @@
 from typing import Dict, Type
 
-from spotipyio.contract.base_manager import BaseManager
-from spotipyio.contract.spotify_component_interface import ISpotifyComponent
+from spotipyio.contract import BaseManager, ISpotifyComponent
 from spotipyio.logic.collectors.singles_collectors.playlists_collector import PlaylistsCollector
 from spotipyio.logic.creators.playlists.playlists_creator import PlaylistsCreator
 from spotipyio.logic.updaters.playlist.playlist_cover_updater import PlaylistCoverUpdater

@@ -1,4 +1,4 @@
-from spotipyio.contract.collectors.base_chunks_collector import BaseChunksCollector
+from spotipyio.contract import BaseChunksCollector
 
 
 class AlbumsCollector(BaseChunksCollector):
