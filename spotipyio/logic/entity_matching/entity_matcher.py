@@ -27,23 +27,24 @@ class EntityMatcher:
 
         return self._is_matching(scores)
 
-    def _compute_field_score(self, entity, field: Field, raw_candidate: Any) -> Optional[float]:
+    def _compute_field_score(self, entity, field: Field, candidate: Any) -> Optional[float]:
         extractor = self._names_to_extractors[field.name]
         extractor_score = self._names_to_scores[field.name]
         entity = getattr(entity, field.name)
 
         if entity is not None:
-            score = self._compute_raw_field_score(extractor, raw_candidate, entity)
+            score = self._compute_raw_field_score(extractor, candidate, entity)
 
             if score is not None:
                 return score * extractor_score
 
     @staticmethod
     def _compute_raw_field_score(extractor: IEntityExtractor, raw_candidate: Any, entity: str) -> Optional[float]:
-        candidate = extractor.extract(raw_candidate)
+        if raw_candidate is not None:
+            candidate = extractor.extract(raw_candidate)
 
-        if candidate is not None:
-            return compute_similarity_score(candidate, entity)
+            if candidate is not None:
+                return compute_similarity_score(candidate, entity)
 
     @staticmethod
     def _get_default_extractors() -> Dict[IEntityExtractor, float]:
