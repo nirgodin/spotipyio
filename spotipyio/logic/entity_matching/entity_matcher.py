@@ -12,7 +12,7 @@ class EntityMatcher:
                  extractors: Optional[Dict[IEntityExtractor, float]] = None,
                  threshold: float = 0.7,
                  min_present_fields: int = 2):
-        self._extractors = extractors or self._get_default_extractors
+        self._extractors = extractors or self._get_default_extractors()
         self._threshold = threshold
         self._min_present_fields = min_present_fields
 
@@ -20,17 +20,17 @@ class EntityMatcher:
         scores = []
 
         for field in fields(entity):
-            field_score = self._compute_field_score(field, candidate)
+            field_score = self._compute_field_score(entity, field, candidate)
 
             if field_score is not None:
                 scores.append(field_score)
 
         return self._is_matching(scores)
 
-    def _compute_field_score(self, entity_field: Field, raw_candidate: Any) -> Optional[float]:
-        extractor = self._names_to_extractors[entity_field.name]
-        extractor_score = self._names_to_scores[entity_field.name]
-        entity = getattr(entity_field, entity_field.name)
+    def _compute_field_score(self, entity, field: Field, raw_candidate: Any) -> Optional[float]:
+        extractor = self._names_to_extractors[field.name]
+        extractor_score = self._names_to_scores[field.name]
+        entity = getattr(entity, field.name)
 
         if entity is not None:
             score = self._compute_raw_field_score(extractor, raw_candidate, entity)
