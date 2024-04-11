@@ -5,13 +5,13 @@ from spotipyio.contract import IEntityExtractor
 from spotipyio.utils import safe_nested_get
 
 
-class ArtistEntityExtractor(IEntityExtractor):
+class SearchResultArtistEntityExtractor(IEntityExtractor):
     def extract(self, entity: dict) -> Optional[str]:
         items = safe_nested_get(entity, [ARTISTS, ITEMS], default=[])
 
         if items:
-            first_result = items[0]
-            return first_result.get(NAME)
+            first_item = items[0]
+            return first_item[NAME]
 
     @property
     def name(self) -> str:

@@ -27,8 +27,11 @@ class EntityMatcher:
 
         return self._is_matching(scores)
 
-    def _compute_field_score(self, entity, field: Field, candidate: Any) -> Optional[float]:
-        extractor = self._names_to_extractors[field.name]
+    def _compute_field_score(self, entity: MatchingEntity, field: Field, candidate: Any) -> Optional[float]:
+        extractor = self._names_to_extractors.get(field.name)
+        if extractor is None:
+            return
+
         extractor_score = self._names_to_scores[field.name]
         entity = getattr(entity, field.name)
 
