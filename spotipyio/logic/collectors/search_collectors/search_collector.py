@@ -12,7 +12,7 @@ class SearchCollector(ISpotifyComponent):
         super().__init__(session)
         self._pool_executor = pool_executor
 
-    async def run(self, search_items: List[SearchItem]):
+    async def run(self, search_items: List[SearchItem]) -> List[dict]:
         return await self._pool_executor.run(iterable=search_items, func=self.run_single, expected_type=dict)
 
     async def run_single(self, search_item: SearchItem) -> dict:
