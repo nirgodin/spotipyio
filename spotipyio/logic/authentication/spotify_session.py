@@ -34,8 +34,13 @@ class SpotifySession:
             raw_response.raise_for_status()  # TODO: Add more accurate error handling
             return await raw_response.json()
 
-    async def put(self, url: str, data: Any) -> Json:
-        async with self._session.put(url=url, data=data) as raw_response:
+    async def put(self, url: str, data: Optional[Any] = None, payload: Optional[dict] = None) -> Json:
+        async with self._session.put(url=url, data=data, json=payload) as raw_response:
+            raw_response.raise_for_status()  # TODO: Add more accurate error handling
+            return await raw_response.json()
+
+    async def delete(self, url: str, payload: Optional[dict] = None) -> Json:
+        async with self._session.delete(url=url, json=payload) as raw_response:
             raw_response.raise_for_status()  # TODO: Add more accurate error handling
             return await raw_response.json()
 
