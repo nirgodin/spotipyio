@@ -52,8 +52,8 @@ class EntityMatcher:
     @staticmethod
     def _get_default_extractors() -> Dict[IEntityExtractor, float]:
         return {
-            TrackEntityExtractor(): 0.7,
-            ArtistEntityExtractor(): 0.3
+            TrackEntityExtractor(): 0.65,
+            ArtistEntityExtractor(): 0.35
         }
 
     @property
