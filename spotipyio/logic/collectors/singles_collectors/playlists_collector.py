@@ -1,7 +1,8 @@
 from functools import partial
 from typing import List
 
-from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL, PLAYLISTS, TRACKS, NEXT
+from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL, PLAYLISTS, TRACKS, NEXT, ITEMS, TRACK, \
+    ADDITIONAL_TYPES
 from spotipyio.contract import ISpotifyComponent
 from spotipyio.logic.authentication.spotify_session import SpotifySession
 from spotipyio.tools import PoolExecutor
@@ -30,6 +31,8 @@ class PlaylistsCollector(ISpotifyComponent):
         next_url = safe_nested_get(playlist, [TRACKS, NEXT])
 
         while next_url is not None:
-            page = await self._session.get(url=next_url, params={'additional_types': 'track'})
-            playlist["tracks"]["items"].extend(page)
+            page = await self._session.get(url=next_url, params={ADDITIONAL_TYPES: TRACK})
+            existing_items: List[dict] = playlist["tracks"]["items"]
+            page_items: dict = page[ITEMS]
+            existing_items.extend(page_items)
             next_url = page["next"]
