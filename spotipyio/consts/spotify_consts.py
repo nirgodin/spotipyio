@@ -22,4 +22,3 @@ SNAPSHOT_ID = "snapshot_id"
 RANGE_LENGTH = "range_length"
 NEXT = "next"
 ADDITIONAL_TYPES = 'additional_types'
-PLAYLIST = "playlist"
