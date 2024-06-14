@@ -3,9 +3,7 @@ from spotipyio.logic.collectors.chunks_collectors.albums_collector import Albums
 from spotipyio.logic.collectors.chunks_collectors.audio_features_collector import AudioFeaturesCollector
 from spotipyio.logic.collectors.chunks_collectors.tracks_collector import TracksCollector
 from spotipyio.logic.collectors.search_collectors.search_collector import SearchCollector
-from spotipyio.logic.managers.artists_manager import ArtistsManager
-from spotipyio.logic.managers.current_user_manager import CurrentUserManager
-from spotipyio.logic.managers.playlists_manager import PlaylistsManager
+from spotipyio.logic.managers import *
 
 
 class SpotifyClient:
@@ -13,6 +11,7 @@ class SpotifyClient:
                  artists_manager: ArtistsManager,
                  current_user_manager: CurrentUserManager,
                  playlists_manager: PlaylistsManager,
+                 users_manager: UsersManager,
                  albums_collector: AlbumsCollector,
                  tracks_collector: TracksCollector,
                  audio_features_collector: AudioFeaturesCollector,
@@ -20,6 +19,7 @@ class SpotifyClient:
         self.artists = artists_manager
         self.albums = albums_collector
         self.tracks = tracks_collector
+        self.users = users_manager
         self.audio_features = audio_features_collector
         self.playlists = playlists_manager
         self.search = search_collector
@@ -31,6 +31,7 @@ class SpotifyClient:
             artists_manager=ArtistsManager.create(session=session),
             current_user_manager=CurrentUserManager.create(session=session),
             playlists_manager=PlaylistsManager.create(session=session),
+            users_manager=UsersManager.create(session=session),
             albums_collector=AlbumsCollector(session=session),
             tracks_collector=TracksCollector(session=session),
             audio_features_collector=AudioFeaturesCollector(session=session),
