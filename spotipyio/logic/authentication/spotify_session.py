@@ -1,6 +1,6 @@
 from typing import Optional, Dict, Any
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientResponse, ContentTypeError, ClientResponseError
 
 from spotipyio.consts.api_consts import ACCESS_TOKEN
 from spotipyio.consts.typing_consts import Json
@@ -24,25 +24,49 @@ class SpotifySession:
         self._access_code = access_code
         self._session = session
 
-    async def get(self, url: str, params: Optional[dict] = None) -> Json:
-        async with self._session.get(url=url, params=params) as raw_response:
-            raw_response.raise_for_status()  # TODO: Add more accurate error handling
-            return await raw_response.json()
+    async def get(self, url: str, params: Optional[dict] = None) -> Optional[Json]:
+        async with self._session.get(url=url, params=params) as response:
+            return await self._handle_response(response)
 
-    async def post(self, url: str, payload: dict) -> Json:
-        async with self._session.post(url=url, json=payload) as raw_response:
-            raw_response.raise_for_status()  # TODO: Add more accurate error handling
-            return await raw_response.json()
+    async def post(self, url: str, payload: dict) -> Optional[Json]:
+        async with self._session.post(url=url, json=payload) as response:
+            return await self._handle_response(response)
 
-    async def put(self, url: str, data: Optional[Any] = None, payload: Optional[dict] = None) -> Json:
-        async with self._session.put(url=url, data=data, json=payload) as raw_response:
-            raw_response.raise_for_status()  # TODO: Add more accurate error handling
-            return await raw_response.json()
+    async def put(self, url: str, data: Optional[Any] = None, payload: Optional[dict] = None) -> Optional[Json]:
+        async with self._session.put(url=url, data=data, json=payload) as response:
+            return await self._handle_response(response)
 
-    async def delete(self, url: str, payload: Optional[dict] = None) -> Json:
-        async with self._session.delete(url=url, json=payload) as raw_response:
-            raw_response.raise_for_status()  # TODO: Add more accurate error handling
-            return await raw_response.json()
+    async def delete(self, url: str, payload: Optional[dict] = None) -> Optional[Json]:
+        async with self._session.delete(url=url, json=payload) as response:
+            return await self._handle_response(response)
+
+    async def _handle_response(self, response: ClientResponse) -> Optional[Json]:
+        if self._is_2xx_successful(response):
+            return await self._jsonify_response_if_possible(response)
+
+        json_error_response = await self._jsonify_response_if_possible(response)
+        if json_error_response is None:
+            response.raise_for_status()
+
+        raise ClientResponseError(
+            request_info=response.request_info,
+            history=response.history,
+            status=response.status,
+            message=f"Spotify request to URL `{response.request_info.url}` with method "
+                    f"`{response.request_info.method}` failed with the following JSON message:\n{json_error_response}"
+        )
+
+    @staticmethod
+    def _is_2xx_successful(response: ClientResponse) -> bool:
+        return 200 <= response.status < 300
+
+    @staticmethod
+    async def _jsonify_response_if_possible(response: ClientResponse) -> Optional[Json]:
+        try:
+            return await response.json()
+
+        except ContentTypeError:
+            return
 
     async def __aenter__(self) -> "SpotifySession":
         async with AccessTokenGenerator(self._client_id, self._client_secret, self._redirect_uri) as token_generator:
