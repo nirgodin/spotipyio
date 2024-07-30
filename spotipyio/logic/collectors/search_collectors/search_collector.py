@@ -4,11 +4,11 @@ from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL
 from spotipyio.contract import ISpotifyComponent
 from spotipyio.logic.authentication.spotify_session import SpotifySession
 from spotipyio.logic.collectors.search_collectors.search_item import SearchItem
-from spotipyio.tools import PoolExecutor
+from spotipyio.tools import AioPoolExecutor
 
 
 class SearchCollector(ISpotifyComponent):
-    def __init__(self, pool_executor: PoolExecutor = PoolExecutor(), session: Optional[SpotifySession] = None):
+    def __init__(self, pool_executor: AioPoolExecutor = AioPoolExecutor(), session: Optional[SpotifySession] = None):
         super().__init__(session)
         self._pool_executor = pool_executor
 

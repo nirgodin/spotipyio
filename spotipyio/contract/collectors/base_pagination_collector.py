@@ -4,11 +4,11 @@ from typing import List, Optional
 
 from spotipyio.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.logic.authentication.spotify_session import SpotifySession
-from spotipyio.tools import PoolExecutor
+from spotipyio.tools import AioPoolExecutor
 
 
 class BasePaginationCollector(ISpotifyComponent, ABC):
-    def __init__(self, session: SpotifySession, pool_executor: PoolExecutor = PoolExecutor()):
+    def __init__(self, session: SpotifySession, pool_executor: AioPoolExecutor = AioPoolExecutor()):
         super().__init__(session)
         self._pool_executor = pool_executor
 

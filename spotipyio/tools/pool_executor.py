@@ -7,7 +7,7 @@ from tqdm import tqdm
 from spotipyio.tools.logging import logger
 
 
-class PoolExecutor:
+class AioPoolExecutor:
     def __init__(self, pool_size: int = 5, validate_results: bool = True):
         self._pool_size = pool_size
         self._validate_results = validate_results
@@ -33,7 +33,7 @@ class PoolExecutor:
             return await func(value)
 
         except Exception as e:
-            logger.exception("PoolExecutor encountered exception")
+            logger.exception("AioPoolExecutor encountered exception")
             return e
 
         finally:

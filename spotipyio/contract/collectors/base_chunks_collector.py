@@ -4,12 +4,12 @@ from typing import List
 from spotipyio.consts.spotify_consts import IDS, SPOTIFY_API_BASE_URL
 from spotipyio.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.logic.authentication.spotify_session import SpotifySession
-from spotipyio.tools import DataChunksGenerator, PoolExecutor
+from spotipyio.tools import DataChunksGenerator, AioPoolExecutor
 from spotipyio.utils.general_utils import chain_iterable
 
 
 class BaseChunksCollector(ISpotifyComponent, ABC):
-    def __init__(self, session: SpotifySession, pool_executor: PoolExecutor = PoolExecutor()):
+    def __init__(self, session: SpotifySession, pool_executor: AioPoolExecutor = AioPoolExecutor()):
         super().__init__(session)
         self._chunks_generator = DataChunksGenerator(pool_executor, self._chunk_size)
         self._formatted_route = self._route.replace("-", "_")
