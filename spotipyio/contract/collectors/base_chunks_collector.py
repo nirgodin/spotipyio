@@ -9,16 +9,17 @@ from spotipyio.utils.general_utils import chain_iterable
 
 
 class BaseChunksCollector(ISpotifyComponent, ABC):
-    def __init__(self, session: SpotifySession, pool_executor: PoolExecutor = PoolExecutor()):
+    def __init__(self, session: SpotifySession, chunks_generator: DataChunksGenerator = DataChunksGenerator()):
         super().__init__(session)
-        self._chunks_generator = DataChunksGenerator(pool_executor, self._chunk_size)
+        self._chunks_generator = chunks_generator
         self._formatted_route = self._route.replace("-", "_")
 
     async def run(self, ids: List[str]) -> List[dict]:
         chunks = await self._chunks_generator.execute_by_chunk_in_parallel(
             lst=ids,
-            filtering_list=[],
-            func=self._run_single
+            func=self._run_single,
+            expected_type=dict,
+            chunk_size=self._chunk_size
         )
         results = chain_iterable(chunks)
 
