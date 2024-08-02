@@ -69,23 +69,25 @@ class SpotifySession:
             return
 
     async def __aenter__(self) -> "SpotifySession":
-        async with AccessTokenGenerator(self._client_id, self._client_secret, self._redirect_uri) as token_generator:
-            response = await token_generator.generate(self._grant_type, self._access_code)
-
-        access_token = response[ACCESS_TOKEN]
-        headers = self._build_spotify_headers(access_token)
-        raw_session = create_client_session(headers)
-        self._session = await raw_session.__aenter__()
+        if self._session is None:
+            raw_session = await self._build_client_session()
+            self._session = await raw_session.__aenter__()
 
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
-        await self._session.__aexit__(exc_type, exc_val, exc_tb)
+        if self._session is not None:
+            await self._session.__aexit__(exc_type, exc_val, exc_tb)
 
-    @staticmethod
-    def _build_spotify_headers(access_token: str) -> Dict[str, str]:
-        return {
+    async def _build_client_session(self) -> ClientSession:
+        async with AccessTokenGenerator(self._client_id, self._client_secret, self._redirect_uri) as token_generator:
+            response = await token_generator.generate(self._grant_type, self._access_code)
+
+        access_token = response[ACCESS_TOKEN]
+        headers = {
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": f"Bearer {access_token}"
         }
+
+        return create_client_session(headers)
