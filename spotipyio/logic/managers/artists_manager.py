@@ -1,8 +1,7 @@
 from typing import Type, Dict
 
 from spotipyio.contract import BaseManager, ISpotifyComponent
-from spotipyio.logic.collectors.chunks_collectors.artists_collector import ArtistsCollector
-from spotipyio.logic.collectors.singles_collectors.artists_top_tracks_collector import ArtistsTopTracksCollector
+from spotipyio.logic.collectors import ArtistsCollector, ArtistsTopTracksCollector
 
 
 class ArtistsManager(BaseManager):
