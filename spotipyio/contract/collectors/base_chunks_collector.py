@@ -9,8 +9,8 @@ from spotipyio.utils.general_utils import chain_iterable
 
 
 class BaseChunksCollector(ISpotifyComponent, ABC):
-    def __init__(self, session: SpotifySession, chunks_generator: DataChunksGenerator = DataChunksGenerator()):
-        super().__init__(session)
+    def __init__(self, base_url: str, session: SpotifySession, chunks_generator: DataChunksGenerator = DataChunksGenerator()):
+        super().__init__(base_url=base_url, session=session)
         self._chunks_generator = chunks_generator
         self._formatted_route = self._route.replace("-", "_")
 

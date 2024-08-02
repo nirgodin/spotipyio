@@ -8,9 +8,10 @@ from spotipyio.tools import ImageCompressor
 
 class PlaylistCoverUpdater(BasePlaylistsUpdater):
     def __init__(self,
+                 base_url: str,
                  session: SpotifySession,
                  image_compressor: ImageCompressor = ImageCompressor()):
-        super().__init__(session)
+        super().__init__(base_url=base_url, session=session)
         self._image_compressor = image_compressor
 
     async def run(self, playlist_id: str, image: bytes) -> Dict[str, str]:

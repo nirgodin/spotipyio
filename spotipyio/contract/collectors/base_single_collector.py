@@ -8,8 +8,8 @@ from spotipyio.tools import PoolExecutor
 
 
 class BaseSingleCollector(ISpotifyComponent, ABC):
-    def __init__(self, session: SpotifySession, pool_executor: PoolExecutor = PoolExecutor()):
-        super().__init__(session)
+    def __init__(self, base_url: str, session: SpotifySession, pool_executor: PoolExecutor = PoolExecutor()):
+        super().__init__(base_url=base_url, session=session)
         self._pool_executor = pool_executor
 
     async def run(self, ids: List[str], **params) -> List[dict]:  # TODO: Think how to better externalize mandatory params
