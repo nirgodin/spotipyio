@@ -14,7 +14,7 @@ class BaseManager(ABC):
         named_components = {}
 
         for name, component in cls._components().items():
-            named_components[name] = component(session)
+            named_components[name] = component(base_url=base_url, session=session)
 
         return cls(**named_components)
 

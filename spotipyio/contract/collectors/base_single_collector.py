@@ -2,7 +2,6 @@ from abc import abstractmethod, ABC
 from functools import partial
 from typing import List, Optional
 
-from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL
 from spotipyio.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.logic.authentication.spotify_session import SpotifySession
 from spotipyio.tools import PoolExecutor
@@ -19,7 +18,7 @@ class BaseSingleCollector(ISpotifyComponent, ABC):
 
     async def run_single(self, id_: str, params: Optional[dict] = None) -> dict:
         route = self._route_format.format(id=id_)
-        url = f"{SPOTIFY_API_BASE_URL}/{route}"
+        url = f"{self._base_url}/{route}"
 
         return await self._session.get(url=url, params=params)
 

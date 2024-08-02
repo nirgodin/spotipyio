@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL, PLAYLISTS
+from spotipyio.consts.spotify_consts import PLAYLISTS
 from spotipyio.contract import ISpotifyComponent
 
 
@@ -11,4 +11,4 @@ class BasePlaylistsUpdater(ISpotifyComponent, ABC):
         raise NotImplementedError
 
     def _build_url(self, playlist_id: str) -> str:
-        return f"{SPOTIFY_API_BASE_URL}/{PLAYLISTS}/{playlist_id}/{self._route}"
+        return f"{self._base_url}/{PLAYLISTS}/{playlist_id}/{self._route}"

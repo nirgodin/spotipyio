@@ -1,6 +1,5 @@
-from typing import List, Optional
+from typing import List
 
-from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL
 from spotipyio.contract import ISpotifyComponent
 from spotipyio.logic.authentication.spotify_session import SpotifySession
 from spotipyio.logic.collectors.search_collectors.search_item import SearchItem
@@ -8,8 +7,8 @@ from spotipyio.tools import PoolExecutor
 
 
 class SearchCollector(ISpotifyComponent):
-    def __init__(self, pool_executor: PoolExecutor = PoolExecutor(), session: Optional[SpotifySession] = None):
-        super().__init__(session)
+    def __init__(self, base_url: str, session: SpotifySession, pool_executor: PoolExecutor = PoolExecutor()):
+        super().__init__(base_url=base_url, session=session)
         self._pool_executor = pool_executor
 
     async def run(self, search_items: List[SearchItem]) -> List[dict]:
@@ -24,4 +23,4 @@ class SearchCollector(ISpotifyComponent):
 
     @property
     def _url(self) -> str:
-        return f"{SPOTIFY_API_BASE_URL}/{self._route}"
+        return f"{self._base_url}/{self._route}"
