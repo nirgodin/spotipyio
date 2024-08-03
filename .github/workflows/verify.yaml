@@ -26,5 +26,5 @@ jobs:
         pip install pytest-cov
     - name: Test with pytest
       run: |
-        pytest tests --asyncio-mode=auto --doctest-modules --junitxml=junit/test-results.xml --cov=spotipyio --cov-report=xml --cov-report=html
+        pytest tests --asyncio-mode=auto --doctest-modules --junitxml=junit/test-results.xml --cov=spotipyio tests/ --cov-report=xml --cov-report=html
         coverage report
