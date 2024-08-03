@@ -6,7 +6,8 @@ from spotipyio.logic.authentication.spotify_session import SpotifySession
 
 
 class ISpotifyComponent(ABC):
-    def __init__(self, session: SpotifySession):
+    def __init__(self, base_url: str, session: SpotifySession):
+        self._base_url = base_url
         self._session = session
 
     @abstractmethod

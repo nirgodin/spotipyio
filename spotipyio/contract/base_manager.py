@@ -10,11 +10,11 @@ class BaseManager(ABC):
         pass
 
     @classmethod
-    def create(cls, session: SpotifySession) -> "BaseManager":
+    def create(cls, base_url: str, session: SpotifySession) -> "BaseManager":
         named_components = {}
 
         for name, component in cls._components().items():
-            named_components[name] = component(session)
+            named_components[name] = component(base_url=base_url, session=session)
 
         return cls(**named_components)
 

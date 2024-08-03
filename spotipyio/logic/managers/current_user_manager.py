@@ -1,8 +1,7 @@
 from typing import Type, Dict
 
 from spotipyio.contract import BaseManager, ISpotifyComponent
-from spotipyio.logic.collectors.current_profile_collector import CurrentProfileCollector
-from spotipyio.logic.collectors.top_items_collectors.top_items_collector import TopItemsCollector
+from spotipyio.logic.collectors import CurrentProfileCollector, TopItemsCollector
 
 
 class CurrentUserManager(BaseManager):

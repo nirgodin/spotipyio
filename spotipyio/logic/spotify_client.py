@@ -1,8 +1,6 @@
+from __future__ import annotations
+from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL
 from spotipyio.logic.authentication.spotify_session import SpotifySession
-from spotipyio.logic.collectors.chunks_collectors.albums_collector import AlbumsCollector
-from spotipyio.logic.collectors.chunks_collectors.audio_features_collector import AudioFeaturesCollector
-from spotipyio.logic.collectors.chunks_collectors.tracks_collector import TracksCollector
-from spotipyio.logic.collectors.search_collectors.search_collector import SearchCollector
 from spotipyio.logic.managers import *
 
 
@@ -12,28 +10,25 @@ class SpotifyClient:
                  current_user_manager: CurrentUserManager,
                  playlists_manager: PlaylistsManager,
                  users_manager: UsersManager,
-                 albums_collector: AlbumsCollector,
-                 tracks_collector: TracksCollector,
-                 audio_features_collector: AudioFeaturesCollector,
-                 search_collector: SearchCollector):
+                 albums_manager: AlbumsManager,
+                 tracks_manager: TracksManager,
+                 search_manager: SearchManager):
         self.artists = artists_manager
-        self.albums = albums_collector
-        self.tracks = tracks_collector
+        self.albums = albums_manager
+        self.tracks = tracks_manager
         self.users = users_manager
-        self.audio_features = audio_features_collector
         self.playlists = playlists_manager
-        self.search = search_collector
+        self.search = search_manager
         self.current_user = current_user_manager
 
     @classmethod
-    def create(cls, session: SpotifySession) -> "SpotifyClient":
+    def create(cls, session: SpotifySession, base_url: str = SPOTIFY_API_BASE_URL) -> SpotifyClient:
         return SpotifyClient(
-            artists_manager=ArtistsManager.create(session=session),
-            current_user_manager=CurrentUserManager.create(session=session),
-            playlists_manager=PlaylistsManager.create(session=session),
-            users_manager=UsersManager.create(session=session),
-            albums_collector=AlbumsCollector(session=session),
-            tracks_collector=TracksCollector(session=session),
-            audio_features_collector=AudioFeaturesCollector(session=session),
-            search_collector=SearchCollector(session=session),
+            artists_manager=ArtistsManager.create(session=session, base_url=base_url),
+            current_user_manager=CurrentUserManager.create(session=session, base_url=base_url),
+            playlists_manager=PlaylistsManager.create(session=session, base_url=base_url),
+            users_manager=UsersManager.create(session=session, base_url=base_url),
+            albums_manager=AlbumsManager.create(session=session, base_url=base_url),
+            tracks_manager=TracksManager.create(session=session, base_url=base_url),
+            search_manager=SearchManager.create(session=session, base_url=base_url),
         )

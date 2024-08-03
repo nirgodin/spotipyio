@@ -1,7 +1,6 @@
 from typing import List, Optional, Dict
 
-from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL, PLAYLISTS, TRACKS, NEXT, ITEMS, TRACK, \
-    ADDITIONAL_TYPES
+from spotipyio.consts.spotify_consts import PLAYLISTS, TRACKS, NEXT, ITEMS, TRACK, ADDITIONAL_TYPES
 from spotipyio.contract import BasePaginationCollector
 from spotipyio.utils import safe_nested_get
 
@@ -9,7 +8,7 @@ from spotipyio.utils import safe_nested_get
 class PlaylistsCollector(BasePaginationCollector):
     @property
     def _url_format(self) -> str:
-        return f"{SPOTIFY_API_BASE_URL}/{PLAYLISTS}/{{id}}"
+        return f"{self._base_url}/{PLAYLISTS}/{{id}}"
 
     @property
     def _additional_items_request_params(self) -> Dict[str, str]:

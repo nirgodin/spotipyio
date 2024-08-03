@@ -1,7 +1,10 @@
-from spotipyio.consts.spotify_consts import SPOTIFY_CURRENT_USER_BASE_URL
 from spotipyio.contract import ISpotifyComponent
 
 
 class CurrentProfileCollector(ISpotifyComponent):
     async def run(self):
-        return await self._session.get(url=SPOTIFY_CURRENT_USER_BASE_URL)
+        return await self._session.get(url=self._url)
+
+    @property
+    def _url(self) -> str:
+        return f"{self._base_url}/me"
