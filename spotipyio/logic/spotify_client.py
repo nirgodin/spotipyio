@@ -1,3 +1,4 @@
+from __future__ import annotations
 from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL
 from spotipyio.logic.authentication.spotify_session import SpotifySession
 from spotipyio.logic.managers import *
@@ -21,7 +22,7 @@ class SpotifyClient:
         self.current_user = current_user_manager
 
     @classmethod
-    def create(cls, session: SpotifySession, base_url: str = SPOTIFY_API_BASE_URL) -> "SpotifyClient":
+    def create(cls, session: SpotifySession, base_url: str = SPOTIFY_API_BASE_URL) -> SpotifyClient:
         return SpotifyClient(
             artists_manager=ArtistsManager.create(session=session, base_url=base_url),
             current_user_manager=CurrentUserManager.create(session=session, base_url=base_url),
