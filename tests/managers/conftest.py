@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import AbstractEventLoop
 
 from _pytest.fixtures import fixture
 from pytest_httpserver import HTTPServer
@@ -9,7 +10,7 @@ from spotipyio.utils import create_client_session
 
 
 @fixture(scope="session")
-def event_loop():
+def event_loop() -> AbstractEventLoop:
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
@@ -22,7 +23,7 @@ def test_client() -> SpotifyTestClient:
 
 
 @fixture(scope="session")
-async def spotify_client(test_client) -> SpotifyClient:
+async def spotify_client(test_client: SpotifyTestClient) -> SpotifyClient:
     raw_session = create_client_session()
 
     async with SpotifySession(session=raw_session) as session:
