@@ -16,9 +16,8 @@ class TestCurrentUserTopItems:
                                        items_type: ItemsType,
                                        time_range: TimeRange):
         expected = random_string_dict()
-        test_client.current_user.top_items \
-            .expect(items_type=items_type, time_range=time_range) \
-            .respond_with_json(expected)
+        request_handlers = test_client.current_user.top_items.expect(items_type=items_type, time_range=time_range)
+        request_handlers[0].respond_with_json(expected)
 
         actual = await spotify_client.current_user.top_items.run(
             items_type=items_type,
@@ -33,9 +32,8 @@ class TestCurrentUserTopItems:
                                                                        items_type: ItemsType,
                                                                        time_range: TimeRange):
         expected_status_code, expected_response = random_invalid_response()
-        test_client.current_user.top_items \
-            .expect(items_type=items_type, time_range=time_range) \
-            .respond_with_json(expected_response, status=expected_status_code)
+        request_handlers = test_client.current_user.top_items.expect(items_type=items_type, time_range=time_range)
+        request_handlers[0].respond_with_json(expected_response, status=expected_status_code)
 
         with pytest.raises(ClientResponseError) as exc_info:
             await spotify_client.current_user.top_items.run(
@@ -51,5 +49,5 @@ class TestCurrentUserTopItems:
         return random_enum_value(ItemsType)
 
     @fixture
-    def time_range(self) -> ItemsType:
-        return random_enum_value(ItemsType)
+    def time_range(self) -> TimeRange:
+        return random_enum_value(TimeRange)

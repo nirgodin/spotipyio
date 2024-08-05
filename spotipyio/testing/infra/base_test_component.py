@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List
 from urllib.parse import urlencode
 
 from pytest_httpserver import HTTPServer
@@ -11,14 +11,16 @@ class BaseTestComponent(ABC):
         self._server = server
 
     @abstractmethod
-    def expect(self, *args, **kwargs) -> RequestHandler:
+    def expect(self, *args, **kwargs) -> List[RequestHandler]:
         raise NotImplementedError
 
-    def _expect_get_request(self, route: str, params: Optional[dict] = None) -> RequestHandler:
-        query_string = "" if params is None else urlencode(params)
+    def _expect_get_request(self, route: str, params: Optional[dict] = None, encode: bool = False) -> RequestHandler:
+        if params is not None and encode:
+            params = urlencode(params)
+
         return self._server.expect_request(
             uri=route,
-            query_string=query_string,
+            query_string=params,
             method="GET",
             handler_type=HandlerType.ONESHOT
         )
