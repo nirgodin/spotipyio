@@ -12,7 +12,7 @@ class SpotifyMockFactory:
 
     @staticmethod
     def some_spotify_ids(length: Optional[int] = None) -> List[str]:
-        number_of_ids = length or randint(1, 10)
+        number_of_ids = length or randint(2, 10)
         return [SpotifyMockFactory.spotify_id() for _ in range(number_of_ids)]
 
     @staticmethod

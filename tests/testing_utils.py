@@ -9,7 +9,6 @@ INVALID_RESPONSES = [
     (HTTPStatus.UNAUTHORIZED, "Unauthorized"),
     (HTTPStatus.FORBIDDEN, "Bad OAuth Request"),
     (HTTPStatus.TOO_MANY_REQUESTS, "Too Many Requests"),
-    (HTTPStatus.INTERNAL_SERVER_ERROR, "Interal Server Error")
 ]
 
 
