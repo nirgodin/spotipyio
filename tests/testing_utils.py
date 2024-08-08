@@ -9,7 +9,6 @@ INVALID_RESPONSES = [
     (HTTPStatus.UNAUTHORIZED, "Unauthorized"),
     (HTTPStatus.FORBIDDEN, "Bad OAuth Request"),
     (HTTPStatus.TOO_MANY_REQUESTS, "Too Many Requests"),
-    (HTTPStatus.INTERNAL_SERVER_ERROR, "Interal Server Error")
 ]
 
 
@@ -43,3 +42,7 @@ def random_alphanumeric_string(min_length: int = 0, max_length: int = 20) -> str
     characters = ascii_letters + digits
 
     return ''.join(choice(characters) for _ in range(n_chars))
+
+
+def random_boolean() -> bool:
+    return choice([True, False])

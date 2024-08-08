@@ -18,12 +18,10 @@ class BaseChunksCollector(ISpotifyComponent, ABC):
         chunks = await self._chunks_generator.execute_by_chunk_in_parallel(
             lst=ids,
             func=self._run_single,
-            expected_type=dict,
+            expected_type=list,
             chunk_size=self._chunk_size
         )
-        results = chain_iterable(chunks)
-
-        return [result for result in results if isinstance(result, dict)]
+        return chain_iterable(chunks)
 
     async def _run_single(self, ids: List[str]) -> List[dict]:
         response = await self._session.get(url=self._url, params={IDS: ','.join(ids)})

@@ -9,9 +9,8 @@ from tests.testing_utils import random_invalid_response, random_string_dict
 class TestCurrentUserProfile:
     async def test_run__valid_response(self, test_client: SpotifyTestClient, spotify_client: SpotifyClient):
         expected = random_string_dict()
-        test_client.current_user.profile \
-            .expect() \
-            .respond_with_json(expected)
+        request_handlers = test_client.current_user.profile.expect()
+        request_handlers[0].respond_with_json(expected)
 
         actual = await spotify_client.current_user.profile.run()
 
@@ -21,9 +20,8 @@ class TestCurrentUserProfile:
                                                                        test_client: SpotifyTestClient,
                                                                        spotify_client: SpotifyClient):
         expected_status_code, expected_response = random_invalid_response()
-        test_client.current_user.profile\
-            .expect() \
-            .respond_with_json(response_json=expected_response, status=expected_status_code)
+        request_handlers = test_client.current_user.profile.expect()
+        request_handlers[0].respond_with_json(response_json=expected_response, status=expected_status_code)
 
         with pytest.raises(ClientResponseError) as exc_info:
             await spotify_client.current_user.profile.run()
