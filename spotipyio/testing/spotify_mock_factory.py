@@ -16,6 +16,80 @@ class SpotifyMockFactory:
         return [SpotifyMockFactory.spotify_id() for _ in range(number_of_ids)]
 
     @staticmethod
+    def playlist(entity_id: Optional[str] = None) -> dict:
+        owner = SpotifyMockFactory.owner()
+        entity_type = "playlist"
+
+        if entity_id is None:
+            entity_id = SpotifyMockFactory.spotify_id()
+
+        return {
+            "collaborative": SpotifyMockFactory._random_boolean(),
+            "description": SpotifyMockFactory._random_alphanumeric_string(),
+            "external_urls": SpotifyMockFactory.external_urls(entity_type=entity_type, entity_id=entity_id),
+            "followers": SpotifyMockFactory.followers(),
+            "href": SpotifyMockFactory.href(entity_type=entity_type, entity_id=entity_id),
+            "id": entity_id,
+            "images": SpotifyMockFactory.images(),
+            "name": SpotifyMockFactory.name(),
+            "owner": owner,
+            "public": SpotifyMockFactory._random_boolean(),
+            "snapshot_id": SpotifyMockFactory.snapshot_id(),
+            "tracks": SpotifyMockFactory.playlist_tracks(entity_id=entity_id, owner=owner),
+            "type": entity_type,
+            "uri": SpotifyMockFactory.uri(entity_type=entity_type, entity_id=entity_id),
+            "primary_color": None
+        }
+
+    @staticmethod
+    def playlist_tracks(entity_id: Optional[str] = None, owner: Optional[dict] = None) -> dict:
+        entity_type = "playlist"
+        if entity_id is None:
+            entity_id = SpotifyMockFactory.spotify_id()
+
+        total_tracks = randint(1, 10)
+        items = [SpotifyMockFactory.playlist_item(owner) for _ in range(total_tracks)]
+
+        return {
+            "href": SpotifyMockFactory.href(entity_type=entity_type, entity_id=entity_id, extra_routes=["tracks"]),
+            "limit": 100,
+            "next": None,
+            "offset": 0,
+            "previous": None,
+            "total": total_tracks,
+            "items": items
+        }
+
+    @staticmethod
+    def playlist_item(owner: Optional[str] = None) -> dict:
+        added_at = SpotifyMockFactory._random_datetime()
+        return {
+            "added_at": added_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "added_by": owner or SpotifyMockFactory.owner(),
+            "is_local": SpotifyMockFactory._random_boolean(),
+            "track": SpotifyMockFactory.track()
+        }
+
+    @staticmethod
+    def snapshot_id() -> str:
+        return SpotifyMockFactory._random_alphanumeric_string(min_length=32, max_length=32)
+
+    @staticmethod
+    def owner(entity_id: Optional[str] = None) -> dict:
+        entity_type = "user"
+        if entity_id is None:
+            entity_id = SpotifyMockFactory._random_alphanumeric_string()
+
+        return {
+            "external_urls": SpotifyMockFactory.external_urls(entity_type=entity_type, entity_id=entity_id),
+            "href": SpotifyMockFactory.href(entity_type=entity_type, entity_id=entity_id),
+            "id": entity_id,
+            "type": entity_type,
+            "uri": SpotifyMockFactory.uri(entity_type=entity_type, entity_id=entity_id),
+            "display": SpotifyMockFactory._random_alphanumeric_string()
+        }
+
+    @staticmethod
     def several_artists(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
         if ids:
             artists = [SpotifyMockFactory.artist(artist_id) for artist_id in ids]
@@ -129,8 +203,15 @@ class SpotifyMockFactory:
         return {"isrc": SpotifyMockFactory._random_alphanumeric_string()}
 
     @staticmethod
-    def href(entity_type: str, entity_id: str) -> str:
-        return f"https://api.spotify.com/v1/{entity_type}/{entity_id}"
+    def href(entity_type: str, entity_id: str, extra_routes: Optional[List[str]] = None) -> str:
+        href = f"https://api.spotify.com/v1/{entity_type}/{entity_id}"
+
+        if extra_routes:
+            formatted_routes = [route.strip("/") for route in extra_routes]
+            joined_route = "/".join(formatted_routes)
+            href += f"/{joined_route}"
+
+        return href
 
     @staticmethod
     def followers(number: Optional[int] = None) -> dict:
