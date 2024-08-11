@@ -1,13 +1,13 @@
 from random import randint
-from typing import List, Tuple
+from typing import List
 
 from _pytest.fixtures import fixture
 
 from spotipyio import SpotifyClient
+from spotipyio.consts.typing_consts import Json
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 from spotipyio.utils import chain_iterable
-from tests.testing_utils import random_invalid_response, random_boolean
 
 
 class TestArtistsInfo:
@@ -26,13 +26,17 @@ class TestArtistsInfo:
         assert actual == []
 
     async def test_run__all_responses_successful__returns_items_list(self,
-                                                                     chunks_responses_map: List[Tuple[List[str], dict]],
+                                                                     artists_ids: List[List[str]],
+                                                                     responses: List[Json],
                                                                      expected: List[dict],
                                                                      test_client: SpotifyTestClient,
                                                                      spotify_client: SpotifyClient):
-        artists_ids = [chunk[0] for chunk in chunks_responses_map]
         provided_ids = chain_iterable(artists_ids)
-        self._given_all_responses_successful(chunks_responses_map, test_client)
+        self._given_all_responses_successful(
+            ids=provided_ids,
+            responses=responses,
+            test_client=test_client
+        )
 
         actual = await spotify_client.artists.info.run(provided_ids)
 
@@ -40,16 +44,20 @@ class TestArtistsInfo:
 
     async def test_run__some_responses_unsuccessful__returns_only_successful(
         self,
-        chunks_responses_map: List[Tuple[List[str], dict]],
+        artists_ids: List[List[str]],
+        responses: List[Json],
         expected: List[dict],
         test_client: SpotifyTestClient,
         spotify_client: SpotifyClient
     ):
-        artists_ids = [chunk[0] for chunk in chunks_responses_map]
         successful_ids = chain_iterable(artists_ids)
         unsuccessful_ids = SpotifyMockFactory.some_spotify_ids(randint(1, 200))
         provided_ids = successful_ids + unsuccessful_ids
-        self._given_all_responses_successful(chunks_responses_map, test_client)
+        self._given_all_responses_successful(
+            ids=successful_ids,
+            responses=responses,
+            test_client=test_client
+        )
         self._given_all_responses_unsuccessful(unsuccessful_ids, test_client)
 
         actual = await spotify_client.artists.info.run(provided_ids)
@@ -57,21 +65,34 @@ class TestArtistsInfo:
         assert actual == expected
 
     @fixture
-    def chunks_responses_map(self) -> List[Tuple[List[str], dict]]:
-        chunks_map = []
-
-        for _ in range(randint(1, 5)):
-            chunk_ids = SpotifyMockFactory.some_spotify_ids(50)
-            chunk_response = SpotifyMockFactory.several_artists(chunk_ids)
-            chunks_map.append((chunk_ids, chunk_response))
-
-        return chunks_map
+    def chunks_number(self) -> int:
+        return randint(1, 5)
 
     @fixture
-    def expected(self, chunks_responses_map: List[Tuple[List[str], dict]]) -> List[dict]:
+    def artists_ids(self, chunks_number: int) -> List[List[str]]:
+        ids = []
+
+        for _ in range(chunks_number):
+            chunk_ids = SpotifyMockFactory.some_spotify_ids(50)
+            ids.append(chunk_ids)
+
+        return ids
+
+    @fixture
+    def responses(self, artists_ids: List[List[str]]) -> List[Json]:
+        json_responses = []
+
+        for chunk in artists_ids:
+            chunk_responses = SpotifyMockFactory.several_artists(chunk)
+            json_responses.append(chunk_responses)
+
+        return json_responses
+
+    @fixture
+    def expected(self, responses: List[Json]) -> List[dict]:
         artists = []
 
-        for ids, response in chunks_responses_map:
+        for response in responses:
             response_artists = response["artists"]
             artists.extend(response_artists)
 
@@ -79,15 +100,8 @@ class TestArtistsInfo:
 
     @staticmethod
     def _given_all_responses_unsuccessful(ids: List[str], test_client: SpotifyTestClient) -> None:
-        request_handlers = test_client.artists.info.expect(ids)
-
-        for handler in request_handlers:
-            status, response_json = random_invalid_response()
-            handler.respond_with_json(response_json=response_json, status=status)
+        test_client.artists.info.expect_failure(ids)
 
     @staticmethod
-    def _given_all_responses_successful(chunks_responses_map: List[Tuple[List[str], dict]],
-                                        test_client: SpotifyTestClient) -> None:
-        for ids, response_json in chunks_responses_map:
-            request_handlers = test_client.artists.info.expect(ids)
-            request_handlers[0].respond_with_json(response_json)
+    def _given_all_responses_successful(ids: List[str], responses: List[Json], test_client: SpotifyTestClient) -> None:
+        test_client.artists.info.expect_success(ids, responses)
