@@ -256,6 +256,30 @@ class SpotifyMockFactory:
         return f"spotify:{entity_type}:{entity_id}"
 
     @staticmethod
+    def user_profile(entity_id: Optional[str] = None) -> dict:
+        entity_type = "user"
+        if entity_id is None:
+            entity_id = SpotifyMockFactory.spotify_id()
+
+        return {
+            "country": SpotifyMockFactory._random_alphanumeric_string(),
+            "display_name": SpotifyMockFactory._random_alphanumeric_string(),
+            "email": SpotifyMockFactory._random_alphanumeric_string(),
+            "explicit_content": {
+                "filter_enabled": SpotifyMockFactory._random_boolean(),
+                "filter_locked": SpotifyMockFactory._random_boolean()
+            },
+            "external_urls": SpotifyMockFactory.external_urls(entity_type=entity_type, entity_id=entity_id),
+            "followers": SpotifyMockFactory.followers(),
+            "href": SpotifyMockFactory.href(entity_type=entity_type, entity_id=entity_id),
+            "id": entity_id,
+            "images": SpotifyMockFactory.images(),
+            "product": choice(["premium", "free"]),
+            "type": entity_type,
+            "uri": SpotifyMockFactory.uri(entity_type=entity_type, entity_id=entity_id)
+        }
+
+    @staticmethod
     def _random_image(size: int) -> dict:
         image_id = SpotifyMockFactory._random_alphanumeric_string(min_length=40, max_length=40)
         return {
