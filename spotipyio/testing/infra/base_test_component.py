@@ -1,9 +1,19 @@
 from abc import ABC, abstractmethod
-from typing import Optional, List
+from http import HTTPStatus
+from random import choice
+from typing import Optional, List, Tuple, Dict
 from urllib.parse import urlencode
 
 from pytest_httpserver import HTTPServer
 from pytest_httpserver.httpserver import HandlerType, RequestHandler
+
+from spotipyio.consts.typing_consts import Json
+
+INVALID_RESPONSES = {
+    HTTPStatus.UNAUTHORIZED: "Unauthorized",
+    HTTPStatus.FORBIDDEN: "Bad OAuth Request",
+    HTTPStatus.TOO_MANY_REQUESTS: "Too Many Requests",
+}
 
 
 class BaseTestComponent(ABC):
@@ -12,6 +22,14 @@ class BaseTestComponent(ABC):
 
     @abstractmethod
     def expect(self, *args, **kwargs) -> List[RequestHandler]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def expect_success(self, *args, **kwargs) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def expect_failure(self, *args, **kwargs) -> None:
         raise NotImplementedError
 
     def _expect_get_request(self, route: str, params: Optional[dict] = None, encode: bool = False) -> RequestHandler:
@@ -32,3 +50,28 @@ class BaseTestComponent(ABC):
             json=payload,
             handler_type=HandlerType.ONESHOT
         )
+
+    def _create_invalid_response(self, status: Optional[int] = None, response_json: Optional[Json] = None) -> Tuple[int, Json]:
+        if status is None:
+            if response_json is None:
+                return self._generate_random_status_and_message()
+            else:
+                status = choice(list(INVALID_RESPONSES.keys()))
+                return status.value, response_json
+
+        if response_json is None:
+            response_json = choice(list(INVALID_RESPONSES.values()))
+
+        return status, response_json
+
+    @staticmethod
+    def _generate_random_status_and_message() -> Tuple[int, Dict[str, dict]]:
+        status, message = choice(list(INVALID_RESPONSES.items()))
+        json_response = {
+            "error": {
+                "status": status.value,
+                "message": message
+            }
+        }
+
+        return status.value, json_response

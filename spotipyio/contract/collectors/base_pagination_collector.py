@@ -12,26 +12,28 @@ class BasePaginationCollector(ISpotifyComponent, ABC):
         super().__init__(base_url=base_url, session=session)
         self._pool_executor = pool_executor
 
-    async def run(self, ids: List[str], paginate: bool = False) -> List[dict]:
-        func = partial(self.run_single, paginate=paginate)
+    async def run(self, ids: List[str], max_pages: int = 1) -> List[dict]:
+        func = partial(self.run_single, max_pages=max_pages)
         return await self._pool_executor.run(iterable=ids, func=func, expected_type=dict)
 
-    async def run_single(self, id_: str, paginate: bool = False) -> dict:
+    async def run_single(self, id_: str, max_pages: int = 1) -> dict:
         url = self._url_format.format(id=id_)
         result = await self._session.get(url=url)
 
-        if paginate:
-            await self._append_additional_pages_items(result)
+        if max_pages > 1:
+            await self._append_additional_pages_items(result, max_pages)
 
         return result
 
-    async def _append_additional_pages_items(self, result: dict) -> None:
+    async def _append_additional_pages_items(self, result: dict, max_pages: int) -> None:
+        current_page = 2
         next_url = self._extract_first_next_url(result)
 
-        while next_url is not None:
+        while next_url is not None and current_page <= max_pages:
             page = await self._session.get(url=next_url, params=self._additional_items_request_params)
             self._extend_existing_items(result, page)
             next_url = self._extract_subsequent_next_url(page)
+            current_page += 1
 
     @property
     @abstractmethod

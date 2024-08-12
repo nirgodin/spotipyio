@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
 from pytest_httpserver import HTTPServer, RequestHandler
 
 from spotipyio.consts.spotify_consts import IDS
+from spotipyio.consts.typing_consts import Json
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.tools import DataChunksGenerator
 
@@ -19,6 +20,41 @@ class BaseChunksTestComponent(BaseTestComponent, ABC):
             ids=ids,
             chunk_size=self._chunk_size
         )
+
+    def expect_failure(self, ids: List[str], status: Optional[int] = None, response_json: Optional[Json] = None) -> None:
+        status, response_json = self._create_invalid_response(status=status, response_json=response_json)
+        handlers = self._expect_chunks(
+            route=self._route,
+            ids=ids,
+            chunk_size=self._chunk_size
+        )
+
+        for handler in handlers:
+            handler.respond_with_json(
+                status=status,
+                response_json=response_json
+            )
+
+    def expect_success(self, ids: List[str], responses_json: Optional[List[Json]] = None) -> None:
+        handlers = self._expect_chunks(
+            route=self._route,
+            ids=ids,
+            chunk_size=self._chunk_size
+        )
+        handlers_number = len(handlers)
+        responses = responses_json or self._random_valid_responses(handlers_number)
+        responses_number = len(responses)
+
+        if responses_number != handlers_number:
+            raise ValueError(
+                f"Number of provided responses ({responses_number}) didn't match number of handlers ({handlers_number})"
+            )
+
+        for handler, response_json in zip(handlers, responses, strict=True):
+            handler.respond_with_json(
+                status=200,
+                response_json=response_json
+            )
 
     def _expect_chunks(self, route: str, ids: List[str], chunk_size: int) -> List[RequestHandler]:
         chunks = self._chunks_generator.generate_data_chunks(lst=ids, chunk_size=chunk_size)
@@ -41,4 +77,8 @@ class BaseChunksTestComponent(BaseTestComponent, ABC):
     @property
     @abstractmethod
     def _route(self) -> str:
+        raise NotImplementedError
+
+    @abstractmethod
+    def _random_valid_responses(self, handlers_number: int) -> List[Json]:
         raise NotImplementedError

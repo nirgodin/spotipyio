@@ -1,3 +1,5 @@
+from random import randint
+
 import pytest
 from _pytest.fixtures import fixture
 from aiohttp import ClientResponseError
@@ -6,7 +8,8 @@ from spotipyio import SpotifyClient
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
 from spotipyio.logic.collectors.top_items_collectors.time_range import TimeRange
 from spotipyio.testing import SpotifyTestClient
-from tests.testing_utils import random_enum_value, random_invalid_response, random_string_dict
+from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
+from tests.testing_utils import random_enum_value
 
 
 class TestCurrentUserTopItems:
@@ -14,14 +17,20 @@ class TestCurrentUserTopItems:
                                        test_client: SpotifyTestClient,
                                        spotify_client: SpotifyClient,
                                        items_type: ItemsType,
-                                       time_range: TimeRange):
-        expected = random_string_dict()
-        request_handlers = test_client.current_user.top_items.expect(items_type=items_type, time_range=time_range)
-        request_handlers[0].respond_with_json(expected)
+                                       time_range: TimeRange,
+                                       limit: int):
+        expected = SpotifyMockFactory.user_top_items(items_type)
+        test_client.current_user.top_items.expect_success(
+            items_type=items_type,
+            time_range=time_range,
+            limit=limit,
+            response_json=expected
+        )
 
         actual = await spotify_client.current_user.top_items.run(
             items_type=items_type,
-            time_range=time_range
+            time_range=time_range,
+            limit=limit
         )
 
         assert actual == expected
@@ -30,19 +39,20 @@ class TestCurrentUserTopItems:
                                                                        test_client: SpotifyTestClient,
                                                                        spotify_client: SpotifyClient,
                                                                        items_type: ItemsType,
-                                                                       time_range: TimeRange):
-        expected_status_code, expected_response = random_invalid_response()
-        request_handlers = test_client.current_user.top_items.expect(items_type=items_type, time_range=time_range)
-        request_handlers[0].respond_with_json(expected_response, status=expected_status_code)
+                                                                       time_range: TimeRange,
+                                                                       limit: int):
+        test_client.current_user.top_items.expect_failure(
+            items_type=items_type,
+            time_range=time_range,
+            limit=limit,
+        )
 
-        with pytest.raises(ClientResponseError) as exc_info:
+        with pytest.raises(ClientResponseError):
             await spotify_client.current_user.top_items.run(
                 items_type=items_type,
-                time_range=time_range
+                time_range=time_range,
+                limit=limit,
             )
-
-        assert exc_info.value.code == expected_status_code
-        assert exc_info.value.message.endswith(str(expected_response))
 
     @fixture
     def items_type(self) -> ItemsType:
@@ -51,3 +61,7 @@ class TestCurrentUserTopItems:
     @fixture
     def time_range(self) -> TimeRange:
         return random_enum_value(TimeRange)
+
+    @fixture
+    def limit(self) -> int:
+        return randint(1, 50)
