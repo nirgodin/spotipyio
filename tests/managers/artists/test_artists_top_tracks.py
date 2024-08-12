@@ -8,7 +8,6 @@ from aiohttp import ClientResponseError
 from spotipyio import SpotifyClient
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
-from tests.testing_utils import random_invalid_response
 
 
 class TestArtistsTopTracks:
@@ -29,26 +28,20 @@ class TestArtistsTopTracks:
                                               spotify_client: SpotifyClient):
         artist_id = SpotifyMockFactory.spotify_id()
         expected = SpotifyMockFactory.several_tracks()
-        request_handlers = test_client.artists.top_tracks.expect([artist_id])
-        request_handlers[0].respond_with_json(expected)
+        test_client.artists.top_tracks.expect_success(id_=artist_id, response_json=expected)
 
         actual = await spotify_client.artists.top_tracks.run_single(artist_id)
 
         assert actual == expected
 
-    async def test_run_single__invalid_response(self,
-                                                test_client: SpotifyTestClient,
-                                                spotify_client: SpotifyClient):
+    async def test_run_single__invalid_response__raises_client_response_error(self,
+                                                                              test_client: SpotifyTestClient,
+                                                                              spotify_client: SpotifyClient):
         artist_id = SpotifyMockFactory.spotify_id()
-        expected_status_code, expected_response = random_invalid_response()
-        request_handlers = test_client.artists.top_tracks.expect([artist_id])
-        request_handlers[0].respond_with_json(response_json=expected_response, status=expected_status_code)
+        test_client.artists.top_tracks.expect_failure(artist_id)
 
-        with pytest.raises(ClientResponseError) as exc_info:
+        with pytest.raises(ClientResponseError):
             await spotify_client.artists.top_tracks.run_single(artist_id)
-
-        assert exc_info.value.code == expected_status_code
-        assert exc_info.value.message.endswith(str(expected_response))
 
     @fixture
     def valid_artists_ids(self, test_client: SpotifyTestClient) -> List[str]:

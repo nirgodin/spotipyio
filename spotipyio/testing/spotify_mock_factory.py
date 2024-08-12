@@ -4,6 +4,8 @@ from random import randint, choice
 from string import ascii_letters, digits
 from typing import Optional, List, Dict
 
+from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
+
 
 class SpotifyMockFactory:
     @staticmethod
@@ -280,6 +282,30 @@ class SpotifyMockFactory:
         }
 
     @staticmethod
+    def user_top_items(items_type: ItemsType) -> dict:
+        total_tracks = randint(1, 10)
+        href = SpotifyMockFactory.href(
+            entity_type="me",
+            entity_id="",
+            extra_routes=["top", items_type.value]
+        )
+
+        if items_type == ItemsType.ARTISTS:
+            items = SpotifyMockFactory._some_artists()
+        else:
+            items = SpotifyMockFactory._some_tracks()
+
+        return {
+            "href": href,
+            "limit": 50,
+            "next": None,
+            "offset": 0,
+            "previous": None,
+            "total": total_tracks,
+            "items": items
+        }
+
+    @staticmethod
     def _random_image(size: int) -> dict:
         image_id = SpotifyMockFactory._random_alphanumeric_string(min_length=40, max_length=40)
         return {
@@ -291,6 +317,10 @@ class SpotifyMockFactory:
     @staticmethod
     def _some_artists() -> List[dict]:
         return [SpotifyMockFactory.artist() for _ in range(randint(1, 10))]
+
+    @staticmethod
+    def _some_tracks() -> List[dict]:
+        return [SpotifyMockFactory.track() for _ in range(randint(1, 10))]
 
     @staticmethod
     def _random_string_array(length: Optional[int] = None) -> List[str]:
