@@ -13,7 +13,7 @@ from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 class TestPlaylistsInfo:
     async def test_run_single__valid_response(self, test_client: SpotifyTestClient, spotify_client: SpotifyClient):
         playlist_id = SpotifyMockFactory.spotify_id()
-        expected = SpotifyMockFactory.playlist(playlist_id)
+        expected = SpotifyMockFactory.playlist(id=playlist_id)
         test_client.playlists.info.expect_success(
             id_=playlist_id,
             response_json=expected
@@ -72,7 +72,7 @@ class TestPlaylistsInfo:
         ids_responses_map = {}
 
         for playlist_id in SpotifyMockFactory.some_spotify_ids():
-            playlist_response = SpotifyMockFactory.playlist(playlist_id)
+            playlist_response = SpotifyMockFactory.playlist(id=playlist_id)
             ids_responses_map[playlist_id] = playlist_response
 
         return ids_responses_map

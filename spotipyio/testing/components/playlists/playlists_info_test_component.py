@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pytest_httpserver import RequestHandler
 
-from spotipyio.consts.spotify_consts import PLAYLISTS, ADDITIONAL_TYPES, TRACK
+from spotipyio.consts.spotify_consts import PLAYLISTS
 from spotipyio.consts.typing_consts import Json
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
@@ -15,7 +15,7 @@ class PlaylistsInfoTestComponent(BaseTestComponent):
     def expect_success(self, id_: str, response_json: Optional[Json] = None, max_pages: int = 1) -> None:
         self._validate_max_pages(max_pages)
         request_handler = self._create_request_handler(id_)
-        response = response_json or SpotifyMockFactory.playlist(id_)
+        response = response_json or SpotifyMockFactory.playlist(id=id_)
 
         request_handler.respond_with_json(response)
 
