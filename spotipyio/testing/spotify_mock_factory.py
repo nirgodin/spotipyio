@@ -256,6 +256,17 @@ class SpotifyMockFactory:
         return f"spotify:{entity_type}:{entity_id}"
 
     @staticmethod
+    def some_uris(entity_type: str, length: Optional[int] = None) -> List[str]:
+        number_of_uris = length or randint(2, 10)
+        uris = []
+
+        for _ in range(number_of_uris):
+            uri = SpotifyMockFactory.uri(entity_type=entity_type, entity_id=SpotifyMockFactory.spotify_id())
+            uris.append(uri)
+
+        return uris
+
+    @staticmethod
     def user_profile(entity_id: Optional[str] = None) -> dict:
         entity_type = "user"
         if entity_id is None:

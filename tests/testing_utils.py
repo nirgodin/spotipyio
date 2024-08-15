@@ -1,7 +1,7 @@
 from enum import Enum
 from random import choice, randint
 from string import ascii_letters, digits
-from typing import Type, List, TypeVar
+from typing import Type, List, TypeVar, Any, Callable, Optional
 
 EnumType = TypeVar("EnumType", bound=Enum)
 
@@ -24,3 +24,8 @@ def random_alphanumeric_string(min_length: int = 1, max_length: int = 20) -> str
     characters = ascii_letters + digits
 
     return ''.join(choice(characters) for _ in range(n_chars))
+
+
+def an_optional(value_generator: Callable[[], Any]) -> Optional[Any]:
+    if random_boolean():
+        return value_generator()
