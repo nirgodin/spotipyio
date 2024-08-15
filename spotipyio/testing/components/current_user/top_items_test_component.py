@@ -12,7 +12,7 @@ from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 
 class TopItemsTestComponent(BaseTestComponent):
     def expect(self, items_type: ItemsType, time_range: TimeRange, limit: int = 50) -> List[RequestHandler]:
-        request_handler = self._create_handler(
+        request_handler = self._create_request_handler(
             items_type=items_type,
             time_range=time_range,
             limit=limit
@@ -24,7 +24,7 @@ class TopItemsTestComponent(BaseTestComponent):
                        time_range: TimeRange,
                        response_json: Optional[Json] = None,
                        limit: int = 50) -> None:
-        handler = self._create_handler(
+        handler = self._create_request_handler(
             items_type=items_type,
             time_range=time_range,
             limit=limit
@@ -41,7 +41,7 @@ class TopItemsTestComponent(BaseTestComponent):
                        limit: int = 50,
                        status: Optional[int] = None,
                        response_json: Optional[int] = None) -> None:
-        handler = self._create_handler(
+        handler = self._create_request_handler(
             items_type=items_type,
             time_range=time_range,
             limit=limit
@@ -53,7 +53,7 @@ class TopItemsTestComponent(BaseTestComponent):
             response_json=response_json
         )
 
-    def _create_handler(self, items_type: ItemsType, time_range: TimeRange, limit: int) -> RequestHandler:
+    def _create_request_handler(self, items_type: ItemsType, time_range: TimeRange, limit: int) -> RequestHandler:
         params = {
             TIME_RANGE: time_range.value,
             LIMIT: limit

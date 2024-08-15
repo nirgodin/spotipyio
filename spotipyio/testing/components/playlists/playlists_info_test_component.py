@@ -39,4 +39,4 @@ class PlaylistsInfoTestComponent(BaseTestComponent):
             raise ValueError("Only max_pages=1 is supported at the moment")
 
     def _create_request_handler(self, id_: str) -> RequestHandler:
-        return self._server.expect_request(f"/{PLAYLISTS}/{id_}")
+        return self._expect_get_request(f"/{PLAYLISTS}/{id_}")

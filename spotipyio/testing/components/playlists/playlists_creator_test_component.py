@@ -40,7 +40,7 @@ class PlaylistsCreatorTestComponent(BaseTestComponent):
         )
 
     def _create_request_handler(self, request: PlaylistCreationRequest) -> RequestHandler:
-        return self._server.expect_request(
-            uri=f"/{USERS}/{request.user_id}/{PLAYLISTS}",
-            json=request.to_payload()
+        return self._expect_post_request(
+            route=f"/{USERS}/{request.user_id}/{PLAYLISTS}",
+            payload=request.to_payload()
         )

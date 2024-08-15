@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from spotipyio.consts.spotify_consts import URIS, TRACKS
+from spotipyio.consts.spotify_consts import URIS, TRACKS, POSITION, SNAPSHOT_ID
 from spotipyio.contract import BasePlaylistsUpdater
 from spotipyio.logic.authentication.spotify_session import SpotifySession
 from spotipyio.tools import DataChunksGenerator
@@ -14,20 +14,32 @@ class PlaylistItemsAdder(BasePlaylistsUpdater):
         super().__init__(base_url=base_url, session=session)
         self._chunks_generator = chunks_generator
 
-    async def run(self, playlist_id: str, uris: List[str], position: Optional[int] = None) -> None:
+    async def run(self, playlist_id: str, uris: List[str], position: Optional[int] = None) -> List[str]:
         chunks = self._chunks_generator.generate_data_chunks(
             lst=uris,
             chunk_size=self._chunk_size
         )
         url = self._build_url(playlist_id)
+        snapshots = []
 
         for chunk in chunks:
-            payload = {
-                URIS: chunk,
-                "position": position
-            }
+            chunk_snapshot = await self._post_single_chunk(
+                url=url,
+                uris=chunk,
+                position=position
+            )
+            snapshots.append(chunk_snapshot)
 
-            await self._session.post(url=url, payload=payload)
+        return snapshots
+
+    async def _post_single_chunk(self, url: str, uris: List[str], position: Optional[int] = None) -> str:
+        payload = {
+            URIS: uris,
+            POSITION: position
+        }
+        response = await self._session.post(url=url, payload=payload)
+
+        return response[SNAPSHOT_ID]
 
     @property
     def _route(self) -> str:
