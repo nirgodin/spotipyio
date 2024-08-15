@@ -1,3 +1,4 @@
+from random import choice
 from typing import List, Optional
 
 from pytest_httpserver import RequestHandler, HTTPServer
@@ -30,13 +31,7 @@ class PlaylistItemsAdderTestComponent(BaseTestComponent):
             uris=uris,
             position=position
         )
-
-        for handler in request_handlers:
-            response = {SNAPSHOT_ID: SpotifyMockFactory.snapshot_id()}
-            handler.respond_with_json(
-                response_json=response,
-                status=201
-            )
+        self._set_handlers_success(request_handlers)
 
     def expect_failure(self,
                        playlist_id: str,
@@ -49,13 +44,15 @@ class PlaylistItemsAdderTestComponent(BaseTestComponent):
             uris=uris,
             position=position
         )
+        failed_handler = choice(request_handlers)
+        successful_handlers = [handler for handler in request_handlers if handler != failed_handler]
+        self._set_handlers_success(successful_handlers)
+        status, response_json = self._create_invalid_response(status=status, response_json=response_json)
 
-        for handler in request_handlers:
-            status, response_json = self._create_invalid_response(status=status, response_json=response_json)
-            handler.respond_with_json(
-                status=status,
-                response_json=response_json
-            )
+        failed_handler.respond_with_json(
+            status=status,
+            response_json=response_json
+        )
 
     def _create_request_handlers(self,
                                  playlist_id: str,
@@ -63,7 +60,7 @@ class PlaylistItemsAdderTestComponent(BaseTestComponent):
                                  position: Optional[int]) -> List[RequestHandler]:
         handlers = []
 
-        for chunk in self._chunks_generator.generate_data_chunks(lst=uris, chunk_size=100):
+        for chunk in self._chunks_generator.generate_data_chunks(lst=uris, chunk_size=self._chunk_size):
             payload = {
                 URIS: chunk,
                 POSITION: position
@@ -74,4 +71,20 @@ class PlaylistItemsAdderTestComponent(BaseTestComponent):
             )
             handlers.append(handler)
 
+            if position is not None:
+                position += self._chunk_size
+
         return handlers
+
+    @staticmethod
+    def _set_handlers_success(request_handlers: List[RequestHandler]) -> None:
+        for handler in request_handlers:
+            response = {SNAPSHOT_ID: SpotifyMockFactory.snapshot_id()}
+            handler.respond_with_json(
+                response_json=response,
+                status=201
+            )
+
+    @property
+    def _chunk_size(self) -> int:
+        return 100

@@ -30,6 +30,9 @@ class PlaylistItemsAdder(BasePlaylistsUpdater):
             )
             snapshots.append(chunk_snapshot)
 
+            if position is not None:
+                position += self._chunk_size
+
         return snapshots
 
     async def _post_single_chunk(self, url: str, uris: List[str], position: Optional[int] = None) -> str:

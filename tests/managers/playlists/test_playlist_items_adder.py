@@ -34,7 +34,7 @@ class TestPlaylistsItemsAdder:
 
         assert len(actual) == expected_snapshots_number
 
-    async def test_run__invalid_request__raises_client_response_error(self,
+    async def test_run__any_chunk_fails__raises_client_response_error(self,
                                                                       test_client: SpotifyTestClient,
                                                                       spotify_client: SpotifyClient,
                                                                       playlist_id: str,
