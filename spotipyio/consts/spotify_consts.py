@@ -1,4 +1,5 @@
 SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1"
+ID = "id"
 IDS = "ids"
 TRACK = "track"
 TRACKS = "tracks"
@@ -20,3 +21,5 @@ SNAPSHOT_ID = "snapshot_id"
 RANGE_LENGTH = "range_length"
 NEXT = "next"
 ADDITIONAL_TYPES = 'additional_types'
+USERS = "users"
+OWNER = "owner"

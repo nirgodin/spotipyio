@@ -12,30 +12,30 @@ from spotipyio.logic.updaters.playlist.playlist_items_replacer import PlaylistIt
 
 class PlaylistsManager(BaseManager):
     def __init__(self,
-                 info: PlaylistsCollector,
-                 create: PlaylistsCreator,
                  add_items: PlaylistItemsAdder,
-                 update_cover: PlaylistCoverUpdater,
-                 replace_items: PlaylistItemsReplacer,
+                 create: PlaylistsCreator,
+                 info: PlaylistsCollector,
+                 remove_items: PlaylistItemsRemover,
                  reorder_items: PlaylistItemsReorder,
-                 remove_items: PlaylistItemsRemover):
+                 replace_items: PlaylistItemsReplacer,
+                 update_cover: PlaylistCoverUpdater):
         super().__init__()
-        self.info = info
-        self.create = create
         self.add_items = add_items
-        self.update_cover = update_cover
+        self.create = create
+        self.info = info
+        self.remove_items = remove_items
         self.replace_items = replace_items
         self.reorder_items = reorder_items
-        self.remove_items = remove_items
+        self.update_cover = update_cover
 
     @staticmethod
     def _components() -> Dict[str, Type[ISpotifyComponent]]:
         return {
-            "info": PlaylistsCollector,
-            "create": PlaylistsCreator,
             "add_items": PlaylistItemsAdder,
-            "update_cover": PlaylistCoverUpdater,
+            "create": PlaylistsCreator,
+            "info": PlaylistsCollector,
+            "remove_items": PlaylistItemsRemover,
             "replace_items": PlaylistItemsReplacer,
             "reorder_items": PlaylistItemsReorder,
-            "remove_items": PlaylistItemsRemover
+            "update_cover": PlaylistCoverUpdater,
         }

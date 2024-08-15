@@ -18,26 +18,24 @@ class SpotifyMockFactory:
         return [SpotifyMockFactory.spotify_id() for _ in range(number_of_ids)]
 
     @staticmethod
-    def playlist(entity_id: Optional[str] = None) -> dict:
-        owner = SpotifyMockFactory.owner()
+    def playlist(user_id: Optional[str] = None, **kwargs) -> dict:
+        owner = kwargs.get("owner", SpotifyMockFactory.owner(user_id))
         entity_type = "playlist"
-
-        if entity_id is None:
-            entity_id = SpotifyMockFactory.spotify_id()
+        entity_id = kwargs.get("id", SpotifyMockFactory.spotify_id())
 
         return {
-            "collaborative": SpotifyMockFactory._random_boolean(),
-            "description": SpotifyMockFactory._random_alphanumeric_string(),
+            "collaborative": kwargs.get("collaborative", SpotifyMockFactory._random_boolean()),
+            "description": kwargs.get("description", SpotifyMockFactory._random_alphanumeric_string()),
             "external_urls": SpotifyMockFactory.external_urls(entity_type=entity_type, entity_id=entity_id),
-            "followers": SpotifyMockFactory.followers(),
+            "followers": kwargs.get("followers", SpotifyMockFactory.followers()),
             "href": SpotifyMockFactory.href(entity_type=entity_type, entity_id=entity_id),
             "id": entity_id,
-            "images": SpotifyMockFactory.images(),
-            "name": SpotifyMockFactory.name(),
+            "images": kwargs.get("images", SpotifyMockFactory.images()),
+            "name": kwargs.get("name", SpotifyMockFactory.name()),
             "owner": owner,
-            "public": SpotifyMockFactory._random_boolean(),
-            "snapshot_id": SpotifyMockFactory.snapshot_id(),
-            "tracks": SpotifyMockFactory.playlist_tracks(entity_id=entity_id, owner=owner),
+            "public": kwargs.get("public", SpotifyMockFactory._random_boolean()),
+            "snapshot_id": kwargs.get("snapshot_id", SpotifyMockFactory.snapshot_id()),
+            "tracks": kwargs.get("tracks", SpotifyMockFactory.playlist_tracks(entity_id=entity_id, owner=owner)),
             "type": entity_type,
             "uri": SpotifyMockFactory.uri(entity_type=entity_type, entity_id=entity_id),
             "primary_color": None
@@ -256,6 +254,17 @@ class SpotifyMockFactory:
     @staticmethod
     def uri(entity_type: str, entity_id: str) -> str:
         return f"spotify:{entity_type}:{entity_id}"
+
+    @staticmethod
+    def some_uris(entity_type: str, length: Optional[int] = None) -> List[str]:
+        number_of_uris = length or randint(2, 10)
+        uris = []
+
+        for _ in range(number_of_uris):
+            uri = SpotifyMockFactory.uri(entity_type=entity_type, entity_id=SpotifyMockFactory.spotify_id())
+            uris.append(uri)
+
+        return uris
 
     @staticmethod
     def user_profile(entity_id: Optional[str] = None) -> dict:
