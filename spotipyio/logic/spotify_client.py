@@ -6,6 +6,7 @@ from spotipyio.logic.managers import *
 
 class SpotifyClient:
     def __init__(self,
+                 session: SpotifySession,
                  artists_manager: ArtistsManager,
                  current_user_manager: CurrentUserManager,
                  playlists_manager: PlaylistsManager,
@@ -13,6 +14,7 @@ class SpotifyClient:
                  albums_manager: AlbumsManager,
                  tracks_manager: TracksManager,
                  search_manager: SearchManager):
+        self.session = session
         self.artists = artists_manager
         self.albums = albums_manager
         self.tracks = tracks_manager
@@ -24,6 +26,7 @@ class SpotifyClient:
     @classmethod
     def create(cls, session: SpotifySession, base_url: str = SPOTIFY_API_BASE_URL) -> SpotifyClient:
         return SpotifyClient(
+            session=session,
             artists_manager=ArtistsManager.create(session=session, base_url=base_url),
             current_user_manager=CurrentUserManager.create(session=session, base_url=base_url),
             playlists_manager=PlaylistsManager.create(session=session, base_url=base_url),
