@@ -11,4 +11,5 @@ __all__ = [
     "extract_first_search_result",
     "get_current_timestamp",
     "safe_nested_get",
+    "to_uri"
 ]
