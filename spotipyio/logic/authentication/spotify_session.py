@@ -4,7 +4,7 @@ from aiohttp import ClientSession, ClientResponse, ContentTypeError, ClientRespo
 
 from spotipyio.consts.api_consts import ACCESS_TOKEN, REFRESH_TOKEN
 from spotipyio.consts.typing_consts import Json
-from spotipyio.contract import ISessionCacheHandler
+from spotipyio.logic.authentication.session_cache_handler_interface import ISessionCacheHandler
 from spotipyio.logic.authentication.access_token_generator import AccessTokenGenerator
 from spotipyio.logic.authentication.spotify_grant_type import SpotifyGrantType
 from spotipyio.utils.web_utils import create_client_session
