@@ -47,7 +47,7 @@ class SpotifySession:
         if self._session is not None:
             await self._session.close()
 
-        raw_session = await self._build_client_session()
+        raw_session = await self._build_client_session(use_cache=False)
         self._session = await raw_session.__aenter__()
 
     async def _handle_response(self, response: ClientResponse) -> Optional[Json]:
@@ -79,15 +79,17 @@ class SpotifySession:
             return
 
     async def __aenter__(self) -> "SpotifySession":
-        await self.refresh()
+        raw_session = await self._build_client_session(use_cache=True)
+        self._session = await raw_session.__aenter__()
+
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         if self._session is not None:
             await self._session.__aexit__(exc_type, exc_val, exc_tb)
 
-    async def _build_client_session(self) -> ClientSession:
-        response = await self._fetch_access_token()
+    async def _build_client_session(self, use_cache: bool) -> ClientSession:
+        response = await self._fetch_access_token(use_cache)
         access_token = response[ACCESS_TOKEN]
         headers = {
             "Accept": "application/json",
@@ -97,8 +99,8 @@ class SpotifySession:
 
         return create_client_session(headers)
 
-    async def _fetch_access_token(self) -> Dict[str, str]:
-        if self._cache_handler is not None:
+    async def _fetch_access_token(self, use_cache: bool) -> Dict[str, str]:
+        if use_cache and self._cache_handler is not None:
             response = await self._retrieve_access_token_from_cache()
 
             if response is not None:
