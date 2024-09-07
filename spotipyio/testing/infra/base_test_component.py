@@ -59,6 +59,15 @@ class BaseTestComponent(ABC):
             handler_type=HandlerType.ONESHOT
         )
 
+    def _expect_put_request(self, route: str, data: Optional[str] = None, payload: Optional[dict] = None) -> RequestHandler:
+        return self._server.expect_request(
+            uri=route,
+            method="PUT",
+            data=data,
+            json=payload,
+            handler_type=HandlerType.ONESHOT
+        )
+
     def _create_invalid_response(self, status: Optional[int] = None, response_json: Optional[Json] = None) -> Tuple[int, Json]:
         if status is None:
             if response_json is None:
