@@ -1,6 +1,5 @@
 import math
 import os.path
-from base64 import b64encode
 from io import BytesIO
 from sys import getsizeof
 from tempfile import TemporaryDirectory
@@ -10,7 +9,7 @@ from PIL.Image import open as open_image, Image
 
 from spotipyio.consts.image_consts import RGB
 from spotipyio.tools.logging import logger
-from spotipyio.utils import get_current_timestamp
+from spotipyio.utils import get_current_timestamp, read_image
 
 
 class ImageCompressor:
@@ -18,7 +17,7 @@ class ImageCompressor:
                  image: bytes,
                  target_size_in_kb: int = 256,
                  quality_interval: int = 5,
-                 file_type: str = "jpeg") -> Optional[str]:
+                 file_type: str = "jpeg") -> Optional[bytes]:
         with TemporaryDirectory() as dir_path:
             logger.info(f"Starting to compress image. Target size: {target_size_in_kb}")
             serialized_image = self._serialize_image(image)
@@ -30,8 +29,7 @@ class ImageCompressor:
                 file_type=file_type
             )
 
-            if compressed_image_path is not None:
-                return self._encode_image_to_base64(compressed_image_path)
+            return self._read_compressed_image(compressed_image_path)
 
     @staticmethod
     def _serialize_image(image: bytes) -> Image:
@@ -63,17 +61,10 @@ class ImageCompressor:
 
         return self._get_compressed_image_path(quality, image_path, image_size)
 
-    def _get_encoded_image_size_in_kb(self, image_path: str) -> float:
-        encoded_image = self._encode_image_to_base64(image_path)
-        return getsizeof(encoded_image) / 1024
-
     @staticmethod
-    def _encode_image_to_base64(image_path: str) -> str:
-        with open(image_path, "rb") as image_file:
-            raw_image = image_file.read()
-            encoded_image = b64encode(raw_image)
-
-        return encoded_image.decode("utf-8")
+    def _get_encoded_image_size_in_kb(image_path: str) -> float:
+        image = read_image(image_path)
+        return getsizeof(image) / 1024
 
     @staticmethod
     def _get_compressed_image_path(quality: int, image_path: str, image_size: float) -> Optional[str]:
@@ -86,3 +77,11 @@ class ImageCompressor:
 
         else:
             logger.warn(f"Could not compress image below requested target size. Returning None instead.")
+
+    @staticmethod
+    def _read_compressed_image(path: Optional[str]) -> Optional[bytes]:
+        if path is None:
+            return
+
+        with open(path, "rb") as f:
+            return f.read()
