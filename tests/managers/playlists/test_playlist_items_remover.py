@@ -55,18 +55,9 @@ class TestPlaylistsItemsRemover:
             )
 
     @fixture
-    def playlist_id(self) -> str:
-        return SpotifyMockFactory.spotify_id()
-
-    @fixture
     def first_snapshot_id(self) -> str:
         return SpotifyMockFactory.snapshot_id()
 
     @fixture
     def expected_snapshots(self, uris: List[str]) -> List[str]:
         return [SpotifyMockFactory.snapshot_id() for _ in range(0, len(uris), 100)]
-
-    @fixture
-    def uris(self) -> List[str]:
-        length = randint(1, 500)
-        return SpotifyMockFactory.some_uris(entity_type="track", length=length)
