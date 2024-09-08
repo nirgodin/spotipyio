@@ -5,7 +5,7 @@ from typing import Optional, List, Tuple, Dict
 from urllib.parse import urlencode
 
 from pytest_httpserver import HTTPServer
-from pytest_httpserver.httpserver import HandlerType, RequestHandler
+from pytest_httpserver.httpserver import HandlerType, RequestHandler, UNDEFINED
 
 from spotipyio.consts.typing_consts import Json
 
@@ -64,7 +64,7 @@ class BaseTestComponent(ABC):
             uri=route,
             method="PUT",
             data=data,
-            json=payload,
+            json=payload or UNDEFINED,
             handler_type=HandlerType.ONESHOT
         )
 

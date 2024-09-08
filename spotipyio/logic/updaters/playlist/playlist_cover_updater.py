@@ -18,7 +18,7 @@ class PlaylistCoverUpdater(BasePlaylistsUpdater):
     async def run(self,
                   playlist_id: str,
                   image: bytes,
-                  compress_if_needed: bool = True) -> Optional[Dict[str, str]]:
+                  compress_if_needed: bool = True) -> None:
         url = self._build_url(playlist_id)
 
         if compress_if_needed:
@@ -26,7 +26,7 @@ class PlaylistCoverUpdater(BasePlaylistsUpdater):
 
         if image is not None:
             data = encode_image_to_base64(image)
-            return await self._session.put(url=url, data=data)
+            await self._session.put(url=url, data=data)
 
     @property
     def _route(self) -> str:
