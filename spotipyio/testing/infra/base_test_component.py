@@ -5,7 +5,7 @@ from typing import Optional, List, Tuple, Dict
 from urllib.parse import urlencode
 
 from pytest_httpserver import HTTPServer
-from pytest_httpserver.httpserver import HandlerType, RequestHandler
+from pytest_httpserver.httpserver import HandlerType, RequestHandler, UNDEFINED
 
 from spotipyio.consts.typing_consts import Json
 
@@ -48,6 +48,23 @@ class BaseTestComponent(ABC):
             uri=route,
             method="POST",
             json=payload,
+            handler_type=HandlerType.ONESHOT
+        )
+
+    def _expect_delete_request(self, route: str, payload: dict) -> RequestHandler:
+        return self._server.expect_request(
+            uri=route,
+            method="DELETE",
+            json=payload,
+            handler_type=HandlerType.ONESHOT
+        )
+
+    def _expect_put_request(self, route: str, data: Optional[str] = None, payload: Optional[dict] = None) -> RequestHandler:
+        return self._server.expect_request(
+            uri=route,
+            method="PUT",
+            data=data,
+            json=payload or UNDEFINED,
             handler_type=HandlerType.ONESHOT
         )
 

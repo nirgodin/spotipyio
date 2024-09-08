@@ -54,14 +54,5 @@ class TestPlaylistsItemsAdder:
             )
 
     @fixture
-    def playlist_id(self) -> str:
-        return SpotifyMockFactory.spotify_id()
-
-    @fixture
-    def uris(self) -> List[str]:
-        length = randint(1, 500)
-        return SpotifyMockFactory.some_uris(entity_type="track", length=length)
-
-    @fixture
     def position(self) -> Optional[int]:
         return an_optional(lambda: randint(1, 20))

@@ -1,23 +1,51 @@
 from typing import List
 
 from spotipyio.consts.spotify_consts import TRACKS, URI, SNAPSHOT_ID
-from spotipyio.consts.typing_consts import Json
 from spotipyio.contract import BasePlaylistsUpdater
+from spotipyio.logic.authentication.spotify_session import SpotifySession
+from spotipyio.tools import DataChunksGenerator
 
 
 class PlaylistItemsRemover(BasePlaylistsUpdater):
-    async def run(self, playlist_id: str, uris: List[str], snapshot_id: str) -> Json:
+    def __init__(self,
+                 base_url: str,
+                 session: SpotifySession,
+                 chunks_generator: DataChunksGenerator = DataChunksGenerator()):
+        super().__init__(base_url=base_url, session=session)
+        self._chunks_generator = chunks_generator
+
+    async def run(self, playlist_id: str, uris: List[str], snapshot_id: str) -> str:
+        chunks = self._chunks_generator.generate_data_chunks(
+            lst=uris,
+            chunk_size=self._chunk_size
+        )
         url = self._build_url(playlist_id)
+
+        for chunk in chunks:
+            snapshot_id = await self._remove_single_chunk(
+                url=url,
+                uris=chunk,
+                snapshot_id=snapshot_id
+            )
+
+        return snapshot_id
+
+    async def _remove_single_chunk(self, url: str, snapshot_id: str, uris: List[str]) -> str:
         payload = {
             TRACKS: [{URI: uri} for uri in uris],
             SNAPSHOT_ID: snapshot_id
         }
-
-        return await self._session.delete(
+        response = await self._session.delete(
             url=url,
             payload=payload
         )
 
+        return response[SNAPSHOT_ID]
+
     @property
     def _route(self) -> str:
         return TRACKS
+
+    @property
+    def _chunk_size(self) -> int:
+        return 100

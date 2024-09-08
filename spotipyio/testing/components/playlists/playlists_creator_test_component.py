@@ -13,7 +13,7 @@ class PlaylistsCreatorTestComponent(BaseTestComponent):
     def expect(self, request: PlaylistCreationRequest) -> List[RequestHandler]:
         return [self._create_request_handler(request)]
 
-    def expect_success(self, request: PlaylistCreationRequest, response_json: Optional[Json] = None, max_pages: int = 1) -> None:
+    def expect_success(self, request: PlaylistCreationRequest, response_json: Optional[Json] = None) -> None:
         request_handler = self._create_request_handler(request)
         response = response_json or SpotifyMockFactory.playlist(
             user_id=request.user_id,

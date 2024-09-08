@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 from random import choice, randint
 from string import ascii_letters, digits
@@ -29,3 +30,8 @@ def random_alphanumeric_string(min_length: int = 1, max_length: int = 20) -> str
 def an_optional(value_generator: Callable[[], Any]) -> Optional[Any]:
     if random_boolean():
         return value_generator()
+
+
+def random_bytes(size: Optional[int] = None) -> bytes:
+    n_bytes = size or randint(1, 100)
+    return os.urandom(n_bytes)

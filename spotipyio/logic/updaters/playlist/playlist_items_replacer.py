@@ -1,6 +1,6 @@
 from typing import List
 
-from spotipyio.consts.spotify_consts import TRACKS
+from spotipyio.consts.spotify_consts import TRACKS, URIS
 from spotipyio.consts.typing_consts import Json
 from spotipyio.contract import BasePlaylistsUpdater
 
@@ -10,7 +10,7 @@ class PlaylistItemsReplacer(BasePlaylistsUpdater):
         url = self._build_url(playlist_id)
         return await self._session.put(
             url=url,
-            payload={"uris": uris}
+            payload={URIS: uris}
         )
 
     @property
