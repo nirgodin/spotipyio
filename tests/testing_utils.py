@@ -2,7 +2,7 @@ import os
 from enum import Enum
 from random import choice, randint
 from string import ascii_letters, digits
-from typing import Type, List, TypeVar, Any, Callable, Optional
+from typing import Type, List, TypeVar, Any, Callable, Optional, Dict
 
 EnumType = TypeVar("EnumType", bound=Enum)
 
@@ -35,3 +35,8 @@ def an_optional(value_generator: Callable[[], Any]) -> Optional[Any]:
 def random_bytes(size: Optional[int] = None) -> bytes:
     n_bytes = size or randint(1, 100)
     return os.urandom(n_bytes)
+
+
+def random_string_dict(length: Optional[int] = None) -> Dict[str, str]:
+    n_elements = length or randint(0, 10)
+    return {random_alphanumeric_string(): random_alphanumeric_string() for _ in range(n_elements)}
