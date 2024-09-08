@@ -13,7 +13,9 @@ class RedisSessionCacheHandler(ISessionCacheHandler):
 
     def get(self) -> Optional[Dict[str, str]]:
         encoded_response = self._redis.get(self._key)
-        return json.loads(encoded_response)
+
+        if encoded_response is not None:
+            return json.loads(encoded_response)
 
     def set(self, response: Dict[str, str]) -> None:
         encoded_response = json.dumps(response)
