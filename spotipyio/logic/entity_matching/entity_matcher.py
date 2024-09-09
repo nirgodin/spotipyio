@@ -1,7 +1,7 @@
 from dataclasses import fields, Field
 from typing import Tuple, List, Optional, Dict, Any
 
-from spotipyio.logic.entity_extractors import TrackEntityExtractor, ArtistEntityExtractor
+from spotipyio.logic.entity_extractors import TrackEntityExtractor, PrimaryArtistEntityExtractor
 from spotipyio.contract import IEntityExtractor
 from spotipyio.logic.entity_matching.matching_entity import MatchingEntity
 from spotipyio.utils import compute_similarity_score
@@ -53,7 +53,7 @@ class EntityMatcher:
     def _get_default_extractors() -> Dict[IEntityExtractor, float]:
         return {
             TrackEntityExtractor(): 0.65,
-            ArtistEntityExtractor(): 0.35
+            PrimaryArtistEntityExtractor(): 0.35
         }
 
     @property
