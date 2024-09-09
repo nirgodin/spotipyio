@@ -92,7 +92,7 @@ class SpotifyMockFactory:
     @staticmethod
     def several_artists(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
         if ids:
-            artists = [SpotifyMockFactory.artist(artist_id) for artist_id in ids]
+            artists = [SpotifyMockFactory.artist(id=artist_id) for artist_id in ids]
         else:
             artists = SpotifyMockFactory._some_artists()
 
@@ -108,20 +108,19 @@ class SpotifyMockFactory:
         return {"tracks": tracks}
 
     @staticmethod
-    def artist(entity_id: Optional[str] = None) -> dict:
+    def artist(**kwargs) -> dict:
         entity_type = "artist"
-        if entity_id is None:
-            entity_id = SpotifyMockFactory.spotify_id()
+        entity_id = kwargs.get("id") or SpotifyMockFactory.spotify_id()
 
         return {
-            "external_urls": SpotifyMockFactory.external_urls(entity_type=entity_type, entity_id=entity_id),
-            "followers": SpotifyMockFactory.followers(),
-            "genres": SpotifyMockFactory.genres(),
-            "href": SpotifyMockFactory.href(entity_type=entity_type, entity_id=entity_id),
+            "external_urls": kwargs.get("external_urls") or SpotifyMockFactory.external_urls(entity_type, entity_id),
+            "followers": kwargs.get("followers") or SpotifyMockFactory.followers(),
+            "genres": kwargs.get("genres") or SpotifyMockFactory.genres(),
+            "href": SpotifyMockFactory.href(entity_type, entity_id),
             "id": entity_id,
-            "images": SpotifyMockFactory.images(),
-            "name": SpotifyMockFactory.name(),
-            "popularity": SpotifyMockFactory.popularity(),
+            "images": kwargs.get("images" or SpotifyMockFactory.images()),
+            "name": kwargs.get("name", SpotifyMockFactory.name()),
+            "popularity": kwargs.get("popularity") or SpotifyMockFactory.popularity(),
             "type": entity_type,
             "uri": SpotifyMockFactory.uri(entity_type=entity_type, entity_id=entity_id)
         }
