@@ -12,6 +12,7 @@ class EntityMatcher:
                  extractors: Optional[Dict[IEntityExtractor, float]] = None,
                  threshold: float = 0.7,
                  min_present_fields: int = 2):
+        self._validate_extractors_scores(extractors)
         self._extractors = extractors or self._get_default_extractors()
         self._threshold = threshold
         self._min_present_fields = min_present_fields
@@ -56,14 +57,6 @@ class EntityMatcher:
             PrimaryArtistEntityExtractor(): 0.35
         }
 
-    @property
-    def _names_to_extractors(self) -> Dict[str, IEntityExtractor]:
-        return {extractor.name: extractor for extractor in self._extractors.keys()}
-
-    @property
-    def _names_to_scores(self) -> Dict[str, float]:
-        return {extractor.name: score for extractor, score in self._extractors.items()}
-
     def _is_matching(self, scores: List[float]) -> Tuple[bool, float]:
         if len(scores) < self._min_present_fields:
             return False, -1
@@ -72,3 +65,22 @@ class EntityMatcher:
         is_matching = weighted_score >= self._threshold
 
         return is_matching, weighted_score
+
+    @staticmethod
+    def _validate_extractors_scores(extractors: Optional[Dict[IEntityExtractor, float]]) -> None:
+        if extractors is not None:
+            extractors_total_score = sum(extractors.values())
+
+            if extractors_total_score != 1:
+                raise ValueError(
+                    f"The sum of scores of given extractors is {extractors_total_score}. entity extractors' scores "
+                    f"must sum up to exactly 1"
+                )
+
+    @property
+    def _names_to_extractors(self) -> Dict[str, IEntityExtractor]:
+        return {extractor.name: extractor for extractor in self._extractors.keys()}
+
+    @property
+    def _names_to_scores(self) -> Dict[str, float]:
+        return {extractor.name: score for extractor, score in self._extractors.items()}
