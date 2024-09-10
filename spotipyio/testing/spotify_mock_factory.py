@@ -4,6 +4,8 @@ from random import randint, choice
 from string import ascii_letters, digits
 from typing import Optional, List, Dict
 
+from docker.utils import kwargs_from_env
+
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
 
 
@@ -92,7 +94,7 @@ class SpotifyMockFactory:
     @staticmethod
     def several_artists(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
         if ids:
-            artists = [SpotifyMockFactory.artist(artist_id) for artist_id in ids]
+            artists = [SpotifyMockFactory.artist(id=artist_id) for artist_id in ids]
         else:
             artists = SpotifyMockFactory._some_artists()
 
@@ -101,56 +103,53 @@ class SpotifyMockFactory:
     @staticmethod
     def several_tracks(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
         if ids:
-            tracks = [SpotifyMockFactory.track(track_id) for track_id in ids]
+            tracks = [SpotifyMockFactory.track(id=track_id) for track_id in ids]
         else:
             tracks = [SpotifyMockFactory.track() for _ in range(randint(1, 10))]
 
         return {"tracks": tracks}
 
     @staticmethod
-    def artist(entity_id: Optional[str] = None) -> dict:
+    def artist(**kwargs) -> dict:
         entity_type = "artist"
-        if entity_id is None:
-            entity_id = SpotifyMockFactory.spotify_id()
+        entity_id = kwargs.get("id") or SpotifyMockFactory.spotify_id()
 
         return {
-            "external_urls": SpotifyMockFactory.external_urls(entity_type=entity_type, entity_id=entity_id),
-            "followers": SpotifyMockFactory.followers(),
-            "genres": SpotifyMockFactory.genres(),
-            "href": SpotifyMockFactory.href(entity_type=entity_type, entity_id=entity_id),
+            "external_urls": kwargs.get("external_urls") or SpotifyMockFactory.external_urls(entity_type, entity_id),
+            "followers": kwargs.get("followers", SpotifyMockFactory.followers()),
+            "genres": kwargs.get("genres", SpotifyMockFactory.genres()),
+            "href": SpotifyMockFactory.href(entity_type, entity_id),
             "id": entity_id,
-            "images": SpotifyMockFactory.images(),
-            "name": SpotifyMockFactory.name(),
-            "popularity": SpotifyMockFactory.popularity(),
+            "images": kwargs.get("images", SpotifyMockFactory.images()),
+            "name": kwargs.get("name", SpotifyMockFactory.name()),
+            "popularity": kwargs.get("popularity", SpotifyMockFactory.popularity()),
             "type": entity_type,
             "uri": SpotifyMockFactory.uri(entity_type=entity_type, entity_id=entity_id)
         }
 
     @staticmethod
-    def track(entity_id: Optional[str] = None) -> dict:
-        if entity_id is None:
-            entity_id = SpotifyMockFactory.spotify_id()
-
+    def track(**kwargs) -> dict:
+        entity_id = kwargs.get("id", SpotifyMockFactory.spotify_id())
         entity_type = "track"
-        artists = SpotifyMockFactory._some_artists()
+        artists = kwargs.get("artists", SpotifyMockFactory._some_artists())
 
         return {
-            "album": SpotifyMockFactory.album(artists=artists),
+            "album": kwargs.get("album", SpotifyMockFactory.album(artists=artists)),
             "artists": artists,
-            "available_markets": SpotifyMockFactory.available_markets(),
-            "disc_number": SpotifyMockFactory.disc_number(),
-            "duration_ms": SpotifyMockFactory.duration_ms(),
-            "explicit": SpotifyMockFactory._random_boolean(),
-            "external_ids": SpotifyMockFactory.external_ids(),
-            "external_urls": SpotifyMockFactory.external_urls(entity_type=entity_type, entity_id=entity_id),
+            "available_markets": kwargs.get("available_markets", SpotifyMockFactory.available_markets()),
+            "disc_number": kwargs.get("disc_number", SpotifyMockFactory.disc_number()),
+            "duration_ms": kwargs.get("duration_ms", SpotifyMockFactory.duration_ms()),
+            "explicit": kwargs.get("explicit", SpotifyMockFactory._random_boolean()),
+            "external_ids": kwargs.get("external_ids", SpotifyMockFactory.external_ids()),
+            "external_urls": kwargs.get("external_urls") or SpotifyMockFactory.external_urls(entity_type, entity_id),
             "href": SpotifyMockFactory.href(entity_type=entity_type, entity_id=entity_id),
             "id": entity_id,
-            "is_local": SpotifyMockFactory._random_boolean(),
-            "is_playable": SpotifyMockFactory._random_boolean(),
-            "name": SpotifyMockFactory.name(),
-            "popularity": SpotifyMockFactory.popularity(),
-            "preview_url": SpotifyMockFactory.preview_url(),
-            "track_number": SpotifyMockFactory.track_number(),
+            "is_local": kwargs.get("is_local", SpotifyMockFactory._random_boolean()),
+            "is_playable": kwargs.get("is_playable", SpotifyMockFactory._random_boolean()),
+            "name": kwargs.get("name", SpotifyMockFactory.name()),
+            "popularity": kwargs.get("popularity", SpotifyMockFactory.popularity()),
+            "preview_url": kwargs.get("preview_url", SpotifyMockFactory.preview_url()),
+            "track_number": kwargs.get("track_number", SpotifyMockFactory.track_number()),
             "type": entity_type,
             "uri": SpotifyMockFactory.uri(entity_type=entity_type, entity_id=entity_id)
         }
