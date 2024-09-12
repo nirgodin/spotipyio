@@ -23,3 +23,6 @@ NEXT = "next"
 ADDITIONAL_TYPES = 'additional_types'
 USERS = "users"
 OWNER = "owner"
+HREF = "href"
+OFFSET = "offset"
+TOTAL = "total"

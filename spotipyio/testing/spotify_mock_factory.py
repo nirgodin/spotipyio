@@ -6,6 +6,7 @@ from typing import Optional, List, Dict
 
 from docker.utils import kwargs_from_env
 
+from spotipyio.consts.spotify_consts import PLAYLISTS, USERS, LIMIT, HREF, NEXT, OFFSET, TOTAL, ITEMS
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
 
 
@@ -18,6 +19,23 @@ class SpotifyMockFactory:
     def some_spotify_ids(length: Optional[int] = None) -> List[str]:
         number_of_ids = length or randint(2, 10)
         return [SpotifyMockFactory.spotify_id() for _ in range(number_of_ids)]
+
+    @staticmethod
+    def paged_playlists(**kwargs) -> dict:
+        entity_id = kwargs.get("id", SpotifyMockFactory.spotify_id())
+        href = kwargs.get("href") or SpotifyMockFactory.href(
+            entity_type=USERS,
+            entity_id=entity_id,
+            extra_routes=[PLAYLISTS]  # TODO: Improve
+        )
+        return {
+            HREF: href,
+            LIMIT: kwargs.get(LIMIT, randint(1, 50)),
+            NEXT: "",  # TODO: Improve
+            OFFSET: kwargs.get(OFFSET, randint(1, 200)),
+            TOTAL: kwargs.get(TOTAL, randint(1, 1000)),
+            ITEMS: kwargs.get(ITEMS, SpotifyMockFactory._some_playlists())
+        }
 
     @staticmethod
     def playlist(user_id: Optional[str] = None, **kwargs) -> dict:
@@ -329,6 +347,10 @@ class SpotifyMockFactory:
     @staticmethod
     def _some_tracks() -> List[dict]:
         return [SpotifyMockFactory.track() for _ in range(randint(1, 10))]
+
+    @staticmethod
+    def _some_playlists() -> List[dict]:
+        return [SpotifyMockFactory.playlist() for _ in range(randint(1, 10))]
 
     @staticmethod
     def _random_string_array(length: Optional[int] = None) -> List[str]:
