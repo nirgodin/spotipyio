@@ -1,13 +1,11 @@
 from typing import List, Optional
 
 from pytest_httpserver import RequestHandler
-from werkzeug import Response
 
-from spotipyio.consts.spotify_consts import PLAYLISTS, IMAGES, USERS
+from spotipyio.consts.spotify_consts import PLAYLISTS, USERS
 from spotipyio.consts.typing_consts import Json
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
-from spotipyio.utils import encode_image_to_base64
 
 
 class UserPlaylistsTestComponent(BaseTestComponent):
