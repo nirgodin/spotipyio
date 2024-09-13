@@ -40,3 +40,7 @@ def random_bytes(size: Optional[int] = None) -> bytes:
 def random_string_dict(length: Optional[int] = None) -> Dict[str, str]:
     n_elements = length or randint(0, 10)
     return {random_alphanumeric_string(): random_alphanumeric_string() for _ in range(n_elements)}
+
+
+def assert_sorted_equal(actual: List[dict], expected: List[dict], sort_by: str) -> None:
+    assert sorted(actual, key=lambda x: x[sort_by]) == sorted(expected, key=lambda x: x[sort_by])

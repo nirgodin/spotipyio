@@ -9,6 +9,7 @@ from spotipyio import SpotifyClient
 from spotipyio.consts.spotify_consts import HREF
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
+from tests.testing_utils import assert_sorted_equal
 
 
 class TestUserPlaylistsCollector:
@@ -41,7 +42,7 @@ class TestUserPlaylistsCollector:
 
         actual = await spotify_client.users.playlists.run(ids)
 
-        assert sorted(actual, key=lambda x: x[HREF]) == sorted(expected, key=lambda x: x[HREF])
+        assert_sorted_equal(actual, expected, sort_by=HREF)
 
     async def test_run__all_invalid_responses__returns_empty_list(self,
                                                                   invalid_user_ids: List[str],
@@ -64,7 +65,7 @@ class TestUserPlaylistsCollector:
 
         actual = await spotify_client.users.playlists.run(ids)
 
-        assert sorted(actual, key=lambda x: x[HREF]) == sorted(expected, key=lambda x: x[HREF])
+        assert_sorted_equal(actual, expected, sort_by=HREF)
 
     @fixture
     def invalid_user_ids(self) -> List[str]:
