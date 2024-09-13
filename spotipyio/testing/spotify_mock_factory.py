@@ -4,9 +4,8 @@ from random import randint, choice
 from string import ascii_letters, digits
 from typing import Optional, List, Dict
 
-from docker.utils import kwargs_from_env
-
-from spotipyio.consts.spotify_consts import PLAYLISTS, USERS, LIMIT, HREF, NEXT, OFFSET, TOTAL, ITEMS
+from spotipyio.consts.spotify_consts import PLAYLISTS, USERS, LIMIT, HREF, NEXT, OFFSET, TOTAL, ITEMS, ARTISTS, TRACKS, \
+    ALBUMS
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
 
 
@@ -116,7 +115,7 @@ class SpotifyMockFactory:
         else:
             artists = SpotifyMockFactory._some_artists()
 
-        return {"artists": artists}
+        return {ARTISTS: artists}
 
     @staticmethod
     def several_tracks(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
@@ -125,7 +124,16 @@ class SpotifyMockFactory:
         else:
             tracks = [SpotifyMockFactory.track() for _ in range(randint(1, 10))]
 
-        return {"tracks": tracks}
+        return {TRACKS: tracks}
+
+    @staticmethod
+    def several_albums(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
+        if ids:
+            albums = [SpotifyMockFactory.album(id=album_id) for album_id in ids]
+        else:
+            albums = [SpotifyMockFactory.album() for _ in range(randint(1, 10))]
+
+        return {ALBUMS: albums}
 
     @staticmethod
     def artist(**kwargs) -> dict:
@@ -173,26 +181,25 @@ class SpotifyMockFactory:
         }
 
     @staticmethod
-    def album(entity_id: Optional[str] = None, artists: Optional[List[dict]] = None) -> dict:
+    def album(**kwargs) -> dict:
         entity_type = "album"
-        if entity_id is None:
-            entity_id = SpotifyMockFactory.spotify_id()
+        entity_id = kwargs.get("id", SpotifyMockFactory.spotify_id())
 
         return {
-            "artists": artists or SpotifyMockFactory._some_artists(),
-            "album_type": SpotifyMockFactory.album_type(),
-            "total_tracks": SpotifyMockFactory.track_number(),
+            "artists": kwargs.get("artists", SpotifyMockFactory._some_artists()),
+            "album_type": kwargs.get("album_type", SpotifyMockFactory.album_type()),
+            "total_tracks": kwargs.get("total_tracks", SpotifyMockFactory.track_number()),
             "external_urls": SpotifyMockFactory.external_urls(entity_type=entity_type, entity_id=entity_id),
-            "available_markets": SpotifyMockFactory.available_markets(),
+            "available_markets": kwargs.get("available_markets", SpotifyMockFactory.available_markets()),
             "href": SpotifyMockFactory.href(entity_type=entity_type, entity_id=entity_id),
             "id": entity_id,
-            "images": SpotifyMockFactory.images(),
-            "name": SpotifyMockFactory.name(),
-            "release_date": SpotifyMockFactory.release_date(),
-            "release_date_precision": "day",
+            "images": kwargs.get("images", SpotifyMockFactory.images()),
+            "name": kwargs.get("name", SpotifyMockFactory.name()),
+            "release_date": kwargs.get("release_date", SpotifyMockFactory.release_date()),
+            "release_date_precision": kwargs.get("release_date_precision", "day"),
             "type": entity_type,
             "uri": SpotifyMockFactory.uri(entity_type=entity_type, entity_id=entity_id),
-            "is_playable": SpotifyMockFactory._random_boolean()
+            "is_playable": kwargs.get("is_playable", SpotifyMockFactory._random_boolean())
         }
 
     @staticmethod

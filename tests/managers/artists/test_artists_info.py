@@ -4,6 +4,7 @@ from typing import List
 from _pytest.fixtures import fixture
 
 from spotipyio import SpotifyClient
+from spotipyio.consts.spotify_consts import ARTISTS
 from spotipyio.consts.typing_consts import Json
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
@@ -93,7 +94,7 @@ class TestArtistsInfo:
         artists = []
 
         for response in responses:
-            response_artists = response["artists"]
+            response_artists = response[ARTISTS]
             artists.extend(response_artists)
 
         return artists
