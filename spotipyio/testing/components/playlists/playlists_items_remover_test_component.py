@@ -5,6 +5,7 @@ from pytest_httpserver import RequestHandler, HTTPServer
 
 from spotipyio.consts.spotify_consts import PLAYLISTS, TRACKS, SNAPSHOT_ID, URI
 from spotipyio.consts.typing_consts import Json
+from spotipyio.models import ChunkSize
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 from spotipyio.tools import DataChunksGenerator
@@ -142,10 +143,6 @@ class PlaylistsItemsRemoverTestComponent(BaseTestComponent):
                     snapshots_ids=snapshots_ids[i: i + 2]
                 )
 
-    @property
-    def _chunk_size(self) -> int:
-        return 100
-
     def _to_chunks(self, uris: List[str]) -> List[List[str]]:
-        chunks = self._chunks_generator.generate_data_chunks(lst=uris, chunk_size=self._chunk_size)
+        chunks = self._chunks_generator.generate_data_chunks(lst=uris, chunk_size=ChunkSize.ITEMS_REMOVAL.value)
         return list(chunks)

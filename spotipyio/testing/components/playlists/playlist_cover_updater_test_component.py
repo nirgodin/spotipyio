@@ -15,7 +15,7 @@ class PlaylistsCoverUpdaterTestComponent(BaseTestComponent):
 
     def expect_success(self, playlist_id: str, image: bytes) -> None:
         request_handler = self._create_request_handler(playlist_id, image)
-        response = Response(status=202)  # TODO: Verify response text / mimetype
+        response = Response(status=202)
 
         request_handler.respond_with_response(response)
 

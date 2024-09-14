@@ -6,8 +6,10 @@ from _pytest.fixtures import fixture
 from aiohttp import ClientResponseError
 
 from spotipyio import SpotifyClient
+from spotipyio.consts.spotify_consts import ID
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
+from tests.testing_utils import assert_sorted_equal
 
 
 class TestPlaylistsInfo:
@@ -65,7 +67,7 @@ class TestPlaylistsInfo:
 
         actual = await spotify_client.playlists.info.run(ids)
 
-        assert sorted(actual, key=lambda x: x["id"]) == sorted(expected, key=lambda x: x["id"])
+        assert_sorted_equal(actual, expected, sort_by=ID)
 
     @fixture
     def valid_ids_to_responses_map(self) -> Dict[str, dict]:
