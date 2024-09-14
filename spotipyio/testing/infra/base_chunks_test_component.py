@@ -42,7 +42,7 @@ class BaseChunksTestComponent(BaseTestComponent, ABC):
             chunk_size=self._chunk_size
         )
         handlers_number = len(handlers)
-        responses = responses_json or self._random_valid_responses(handlers_number)
+        responses = responses_json or [self._random_valid_response() for _ in range(handlers_number)]
         responses_number = len(responses)
 
         if responses_number != handlers_number:
@@ -79,6 +79,7 @@ class BaseChunksTestComponent(BaseTestComponent, ABC):
     def _route(self) -> str:
         raise NotImplementedError
 
+    @staticmethod
     @abstractmethod
-    def _random_valid_responses(self, handlers_number: int) -> List[Json]:
+    def _random_valid_response() -> Json:
         raise NotImplementedError

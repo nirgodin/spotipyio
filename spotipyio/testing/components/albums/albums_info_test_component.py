@@ -15,5 +15,6 @@ class AlbumsInfoTestComponent(BaseChunksTestComponent):
     def _chunk_size(self) -> int:
         return 20
 
-    def _random_valid_responses(self, handlers_number: int) -> List[Json]:
-        return [SpotifyMockFactory.several_albums() for _ in range(handlers_number)]
+    @staticmethod
+    def _random_valid_response() -> Json:
+        return SpotifyMockFactory.several_albums()
