@@ -3,6 +3,7 @@ from typing import List
 from spotipyio.consts.spotify_consts import TRACKS, URI, SNAPSHOT_ID
 from spotipyio.contract import BasePlaylistsUpdater
 from spotipyio.logic.authentication.spotify_session import SpotifySession
+from spotipyio.models import ChunkSize
 from spotipyio.tools import DataChunksGenerator
 
 
@@ -17,7 +18,7 @@ class PlaylistItemsRemover(BasePlaylistsUpdater):
     async def run(self, playlist_id: str, uris: List[str], snapshot_id: str) -> str:
         chunks = self._chunks_generator.generate_data_chunks(
             lst=uris,
-            chunk_size=self._chunk_size
+            chunk_size=ChunkSize.ITEMS_REMOVAL.value
         )
         url = self._build_url(playlist_id)
 
@@ -45,7 +46,3 @@ class PlaylistItemsRemover(BasePlaylistsUpdater):
     @property
     def _route(self) -> str:
         return TRACKS
-
-    @property
-    def _chunk_size(self) -> int:
-        return 100

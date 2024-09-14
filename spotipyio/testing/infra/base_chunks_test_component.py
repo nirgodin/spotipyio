@@ -5,6 +5,7 @@ from pytest_httpserver import HTTPServer, RequestHandler
 
 from spotipyio.consts.spotify_consts import IDS
 from spotipyio.consts.typing_consts import Json
+from spotipyio.models import ChunkSize
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.tools import DataChunksGenerator
 
@@ -18,7 +19,7 @@ class BaseChunksTestComponent(BaseTestComponent, ABC):
         return self._expect_chunks(
             route=self._route,
             ids=ids,
-            chunk_size=self._chunk_size
+            chunk_size=self._chunk_size.value
         )
 
     def expect_failure(self, ids: List[str], status: Optional[int] = None, response_json: Optional[Json] = None) -> None:
@@ -26,7 +27,7 @@ class BaseChunksTestComponent(BaseTestComponent, ABC):
         handlers = self._expect_chunks(
             route=self._route,
             ids=ids,
-            chunk_size=self._chunk_size
+            chunk_size=self._chunk_size.value
         )
 
         for handler in handlers:
@@ -39,7 +40,7 @@ class BaseChunksTestComponent(BaseTestComponent, ABC):
         handlers = self._expect_chunks(
             route=self._route,
             ids=ids,
-            chunk_size=self._chunk_size
+            chunk_size=self._chunk_size.value
         )
         handlers_number = len(handlers)
         responses = responses_json or [self._random_valid_response() for _ in range(handlers_number)]
@@ -71,7 +72,7 @@ class BaseChunksTestComponent(BaseTestComponent, ABC):
 
     @property
     @abstractmethod
-    def _chunk_size(self) -> int:
+    def _chunk_size(self) -> ChunkSize:
         raise NotImplementedError
 
     @property

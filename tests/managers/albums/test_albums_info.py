@@ -3,6 +3,7 @@ from typing import List, Dict
 from spotipyio import SpotifyClient
 from spotipyio.consts.spotify_consts import ALBUMS
 from spotipyio.consts.typing_consts import Json
+from spotipyio.models import ChunkSize
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 from tests.managers.base_chunks_collector_test import BaseChunksCollectorTest
@@ -10,8 +11,8 @@ from tests.managers.base_chunks_collector_test import BaseChunksCollectorTest
 
 class TestAlbumsInfo(BaseChunksCollectorTest):
     @property
-    def _chunk_size(self) -> int:
-        return 20
+    def _chunk_size(self) -> ChunkSize:
+        return ChunkSize.ALBUMS
 
     @property
     def _json_response_key(self) -> str:

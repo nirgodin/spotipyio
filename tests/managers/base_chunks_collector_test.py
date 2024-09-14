@@ -6,6 +6,7 @@ from _pytest.fixtures import fixture
 
 from spotipyio import SpotifyClient
 from spotipyio.consts.typing_consts import Json
+from spotipyio.models import ChunkSize
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 from spotipyio.utils import chain_iterable
@@ -74,7 +75,7 @@ class BaseChunksCollectorTest(ABC):
         ids = []
 
         for _ in range(chunks_number):
-            chunk_ids = SpotifyMockFactory.some_spotify_ids(self._chunk_size)
+            chunk_ids = SpotifyMockFactory.some_spotify_ids(self._chunk_size.value)
             ids.append(chunk_ids)
 
         return ids
@@ -101,7 +102,7 @@ class BaseChunksCollectorTest(ABC):
 
     @property
     @abstractmethod
-    def _chunk_size(self) -> int:
+    def _chunk_size(self) -> ChunkSize:
         raise NotImplementedError
 
     @property
