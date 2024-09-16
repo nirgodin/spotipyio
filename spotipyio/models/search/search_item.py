@@ -2,8 +2,8 @@ from dataclasses import dataclass, fields
 from typing import Optional, Dict, List
 from urllib.parse import quote
 
-from spotipyio.logic.collectors.search_collectors.search_item_filters import SearchItemFilters
-from spotipyio.logic.collectors.search_collectors.search_item_metadata import SearchItemMetadata
+from spotipyio.models.search.search_item_filters import SearchItemFilters
+from spotipyio.models.search.search_item_metadata import SearchItemMetadata
 
 
 @dataclass
