@@ -2,8 +2,9 @@ from calendar import monthrange
 from datetime import datetime
 from random import randint, choice, random, uniform
 from string import ascii_letters, digits
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Callable, Any
 
+from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, SpotifySearchType
 from spotipyio.consts.spotify_consts import PLAYLISTS, USERS, LIMIT, HREF, NEXT, OFFSET, TOTAL, ITEMS, ARTISTS, TRACKS, \
     ALBUMS, TRACK, AUDIO_FEATURES
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
@@ -374,6 +375,22 @@ class SpotifyMockFactory:
         }
 
     @staticmethod
+    def search_item() -> SearchItem:
+        return SearchItem(
+            text=SpotifyMockFactory._optional_random_alphanumeric_string(),
+            filters=SearchItemFilters(
+                track=SpotifyMockFactory._optional_random_alphanumeric_string(),
+                artist=SpotifyMockFactory._optional_random_alphanumeric_string(),
+                album=SpotifyMockFactory._optional_random_alphanumeric_string(),
+                year=SpotifyMockFactory._an_optional(lambda: SpotifyMockFactory._random_datetime().year)
+            ),
+            metadata=SearchItemMetadata(
+                search_types=random_multi_enum_values(SpotifySearchType),
+                quote=random_boolean(),
+            )
+        )
+
+    @staticmethod
     def _random_image(size: int) -> dict:
         image_id = SpotifyMockFactory._random_alphanumeric_string(min_length=40, max_length=40)
         return {
@@ -423,3 +440,12 @@ class SpotifyMockFactory:
     @staticmethod
     def _random_confidence(key: str, **kwargs) -> float:
         return kwargs.get(key, random())
+
+    @staticmethod
+    def _optional_random_alphanumeric_string() -> Optional[str]:
+        return SpotifyMockFactory._an_optional(SpotifyMockFactory._random_alphanumeric_string)
+
+    @staticmethod
+    def _an_optional(value_generator: Callable[[], Any]) -> Optional[Any]:
+        if SpotifyMockFactory._random_boolean():
+            return value_generator()
