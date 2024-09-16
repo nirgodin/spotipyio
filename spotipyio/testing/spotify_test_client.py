@@ -13,6 +13,7 @@ class SpotifyTestClient:
                  artists_manager: Optional[ArtistsTestManager] = None,
                  current_user_manager: Optional[CurrentUserTestManager] = None,
                  playlists_manager: Optional[PlaylistsTestManager] = None,
+                 search_manager: Optional[SearchTestManager] = None,
                  tracks_manager: Optional[TracksTestManager] = None,
                  users_manager: Optional[UsersTestManager] = None):
         self._server = server
@@ -20,6 +21,7 @@ class SpotifyTestClient:
         self.artists = artists_manager
         self.current_user = current_user_manager
         self.playlists = playlists_manager
+        self.search = search_manager
         self.tracks = tracks_manager
         self.users = users_manager
 
@@ -34,6 +36,7 @@ class SpotifyTestClient:
             artists_manager=ArtistsTestManager.create(server),
             current_user_manager=CurrentUserTestManager.create(server),
             playlists_manager=PlaylistsTestManager.create(server),
+            search_manager=SearchTestManager.create(server),
             tracks_manager=TracksTestManager.create(server),
             users_manager=UsersTestManager.create(server)
         )
