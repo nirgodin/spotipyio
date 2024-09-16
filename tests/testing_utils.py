@@ -16,6 +16,11 @@ def random_enum_value(enum_: Type[EnumType]) -> EnumType:
     return choice(enum_values)
 
 
+def random_multi_enum_values(enum_: Type[EnumType]) -> List[EnumType]:
+    enum_values = get_all_enum_values(enum_)
+    return [v for v in enum_values if random_boolean()]
+
+
 def random_boolean() -> bool:
     return choice([True, False])
 
