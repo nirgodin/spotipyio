@@ -2,8 +2,9 @@ from calendar import monthrange
 from datetime import datetime
 from random import randint, choice, random, uniform
 from string import ascii_letters, digits
-from typing import Optional, List, Dict, Callable, Any
+from typing import Optional, List, Dict, Callable, Any, Type
 
+from spotipyio.consts.typing_consts import EnumType
 from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, SpotifySearchType
 from spotipyio.consts.spotify_consts import PLAYLISTS, USERS, LIMIT, HREF, NEXT, OFFSET, TOTAL, ITEMS, ARTISTS, TRACKS, \
     ALBUMS, TRACK, AUDIO_FEATURES
@@ -385,10 +386,27 @@ class SpotifyMockFactory:
                 year=SpotifyMockFactory._an_optional(lambda: SpotifyMockFactory._random_datetime().year)
             ),
             metadata=SearchItemMetadata(
-                search_types=random_multi_enum_values(SpotifySearchType),
-                quote=random_boolean(),
+                search_types=SpotifyMockFactory._random_multi_enum_values(SpotifySearchType),
+                quote=SpotifyMockFactory._random_boolean(),
             )
         )
+
+    @staticmethod
+    def search_response(search_types: List[SpotifySearchType]) -> Dict[str, dict]:
+        search_types_method_mapping = {  # TODO: Support all methods
+            SpotifySearchType.ALBUM: SpotifyMockFactory.several_albums,
+            SpotifySearchType.TRACK: SpotifyMockFactory.several_tracks,
+            SpotifySearchType.ARTIST: SpotifyMockFactory.several_artists,
+        }
+        response = {}
+
+        for search_type in search_types:
+            if search_type in search_types_method_mapping.keys():
+                response_method = search_types_method_mapping[search_type]
+                search_type_response = response_method()
+                response.update(search_type_response)
+
+        return response
 
     @staticmethod
     def _random_image(size: int) -> dict:
@@ -449,3 +467,7 @@ class SpotifyMockFactory:
     def _an_optional(value_generator: Callable[[], Any]) -> Optional[Any]:
         if SpotifyMockFactory._random_boolean():
             return value_generator()
+
+    @staticmethod
+    def _random_multi_enum_values(enum_: Type[EnumType]) -> List[EnumType]:
+        return [v for v in enum_ if SpotifyMockFactory._random_boolean()]

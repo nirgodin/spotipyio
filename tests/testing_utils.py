@@ -1,10 +1,9 @@
 import os
-from enum import Enum
 from random import choice, randint
 from string import ascii_letters, digits
-from typing import Type, List, TypeVar, Any, Callable, Optional, Dict
+from typing import Type, List, Any, Callable, Optional, Dict
 
-EnumType = TypeVar("EnumType", bound=Enum)
+from spotipyio.consts.typing_consts import EnumType
 
 
 def get_all_enum_values(enum_: Type[EnumType]) -> List[EnumType]:

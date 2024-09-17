@@ -39,6 +39,17 @@ class TestSearchItem:
 
         assert actual == expected
 
+    def test_to_query_params__no_filters__includes_only_text_in_query(self, search_item: SearchItem):
+        search_item.filters = SearchItemFilters()
+        expected = {
+            "q": "Bridge Over Troubled Water",
+            "type": "track,album"
+        }
+
+        actual = search_item.to_query_params()
+
+        assert actual == expected
+
     @fixture
     def search_item(self) -> SearchItem:
         return SearchItem(
