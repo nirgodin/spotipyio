@@ -2,41 +2,87 @@ from typing import List, Optional
 
 from pytest_httpserver import RequestHandler
 
-from spotipyio.consts.spotify_consts import PLAYLISTS
+from spotipyio.consts.spotify_consts import PLAYLISTS, TRACKS, OFFSET, LIMIT, ADDITIONAL_TYPES, TRACK
 from spotipyio.consts.typing_consts import Json
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 
 
 class PlaylistsInfoTestComponent(BaseTestComponent):
-    def expect(self, id_: str, max_pages: int = 1) -> List[RequestHandler]:
-        return [self._create_request_handler(id_)]
+    def expect(self, id_: str, expected_pages: int = 1) -> List[RequestHandler]:
+        return self._create_request_handlers(id_, expected_pages)
 
-    def expect_success(self, id_: str, response_json: Optional[Json] = None, max_pages: int = 1) -> None:
-        self._validate_max_pages(max_pages)
-        request_handler = self._create_request_handler(id_)
-        response = response_json or SpotifyMockFactory.playlist(id=id_)
+    def expect_success(self, id_: str, response_jsons: Optional[List[Json]] = None, expected_pages: int = 1) -> None:
+        request_handlers = self._create_request_handlers(id_, expected_pages)
+        responses = self._build_responses(
+            provided_responses=response_jsons,
+            request_handlers=request_handlers,
+            playlist_id=id_
+        )
 
-        request_handler.respond_with_json(response)
+        for handler, response in zip(request_handlers, responses, strict=True):
+            handler.respond_with_json(response)
 
     def expect_failure(self,
                        id_: str,
                        status: Optional[int] = None,
                        response_json: Optional[Json] = None,
-                       max_pages: int = 1) -> None:
-        self._validate_max_pages(max_pages)
+                       expected_pages: int = 1) -> None:
         status, response_json = self._create_invalid_response(status=status, response_json=response_json)
-        request_handler = self._create_request_handler(id_)
+        request_handlers = self._create_request_handlers(id_, expected_pages)
+        first_handler = request_handlers[0]
 
-        request_handler.respond_with_json(
+        first_handler.respond_with_json(
             status=status,
             response_json=response_json
         )
 
-    @staticmethod
-    def _validate_max_pages(max_pages: int) -> None:
-        if max_pages > 1:
-            raise ValueError("Only max_pages=1 is supported at the moment")
+    def _create_request_handlers(self, id_: str, expected_pages: int) -> List[RequestHandler]:
+        handlers = [self._expect_get_request(route=f"/{PLAYLISTS}/{id_}")]
 
-    def _create_request_handler(self, id_: str) -> RequestHandler:
-        return self._expect_get_request(f"/{PLAYLISTS}/{id_}")
+        for i in range(1, expected_pages):
+            params = {
+                OFFSET: str(i * 100),
+                LIMIT: "100",
+                ADDITIONAL_TYPES: TRACK
+            }
+            page_handler = self._expect_get_request(route=f"/{PLAYLISTS}/{id_}/{TRACKS}", params=params)
+            handlers.append(page_handler)
+
+        return handlers
+
+    def _build_responses(self,
+                         provided_responses: Optional[List[Json]],
+                         request_handlers: List[RequestHandler],
+                         playlist_id: str) -> List[Json]:
+        if provided_responses is not None:
+            self._validate_provided_responses(provided_responses, request_handlers)
+            return provided_responses
+
+        return self._generate_random_responses(request_handlers, playlist_id)
+
+    @staticmethod
+    def _validate_provided_responses(provided_responses: List[Json],
+                                     request_handlers: List[RequestHandler]) -> None:
+        request_handlers_number = len(request_handlers)
+        provided_responses_number = len(provided_responses)
+
+        if request_handlers_number != provided_responses_number:
+            raise ValueError(f"Expected {request_handlers_number} responses but got {provided_responses_number}")
+
+    def _generate_random_responses(self, request_handlers: List[RequestHandler], playlist_id: str) -> List[Json]:
+        handlers_number = len(request_handlers)
+
+        if handlers_number == 1:
+            next_url = None
+        else:
+            next_url = f"{self._base_url}/{PLAYLISTS}/{playlist_id}/{TRACKS}?{OFFSET}=100&{LIMIT}=100"
+
+        tracks = SpotifyMockFactory.playlist_tracks(next=next_url)
+        responses = [SpotifyMockFactory.playlist(id=playlist_id, tracks=tracks)]
+
+        for _ in range(1, handlers_number):
+            page_response = SpotifyMockFactory.playlist_tracks(entity_id=playlist_id)
+            responses.append(page_response)
+
+        return responses
