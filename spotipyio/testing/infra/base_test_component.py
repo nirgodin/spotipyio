@@ -19,6 +19,7 @@ INVALID_RESPONSES = {
 class BaseTestComponent(ABC):
     def __init__(self, server: HTTPServer):
         self._server = server
+        self._base_url = self._server.url_for("").rstrip("/")
 
     @abstractmethod
     def expect(self, *args, **kwargs) -> List[RequestHandler]:

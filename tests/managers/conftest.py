@@ -23,11 +23,16 @@ def test_client() -> SpotifyTestClient:
 
 
 @fixture(scope="session")
-async def spotify_client(test_client: SpotifyTestClient) -> SpotifyClient:
+def base_url(test_client: SpotifyTestClient) -> str:
+    return test_client.get_base_url()
+
+
+@fixture(scope="session")
+async def spotify_client(base_url: str) -> SpotifyClient:
     raw_session = create_client_session()
 
     async with SpotifySession(session=raw_session) as session:
         yield SpotifyClient.create(
             session=session,
-            base_url=test_client.get_base_url()
+            base_url=base_url
         )

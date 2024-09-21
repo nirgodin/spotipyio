@@ -54,25 +54,24 @@ class SpotifyMockFactory:
             "owner": owner,
             "public": kwargs.get("public", SpotifyMockFactory._random_boolean()),
             "snapshot_id": kwargs.get("snapshot_id", SpotifyMockFactory.snapshot_id()),
-            "tracks": kwargs.get("tracks", SpotifyMockFactory.playlist_tracks(entity_id=entity_id, owner=owner)),
+            "tracks": kwargs.get("tracks", SpotifyMockFactory.playlist_tracks(id=entity_id, owner=owner)),
             "type": entity_type,
             "uri": SpotifyMockFactory.uri(entity_type=entity_type, entity_id=entity_id),
             "primary_color": None
         }
 
     @staticmethod
-    def playlist_tracks(entity_id: Optional[str] = None, owner: Optional[dict] = None) -> dict:
+    def playlist_tracks(**kwargs) -> dict:
         entity_type = "playlist"
-        if entity_id is None:
-            entity_id = SpotifyMockFactory.spotify_id()
-
-        total_tracks = randint(1, 10)
+        entity_id = kwargs.get("id", SpotifyMockFactory.spotify_id())
+        owner = kwargs.get("owner")
+        total_tracks = kwargs.get("total", randint(1, 100))
         items = [SpotifyMockFactory.playlist_item(owner) for _ in range(total_tracks)]
 
         return {
             "href": SpotifyMockFactory.href(entity_type=entity_type, entity_id=entity_id, extra_routes=["tracks"]),
             "limit": 100,
-            "next": None,
+            "next": kwargs.get("next"),
             "offset": 0,
             "previous": None,
             "total": total_tracks,
