@@ -1,14 +1,22 @@
 from typing import List, Optional
 
-from pytest_httpserver import RequestHandler
+from pytest_httpserver import RequestHandler, HTTPServer
 
 from spotipyio.consts.spotify_consts import PLAYLISTS, TRACKS, OFFSET, LIMIT, ADDITIONAL_TYPES, TRACK
 from spotipyio.consts.typing_consts import Json
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
+from spotipyio.testing.utils import RandomPagedResponsesBuilder
 
 
 class PlaylistsInfoTestComponent(BaseTestComponent):
+    def __init__(self, server: HTTPServer):
+        super().__init__(server)
+        self._paged_responses_builder = RandomPagedResponsesBuilder(
+            base_url=self._base_url,
+            page_max_size=100
+        )
+
     def expect(self, id_: str, expected_pages: int = 1) -> List[RequestHandler]:
         return self._create_request_handlers(id_, expected_pages)
 
@@ -17,7 +25,8 @@ class PlaylistsInfoTestComponent(BaseTestComponent):
         responses = self._build_responses(
             provided_responses=response_jsons,
             request_handlers=request_handlers,
-            playlist_id=id_
+            playlist_id=id_,
+            expected_pages=expected_pages
         )
 
         for handler, response in zip(request_handlers, responses, strict=True):
@@ -54,12 +63,13 @@ class PlaylistsInfoTestComponent(BaseTestComponent):
     def _build_responses(self,
                          provided_responses: Optional[List[Json]],
                          request_handlers: List[RequestHandler],
-                         playlist_id: str) -> List[Json]:
+                         playlist_id: str,
+                         expected_pages: int) -> List[Json]:
         if provided_responses is not None:
             self._validate_provided_responses(provided_responses, request_handlers)
             return provided_responses
 
-        return self._generate_random_responses(request_handlers, playlist_id)
+        return self._paged_responses_builder.build(playlist_id, expected_pages)
 
     @staticmethod
     def _validate_provided_responses(provided_responses: List[Json],

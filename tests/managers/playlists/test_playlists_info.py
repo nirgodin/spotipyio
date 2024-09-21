@@ -1,16 +1,16 @@
 from copy import deepcopy
 from random import shuffle, randint
 from typing import Dict, List
-from urllib.parse import urlencode
 
 import pytest
 from _pytest.fixtures import fixture
 from aiohttp import ClientResponseError
 
 from spotipyio import SpotifyClient
-from spotipyio.consts.spotify_consts import ID, TRACKS, ITEMS, PLAYLISTS, OFFSET, LIMIT
+from spotipyio.consts.spotify_consts import ID, TRACKS, ITEMS
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
+from spotipyio.testing.utils import RandomPagedResponsesBuilder
 from tests.managers.conftest import base_url
 from tests.testing_utils import assert_sorted_equal
 
@@ -30,18 +30,16 @@ class TestPlaylistsInfo:
 
         assert actual == expected
 
-    async def test_run_single__multiple_pages_all_requested__returns_all_pages_items(self,
-                                                                                     base_url: str,
-                                                                                     test_client: SpotifyTestClient,
-                                                                                     spotify_client: SpotifyClient,
-                                                                                     playlist_id: str,
-                                                                                     max_pages: int):
-        response_jsons = self._random_paged_response_jsons(
-            base_url=base_url,
-            playlist_id=playlist_id,
-            max_pages=max_pages
-        )
-        expected = self._build_expected_paged_response(response_jsons, requested_pages=max_pages)
+    async def test_run_single__multiple_pages_all_requested__returns_all_pages_items(
+            self,
+            paged_responses_builder: RandomPagedResponsesBuilder,
+            test_client: SpotifyTestClient,
+            spotify_client: SpotifyClient,
+            playlist_id: str,
+            max_pages: int
+    ):
+        response_jsons = paged_responses_builder.build(playlist_id, max_pages)
+        expected = self._build_expected_paged_response(response_jsons, pages_number=max_pages)
         test_client.playlists.info.expect_success(
             id_=playlist_id,
             response_jsons=response_jsons,
@@ -54,19 +52,36 @@ class TestPlaylistsInfo:
 
     async def test_run_single__multiple_pages_requested_less_than_existing__returns_only_requested_pages_items(
             self,
-            base_url: str,
+            paged_responses_builder: RandomPagedResponsesBuilder,
             test_client: SpotifyTestClient,
             spotify_client: SpotifyClient,
             playlist_id: str,
             max_pages: int
     ):
         requested_pages = max_pages - 1
-        response_jsons = self._random_paged_response_jsons(
-            base_url=base_url,
-            playlist_id=playlist_id,
-            max_pages=max_pages
+        response_jsons = paged_responses_builder.build(playlist_id, max_pages)
+        expected = self._build_expected_paged_response(response_jsons, pages_number=requested_pages)
+        test_client.playlists.info.expect_success(
+            id_=playlist_id,
+            response_jsons=response_jsons,
+            expected_pages=max_pages
         )
-        expected = self._build_expected_paged_response(response_jsons, requested_pages=requested_pages)
+
+        actual = await spotify_client.playlists.info.run_single(playlist_id, max_pages=requested_pages)
+
+        assert actual == expected
+
+    async def test_run_single__multiple_pages_requested_more_than_existing__returns_only_existing_pages_items(
+            self,
+            paged_responses_builder: RandomPagedResponsesBuilder,
+            test_client: SpotifyTestClient,
+            spotify_client: SpotifyClient,
+            playlist_id: str,
+            max_pages: int
+    ):
+        requested_pages = max_pages + 1
+        response_jsons = paged_responses_builder.build(playlist_id, max_pages)
+        expected = self._build_expected_paged_response(response_jsons, pages_number=max_pages)
         test_client.playlists.info.expect_success(
             id_=playlist_id,
             response_jsons=response_jsons,
@@ -139,45 +154,18 @@ class TestPlaylistsInfo:
     def max_pages(self) -> int:
         return randint(2, 5)
 
-    def _random_paged_response_jsons(self,
-                                     base_url: str,
-                                     playlist_id: str,
-                                     max_pages: int) -> List[dict]:
-        tracks = SpotifyMockFactory.playlist_tracks(next=self._build_next_url(base_url, playlist_id, page_number=1))
-        playlist_response = SpotifyMockFactory.playlist(id=playlist_id, tracks=tracks, total=100)
-        additional_pages_responses = self._build_additional_pages_responses(
-            max_pages=max_pages,
+    @fixture
+    def paged_responses_builder(self, base_url: str) -> RandomPagedResponsesBuilder:
+        return RandomPagedResponsesBuilder(
             base_url=base_url,
-            playlist_id=playlist_id
+            page_max_size=100
         )
 
-        return [playlist_response] + additional_pages_responses
-
-    def _build_additional_pages_responses(self, max_pages: int, base_url: str, playlist_id: str) -> List[dict]:
-        additional_pages_responses = []
-
-        for i in range(1, max_pages):
-            next_url = self._build_next_url(base_url, playlist_id, page_number=i + 1)
-            page_response = SpotifyMockFactory.playlist_tracks(id=playlist_id, next=next_url)
-            additional_pages_responses.append(page_response)
-
-        return additional_pages_responses
-
     @staticmethod
-    def _build_next_url(base_url: str, playlist_id: str, page_number: int) -> str:
-        params = {
-            OFFSET: str(page_number * 100),
-            LIMIT: "100"
-        }
-        encoded_params = urlencode(params)
-
-        return f"{base_url}/{PLAYLISTS}/{playlist_id}/{TRACKS}?{encoded_params}"
-
-    @staticmethod
-    def _build_expected_paged_response(response_jsons: List[dict], requested_pages: int) -> dict:
+    def _build_expected_paged_response(response_jsons: List[dict], pages_number: int) -> dict:
         response = deepcopy(response_jsons[0])
 
-        for i in range(1, requested_pages):
+        for i in range(1, pages_number):
             page_response = response_jsons[i]
             page_items = page_response[ITEMS]
             response[TRACKS][ITEMS].extend(page_items)
