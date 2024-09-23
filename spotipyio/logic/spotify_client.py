@@ -9,6 +9,7 @@ class SpotifyClient:
                  session: SpotifySession,
                  albums_manager: AlbumsManager,
                  artists_manager: ArtistsManager,
+                 chapters_manager: ChaptersManager,
                  current_user_manager: CurrentUserManager,
                  playlists_manager: PlaylistsManager,
                  search_manager: SearchManager,
@@ -17,6 +18,7 @@ class SpotifyClient:
         self.session = session
         self.albums = albums_manager
         self.artists = artists_manager
+        self.chapters = chapters_manager
         self.current_user = current_user_manager
         self.playlists = playlists_manager
         self.search = search_manager
@@ -28,6 +30,7 @@ class SpotifyClient:
         return SpotifyClient(
             session=session,
             artists_manager=ArtistsManager.create(base_url, session),
+            chapters_manager=ChaptersManager.create(base_url, session),
             current_user_manager=CurrentUserManager.create(base_url, session),
             playlists_manager=PlaylistsManager.create(base_url, session),
             users_manager=UsersManager.create(base_url, session),
