@@ -2,11 +2,14 @@ from calendar import monthrange
 from datetime import datetime
 from random import randint, choice, random, uniform
 from string import ascii_letters, digits
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Callable, Any, Type
 
+from spotipyio.consts.typing_consts import EnumType
+from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, SpotifySearchType
 from spotipyio.consts.spotify_consts import PLAYLISTS, USERS, LIMIT, HREF, NEXT, OFFSET, TOTAL, ITEMS, ARTISTS, TRACKS, \
-    ALBUMS, TRACK, AUDIO_FEATURES, CHAPTERS, EPISODES
+    ALBUMS, TRACK, AUDIO_FEATURES, CHAPTERS, EPISODES, SHOWS, AUDIOBOOKS
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
+from spotipyio.testing.search_response_builder import SearchResponseBuilder
 
 
 class SpotifyMockFactory:
@@ -109,57 +112,75 @@ class SpotifyMockFactory:
 
     @staticmethod
     def several_artists(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
-        if ids:
-            artists = [SpotifyMockFactory.artist(id=artist_id) for artist_id in ids]
-        else:
-            artists = SpotifyMockFactory._some_artists()
-
-        return {ARTISTS: artists}
+        return SpotifyMockFactory._several_items(
+            method=SpotifyMockFactory.artist,
+            ids=ids,
+            key=ARTISTS
+        )
 
     @staticmethod
     def several_tracks(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
-        if ids:
-            tracks = [SpotifyMockFactory.track(id=track_id) for track_id in ids]
-        else:
-            tracks = [SpotifyMockFactory.track() for _ in range(randint(1, 10))]
-
-        return {TRACKS: tracks}
+        return SpotifyMockFactory._several_items(
+            method=SpotifyMockFactory.track,
+            ids=ids,
+            key=TRACKS
+        )
 
     @staticmethod
     def several_albums(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
-        if ids:
-            albums = [SpotifyMockFactory.album(id=album_id) for album_id in ids]
-        else:
-            albums = [SpotifyMockFactory.album() for _ in range(randint(1, 10))]
-
-        return {ALBUMS: albums}
+        return SpotifyMockFactory._several_items(
+            method=SpotifyMockFactory.album,
+            ids=ids,
+            key=ALBUMS
+        )
 
     @staticmethod
     def several_chapters(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
-        if ids:
-            chapters = [SpotifyMockFactory.chapter(id=chapter_id) for chapter_id in ids]
-        else:
-            chapters = [SpotifyMockFactory.chapter() for _ in range(randint(1, 10))]
-
-        return {CHAPTERS: chapters}
+        return SpotifyMockFactory._several_items(
+            method=SpotifyMockFactory.chapter,
+            ids=ids,
+            key=CHAPTERS
+        )
 
     @staticmethod
     def several_episodes(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
-        if ids:
-            episodes = [SpotifyMockFactory.episode(id=episode_id) for episode_id in ids]
-        else:
-            episodes = [SpotifyMockFactory.episode() for _ in range(randint(1, 10))]
-
-        return {EPISODES: episodes}
+        return SpotifyMockFactory._several_items(
+            method=SpotifyMockFactory.episode,
+            ids=ids,
+            key=EPISODES
+        )
 
     @staticmethod
     def several_audio_features(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
-        if ids:
-            audio_features = [SpotifyMockFactory.audio_features(id=album_id) for album_id in ids]
-        else:
-            audio_features = [SpotifyMockFactory.audio_features() for _ in range(randint(1, 10))]
+        return SpotifyMockFactory._several_items(
+            method=SpotifyMockFactory.audio_features,
+            ids=ids,
+            key=AUDIO_FEATURES
+        )
 
-        return {AUDIO_FEATURES: audio_features}
+    @staticmethod
+    def several_shows(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
+        return SpotifyMockFactory._several_items(
+            method=SpotifyMockFactory.show,
+            ids=ids,
+            key=SHOWS
+        )
+
+    @staticmethod
+    def several_playlists(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
+        return SpotifyMockFactory._several_items(
+            method=SpotifyMockFactory.playlist,
+            ids=ids,
+            key=PLAYLISTS
+        )
+
+    @staticmethod
+    def several_audiobooks(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
+        return SpotifyMockFactory._several_items(
+            method=SpotifyMockFactory.audiobook,
+            ids=ids,
+            key=AUDIOBOOKS
+        )
 
     @staticmethod
     def artist(**kwargs) -> dict:
@@ -461,6 +482,56 @@ class SpotifyMockFactory:
         }
 
     @staticmethod
+    def search_item() -> SearchItem:
+        search_types = SpotifyMockFactory._random_multi_enum_values(SpotifySearchType) or [SpotifySearchType.TRACK]
+        return SearchItem(
+            text=SpotifyMockFactory._random_alphanumeric_string(),
+            filters=SearchItemFilters(
+                track=SpotifyMockFactory._optional_random_alphanumeric_string(),
+                artist=SpotifyMockFactory._optional_random_alphanumeric_string(),
+                album=SpotifyMockFactory._optional_random_alphanumeric_string(),
+                year=SpotifyMockFactory._an_optional(lambda: SpotifyMockFactory._random_datetime().year)
+            ),
+            metadata=SearchItemMetadata(
+                search_types=search_types,
+                quote=SpotifyMockFactory._random_boolean(),
+            )
+        )
+
+    @staticmethod
+    def search_response(search_item: SearchItem) -> Dict[str, dict]:
+        search_types_method_mapping = {
+            SpotifySearchType.ALBUM: SpotifyMockFactory.album,
+            SpotifySearchType.ARTIST: SpotifyMockFactory.album,
+            SpotifySearchType.AUDIOBOOK: SpotifyMockFactory.audiobook,
+            SpotifySearchType.EPISODE: SpotifyMockFactory.episode,
+            SpotifySearchType.PLAYLIST: SpotifyMockFactory.playlist,
+            SpotifySearchType.SHOW: SpotifyMockFactory.show,
+            SpotifySearchType.TRACK: SpotifyMockFactory.track,
+        }
+        builder = SearchResponseBuilder(search_item)
+
+        for search_type in search_item.metadata.search_types:
+            search_type_method = search_types_method_mapping[search_type]
+            items = SpotifyMockFactory._some_items(search_type_method)
+            builder.add(search_type, items)
+
+        return builder.build()
+
+    @staticmethod
+    def _several_items(method: Callable[..., dict], ids: Optional[List[str]], key: str) -> Dict[str, List[dict]]:
+        if ids:
+            items = [method(id=item_id) for item_id in ids]
+        else:
+            items = SpotifyMockFactory._some_items(method)
+
+        return {key: items}
+
+    @staticmethod
+    def _some_items(method: Callable[..., dict]) -> List[dict]:
+        return [method() for _ in range(randint(1, 10))]
+
+    @staticmethod
     def _random_image(size: int) -> dict:
         image_id = SpotifyMockFactory._random_alphanumeric_string(min_length=40, max_length=40)
         return {
@@ -471,15 +542,15 @@ class SpotifyMockFactory:
 
     @staticmethod
     def _some_artists() -> List[dict]:
-        return [SpotifyMockFactory.artist() for _ in range(randint(1, 10))]
+        return SpotifyMockFactory._some_items(SpotifyMockFactory.artist)
 
     @staticmethod
     def _some_tracks() -> List[dict]:
-        return [SpotifyMockFactory.track() for _ in range(randint(1, 10))]
+        return SpotifyMockFactory._some_items(SpotifyMockFactory.track)
 
     @staticmethod
     def _some_playlists() -> List[dict]:
-        return [SpotifyMockFactory.playlist() for _ in range(randint(1, 10))]
+        return SpotifyMockFactory._some_items(SpotifyMockFactory.playlist)
 
     @staticmethod
     def _random_string_array(length: Optional[int] = None) -> List[str]:
@@ -611,3 +682,16 @@ class SpotifyMockFactory:
         return {
             "name": kwargs.get("name", SpotifyMockFactory.name())
         }
+
+    @staticmethod
+    def _optional_random_alphanumeric_string() -> Optional[str]:
+        return SpotifyMockFactory._an_optional(SpotifyMockFactory._random_alphanumeric_string)
+
+    @staticmethod
+    def _an_optional(value_generator: Callable[[], Any]) -> Optional[Any]:
+        if SpotifyMockFactory._random_boolean():
+            return value_generator()
+
+    @staticmethod
+    def _random_multi_enum_values(enum_: Type[EnumType]) -> List[EnumType]:
+        return [v for v in enum_ if SpotifyMockFactory._random_boolean()]

@@ -2,8 +2,9 @@ from dataclasses import dataclass, fields
 from typing import Optional, Dict, List
 from urllib.parse import quote
 
-from spotipyio.logic.collectors.search_collectors.search_item_filters import SearchItemFilters
-from spotipyio.logic.collectors.search_collectors.search_item_metadata import SearchItemMetadata
+from spotipyio.models.search.spotify_search_type import SpotifySearchType
+from spotipyio.models.search.search_item_filters import SearchItemFilters
+from spotipyio.models.search.search_item_metadata import SearchItemMetadata
 
 
 @dataclass
@@ -15,12 +16,14 @@ class SearchItem:
     def __post_init__(self):
         self._validate_input()
 
-    def to_query_params(self) -> Dict[str, str]:
-        types = [search_type.value for search_type in self.metadata.search_types]
-        query = self._build_query()
+    def to_query_params(self, search_types: Optional[List[SpotifySearchType]] = None) -> Dict[str, str]:
+        if search_types:
+            types = [search_type.value for search_type in search_types]
+        else:
+            types = [search_type.value for search_type in self.metadata.search_types]
 
         return {
-            "q": query,
+            "q": self._build_query(),
             "type": ",".join(types)
         }
 
