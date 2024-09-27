@@ -9,6 +9,7 @@ from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, 
 from spotipyio.consts.spotify_consts import PLAYLISTS, USERS, LIMIT, HREF, NEXT, OFFSET, TOTAL, ITEMS, ARTISTS, TRACKS, \
     ALBUMS, TRACK, AUDIO_FEATURES, CHAPTERS, EPISODES, SHOWS, AUDIOBOOKS
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
+from spotipyio.testing.search_response_builder import SearchResponseBuilder
 
 
 class SpotifyMockFactory:
@@ -497,34 +498,37 @@ class SpotifyMockFactory:
         )
 
     @staticmethod
-    def search_response(search_types: List[SpotifySearchType]) -> Dict[str, dict]:
+    def search_response(search_item: SearchItem) -> Dict[str, dict]:
         search_types_method_mapping = {
-            SpotifySearchType.ALBUM: SpotifyMockFactory.several_albums,
-            SpotifySearchType.ARTIST: SpotifyMockFactory.several_artists,
-            SpotifySearchType.AUDIOBOOK: SpotifyMockFactory.several_audiobooks,
-            SpotifySearchType.EPISODE: SpotifyMockFactory.several_episodes,
-            SpotifySearchType.PLAYLIST: SpotifyMockFactory.several_playlists,
-            SpotifySearchType.SHOW: SpotifyMockFactory.several_shows,
-            SpotifySearchType.TRACK: SpotifyMockFactory.several_tracks,
+            SpotifySearchType.ALBUM: SpotifyMockFactory.album,
+            SpotifySearchType.ARTIST: SpotifyMockFactory.album,
+            SpotifySearchType.AUDIOBOOK: SpotifyMockFactory.audiobook,
+            SpotifySearchType.EPISODE: SpotifyMockFactory.episode,
+            SpotifySearchType.PLAYLIST: SpotifyMockFactory.playlist,
+            SpotifySearchType.SHOW: SpotifyMockFactory.show,
+            SpotifySearchType.TRACK: SpotifyMockFactory.track,
         }
-        response = {}
+        builder = SearchResponseBuilder(search_item)
 
-        for search_type in search_types:
-            if search_type in search_types_method_mapping.keys():
-                response_method = search_types_method_mapping[search_type]
-                search_type_response = response_method()
-                response.update(search_type_response)
+        for search_type in search_item.metadata.search_types:
+            search_type_method = search_types_method_mapping[search_type]
+            items = SpotifyMockFactory._some_items(search_type_method)
+            builder.add(search_type, items)
 
-        return response
+        return builder.build()
 
     @staticmethod
     def _several_items(method: Callable[..., dict], ids: Optional[List[str]], key: str) -> Dict[str, List[dict]]:
         if ids:
             items = [method(id=item_id) for item_id in ids]
         else:
-            items = [method() for _ in range(randint(1, 10))]
+            items = SpotifyMockFactory._some_items(method)
 
         return {key: items}
+
+    @staticmethod
+    def _some_items(method: Callable[..., dict]) -> List[dict]:
+        return [method() for _ in range(randint(1, 10))]
 
     @staticmethod
     def _random_image(size: int) -> dict:
@@ -537,15 +541,15 @@ class SpotifyMockFactory:
 
     @staticmethod
     def _some_artists() -> List[dict]:
-        return [SpotifyMockFactory.artist() for _ in range(randint(1, 10))]
+        return SpotifyMockFactory._some_items(SpotifyMockFactory.artist)
 
     @staticmethod
     def _some_tracks() -> List[dict]:
-        return [SpotifyMockFactory.track() for _ in range(randint(1, 10))]
+        return SpotifyMockFactory._some_items(SpotifyMockFactory.track)
 
     @staticmethod
     def _some_playlists() -> List[dict]:
-        return [SpotifyMockFactory.playlist() for _ in range(randint(1, 10))]
+        return SpotifyMockFactory._some_items(SpotifyMockFactory.playlist)
 
     @staticmethod
     def _random_string_array(length: Optional[int] = None) -> List[str]:

@@ -13,7 +13,7 @@ class TestSearchItemCollector:
                                                                          spotify_client: SpotifyClient,
                                                                          test_client: SpotifyTestClient,
                                                                          search_item: SearchItem):
-        expected = SpotifyMockFactory.search_response(search_item.metadata.search_types)
+        expected = SpotifyMockFactory.search_response(search_item)
         test_client.search.search_item.expect_success(search_item, expected)
 
         actual = await spotify_client.search.search_item.run_single(search_item)
