@@ -7,7 +7,7 @@ from typing import Optional, List, Dict, Callable, Any, Type
 from spotipyio.consts.typing_consts import EnumType
 from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, SpotifySearchType
 from spotipyio.consts.spotify_consts import PLAYLISTS, USERS, LIMIT, HREF, NEXT, OFFSET, TOTAL, ITEMS, ARTISTS, TRACKS, \
-    ALBUMS, TRACK, AUDIO_FEATURES
+    ALBUMS, TRACK, AUDIO_FEATURES, CHAPTERS, EPISODES
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
 
 
@@ -56,25 +56,24 @@ class SpotifyMockFactory:
             "owner": owner,
             "public": kwargs.get("public", SpotifyMockFactory._random_boolean()),
             "snapshot_id": kwargs.get("snapshot_id", SpotifyMockFactory.snapshot_id()),
-            "tracks": kwargs.get("tracks", SpotifyMockFactory.playlist_tracks(entity_id=entity_id, owner=owner)),
+            "tracks": kwargs.get("tracks", SpotifyMockFactory.playlist_tracks(id=entity_id, owner=owner)),
             "type": entity_type,
             "uri": SpotifyMockFactory.uri(entity_type=entity_type, entity_id=entity_id),
             "primary_color": None
         }
 
     @staticmethod
-    def playlist_tracks(entity_id: Optional[str] = None, owner: Optional[dict] = None) -> dict:
+    def playlist_tracks(**kwargs) -> dict:
         entity_type = "playlist"
-        if entity_id is None:
-            entity_id = SpotifyMockFactory.spotify_id()
-
-        total_tracks = randint(1, 10)
+        entity_id = kwargs.get("id", SpotifyMockFactory.spotify_id())
+        owner = kwargs.get("owner")
+        total_tracks = kwargs.get("total", randint(1, 100))
         items = [SpotifyMockFactory.playlist_item(owner) for _ in range(total_tracks)]
 
         return {
             "href": SpotifyMockFactory.href(entity_type=entity_type, entity_id=entity_id, extra_routes=["tracks"]),
             "limit": 100,
-            "next": None,
+            "next": kwargs.get("next"),
             "offset": 0,
             "previous": None,
             "total": total_tracks,
@@ -136,6 +135,24 @@ class SpotifyMockFactory:
             albums = [SpotifyMockFactory.album() for _ in range(randint(1, 10))]
 
         return {ALBUMS: albums}
+
+    @staticmethod
+    def several_chapters(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
+        if ids:
+            chapters = [SpotifyMockFactory.chapter(id=chapter_id) for chapter_id in ids]
+        else:
+            chapters = [SpotifyMockFactory.chapter() for _ in range(randint(1, 10))]
+
+        return {CHAPTERS: chapters}
+
+    @staticmethod
+    def several_episodes(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
+        if ids:
+            episodes = [SpotifyMockFactory.episode(id=episode_id) for episode_id in ids]
+        else:
+            episodes = [SpotifyMockFactory.episode() for _ in range(randint(1, 10))]
+
+        return {EPISODES: episodes}
 
     @staticmethod
     def several_audio_features(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
@@ -240,6 +257,75 @@ class SpotifyMockFactory:
         }
 
     @staticmethod
+    def chapter(**kwargs) -> dict:
+        entity_type = "episode"
+        entity_id = kwargs.get("id", SpotifyMockFactory.spotify_id())
+        description = kwargs.get("description", SpotifyMockFactory.description())
+
+        return {
+            "audio_preview_url": kwargs.get("audio_preview_url", SpotifyMockFactory.preview_url()),
+            "available_markets": kwargs.get("available_markets", SpotifyMockFactory.available_markets()),
+            "chapter_number": kwargs.get("chapter_number", randint(1, 20)),
+            "description": description,
+            "html_description": SpotifyMockFactory.html_description(description),
+            "duration_ms": kwargs.get("duration_ms", SpotifyMockFactory.duration_ms()),
+            "explicit": kwargs.get("explicit", SpotifyMockFactory._random_boolean()),
+            "external_urls": SpotifyMockFactory.external_urls(entity_type, entity_id),
+            "href": SpotifyMockFactory.href(entity_type, entity_id),
+            "id": entity_id,
+            "images": kwargs.get("images", SpotifyMockFactory.images()),
+            "is_playable": kwargs.get("is_playable", SpotifyMockFactory._random_boolean()),
+            "languages": kwargs.get("languages", SpotifyMockFactory._random_string_array()),
+            "name": kwargs.get("name", SpotifyMockFactory.name()),
+            "release_date": kwargs.get("release_date", SpotifyMockFactory.release_date()),
+            "release_date_precision": "day",
+            "resume_point": kwargs.get("resume_point", SpotifyMockFactory.resume_point()),
+            "type": entity_type,
+            "uri": SpotifyMockFactory.uri(entity_type, entity_id),
+            "restrictions": kwargs.get("restrictions", SpotifyMockFactory.restrictions()),
+            "audiobook": kwargs.get("audiobook", SpotifyMockFactory.audiobook())
+        }
+
+    @staticmethod
+    def episode(**kwargs) -> dict:
+        entity_type = "show"
+        entity_id = kwargs.get("id", SpotifyMockFactory.spotify_id())
+        description = kwargs.get("description", SpotifyMockFactory.description())
+
+        return {
+            "audio_preview_url": kwargs.get("audio_preview_url", SpotifyMockFactory.preview_url()),
+            "description": description,
+            "html_description": SpotifyMockFactory.html_description(description),
+            "duration_ms": kwargs.get("duration_ms", SpotifyMockFactory.duration_ms()),
+            "explicit": kwargs.get("explicit", SpotifyMockFactory._random_boolean()),
+            "external_urls": SpotifyMockFactory.external_urls(entity_type, entity_id),
+            "href": SpotifyMockFactory.href(entity_type, entity_id),
+            "id": entity_id,
+            "images": kwargs.get("images", SpotifyMockFactory.images()),
+            "is_externally_hosted": kwargs.get("is_externally_hosted", SpotifyMockFactory._random_boolean()),
+            "is_playable": kwargs.get("is_playable", SpotifyMockFactory._random_boolean()),
+            "language": kwargs.get("language", SpotifyMockFactory._random_alphanumeric_string()),
+            "languages": kwargs.get("languages", SpotifyMockFactory._random_string_array()),
+            "name": kwargs.get("name", SpotifyMockFactory.name()),
+            "release_date": kwargs.get("release_date", SpotifyMockFactory.release_date()),
+            "release_date_precision": "day",
+            "resume_point": kwargs.get("resume_point", SpotifyMockFactory.resume_point()),
+            "type": entity_type,
+            "uri": SpotifyMockFactory.uri(entity_type, entity_id),
+            "restrictions": kwargs.get("restrictions", SpotifyMockFactory.restrictions()),
+            "show": kwargs.get("show", SpotifyMockFactory.show())
+        }
+
+    @staticmethod
+    def description() -> str:
+        return SpotifyMockFactory._random_alphanumeric_string()
+
+    @staticmethod
+    def html_description(description: Optional[str] = None) -> str:
+        description_text = description or SpotifyMockFactory._random_alphanumeric_string()
+        return f"<p>{description_text}</p>"
+
+    @staticmethod
     def album_type() -> str:
         return choice(["album", "single", "compilation"])
 
@@ -301,7 +387,8 @@ class SpotifyMockFactory:
 
     @staticmethod
     def preview_url() -> str:
-        return f"https://p.scdn.co/mp3-preview/{SpotifyMockFactory._random_alphanumeric_string()}"
+        preview_id = SpotifyMockFactory._random_alphanumeric_string(min_length=40, max_length=40)
+        return f"https://p.scdn.co/mp3-preview/{preview_id}"
 
     @staticmethod
     def release_date() -> str:
@@ -458,6 +545,107 @@ class SpotifyMockFactory:
     @staticmethod
     def _random_confidence(key: str, **kwargs) -> float:
         return kwargs.get(key, random())
+
+    @staticmethod
+    def resume_point(**kwargs) -> dict:
+        return {
+            "fully_played": kwargs.get("fully_played", SpotifyMockFactory._random_boolean()),
+            "resume_position_ms": kwargs.get("resume_position_ms", SpotifyMockFactory.duration_ms())
+        }
+
+    @staticmethod
+    def restrictions(**kwargs) -> dict:
+        return {
+            "reason": kwargs.get("reason", SpotifyMockFactory._random_alphanumeric_string())
+        }
+
+    @staticmethod
+    def audiobook(**kwargs) -> dict:
+        entity_type = "audiobook"
+        entity_id = kwargs.get("id", SpotifyMockFactory.spotify_id())
+        description = kwargs.get("description", SpotifyMockFactory.description())
+
+        return {
+            "authors": kwargs.get("authors", SpotifyMockFactory.some_authors()),
+            "available_markets": kwargs.get("available_markets", SpotifyMockFactory.available_markets()),
+            "copyrights": kwargs.get("copyrights", SpotifyMockFactory.some_copyrights()),
+            "description": description,
+            "html_description": SpotifyMockFactory.html_description(description),
+            "edition": kwargs.get("edition", SpotifyMockFactory._random_alphanumeric_string()),
+            "explicit": kwargs.get("explicit", SpotifyMockFactory._random_boolean()),
+            "external_urls": SpotifyMockFactory.external_urls(entity_type, entity_id),
+            "href": SpotifyMockFactory.href(entity_type, entity_id),
+            "id": entity_id,
+            "images": kwargs.get("images", SpotifyMockFactory.images()),
+            "languages": kwargs.get("languages", SpotifyMockFactory._random_string_array()),
+            "media_type": kwargs.get("media_type", SpotifyMockFactory._random_alphanumeric_string()),
+            "name": kwargs.get("name", SpotifyMockFactory.name()),
+            "narrators": kwargs.get("narrators", SpotifyMockFactory.some_narrators()),
+            "publisher": kwargs.get("publisher", SpotifyMockFactory._random_alphanumeric_string()),
+            "type": entity_type,
+            "uri": SpotifyMockFactory.uri(entity_type, entity_id),
+            "total_chapters": kwargs.get("total_chapters", randint(1, 20))
+        }
+
+    @staticmethod
+    def show(**kwargs) -> dict:
+        entity_type = "show"
+        entity_id = kwargs.get("id", SpotifyMockFactory.spotify_id())
+        description = kwargs.get("description", SpotifyMockFactory.description())
+
+        return {
+            "available_markets": kwargs.get("available_markets", SpotifyMockFactory.available_markets()),
+            "copyrights": kwargs.get("copyrights", SpotifyMockFactory.some_copyrights()),
+            "description": description,
+            "html_description": SpotifyMockFactory.html_description(description),
+            "explicit": kwargs.get("explicit", SpotifyMockFactory._random_boolean()),
+            "external_urls": SpotifyMockFactory.external_urls(entity_type, entity_id),
+            "href": SpotifyMockFactory.href(entity_type, entity_id),
+            "id": entity_id,
+            "images": kwargs.get("images", SpotifyMockFactory.images()),
+            "is_externally_hosted": kwargs.get("is_externally_hosted", SpotifyMockFactory._random_boolean()),
+            "languages": kwargs.get("languages", SpotifyMockFactory._random_string_array()),
+            "media_type": kwargs.get("media_type", SpotifyMockFactory._random_alphanumeric_string()),
+            "name": kwargs.get("name", SpotifyMockFactory.name()),
+            "publisher": kwargs.get("publisher", SpotifyMockFactory._random_alphanumeric_string()),
+            "type": entity_type,
+            "uri": SpotifyMockFactory.uri(entity_type, entity_id),
+            "total_episodes": kwargs.get("total_episodes", randint(1, 20))
+        }
+
+    @staticmethod
+    def some_authors(length: Optional[int] = None) -> List[dict]:
+        number_of_authors = length or randint(2, 10)
+        return [SpotifyMockFactory.author() for _ in range(number_of_authors)]
+
+    @staticmethod
+    def author(**kwargs) -> dict:
+        return {
+            "name": kwargs.get("name", SpotifyMockFactory.name())
+        }
+
+    @staticmethod
+    def some_copyrights(length: Optional[int] = None) -> List[dict]:
+        number_of_copyrights = length or randint(2, 10)
+        return [SpotifyMockFactory.copyright() for _ in range(number_of_copyrights)]
+
+    @staticmethod
+    def copyright(**kwargs) -> dict:
+        return {
+            "text": kwargs.get("text", SpotifyMockFactory._random_alphanumeric_string()),
+            "type": kwargs.get("type", choice(["C", "P"]))
+        }
+
+    @staticmethod
+    def some_narrators(length: Optional[int] = None) -> List[dict]:
+        number_of_authors = length or randint(2, 10)
+        return [SpotifyMockFactory.author() for _ in range(number_of_authors)]
+
+    @staticmethod
+    def narrator(**kwargs) -> dict:
+        return {
+            "name": kwargs.get("name", SpotifyMockFactory.name())
+        }
 
     @staticmethod
     def _optional_random_alphanumeric_string() -> Optional[str]:
