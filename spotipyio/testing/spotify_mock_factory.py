@@ -483,8 +483,9 @@ class SpotifyMockFactory:
 
     @staticmethod
     def search_item() -> SearchItem:
+        search_types = SpotifyMockFactory._random_multi_enum_values(SpotifySearchType) or [SpotifySearchType.TRACK]
         return SearchItem(
-            text=SpotifyMockFactory._optional_random_alphanumeric_string(),
+            text=SpotifyMockFactory._random_alphanumeric_string(),
             filters=SearchItemFilters(
                 track=SpotifyMockFactory._optional_random_alphanumeric_string(),
                 artist=SpotifyMockFactory._optional_random_alphanumeric_string(),
@@ -492,7 +493,7 @@ class SpotifyMockFactory:
                 year=SpotifyMockFactory._an_optional(lambda: SpotifyMockFactory._random_datetime().year)
             ),
             metadata=SearchItemMetadata(
-                search_types=SpotifyMockFactory._random_multi_enum_values(SpotifySearchType),
+                search_types=search_types,
                 quote=SpotifyMockFactory._random_boolean(),
             )
         )
