@@ -7,7 +7,7 @@ from typing import Optional, List, Dict, Callable, Any, Type
 from spotipyio.consts.typing_consts import EnumType
 from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, SpotifySearchType
 from spotipyio.consts.spotify_consts import PLAYLISTS, USERS, LIMIT, HREF, NEXT, OFFSET, TOTAL, ITEMS, ARTISTS, TRACKS, \
-    ALBUMS, TRACK, AUDIO_FEATURES, CHAPTERS, EPISODES, SHOWS
+    ALBUMS, TRACK, AUDIO_FEATURES, CHAPTERS, EPISODES, SHOWS, AUDIOBOOKS
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
 
 
@@ -163,6 +163,22 @@ class SpotifyMockFactory:
             method=SpotifyMockFactory.show,
             ids=ids,
             key=SHOWS
+        )
+
+    @staticmethod
+    def several_playlists(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
+        return SpotifyMockFactory._several_items(
+            method=SpotifyMockFactory.playlist,
+            ids=ids,
+            key=PLAYLISTS
+        )
+
+    @staticmethod
+    def several_audiobooks(ids: Optional[List[str]] = None) -> Dict[str, List[dict]]:
+        return SpotifyMockFactory._several_items(
+            method=SpotifyMockFactory.audiobook,
+            ids=ids,
+            key=AUDIOBOOKS
         )
 
     @staticmethod
@@ -482,12 +498,14 @@ class SpotifyMockFactory:
 
     @staticmethod
     def search_response(search_types: List[SpotifySearchType]) -> Dict[str, dict]:
-        search_types_method_mapping = {  # TODO: Support all methods
+        search_types_method_mapping = {
             SpotifySearchType.ALBUM: SpotifyMockFactory.several_albums,
-            SpotifySearchType.TRACK: SpotifyMockFactory.several_tracks,
             SpotifySearchType.ARTIST: SpotifyMockFactory.several_artists,
+            SpotifySearchType.AUDIOBOOK: SpotifyMockFactory.several_audiobooks,
             SpotifySearchType.EPISODE: SpotifyMockFactory.several_episodes,
-            SpotifySearchType.SHOW: SpotifyMockFactory.several_shows
+            SpotifySearchType.PLAYLIST: SpotifyMockFactory.several_playlists,
+            SpotifySearchType.SHOW: SpotifyMockFactory.several_shows,
+            SpotifySearchType.TRACK: SpotifyMockFactory.several_tracks,
         }
         response = {}
 
