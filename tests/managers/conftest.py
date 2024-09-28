@@ -1,10 +1,12 @@
 import asyncio
+import json
 from asyncio import AbstractEventLoop
 
 from _pytest.fixtures import fixture
 from pytest_httpserver import HTTPServer
 
-from spotipyio import SpotifyClient, SpotifySession
+from spotipyio import SpotifyClient, SpotifySession, SpotifyGrantType
+from spotipyio.consts.api_consts import GRANT_TYPE, JSON, ACCESS_TOKEN
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.utils import create_client_session
 
@@ -23,11 +25,34 @@ def test_client() -> SpotifyTestClient:
 
 
 @fixture(scope="session")
-async def spotify_client(test_client: SpotifyTestClient) -> SpotifyClient:
-    raw_session = create_client_session()
+def authorization_server() -> HTTPServer:
+    with HTTPServer() as mock_authorization_server:
+        yield mock_authorization_server
 
-    async with SpotifySession(session=raw_session) as session:
-        yield SpotifyClient.create(
-            session=session,
-            base_url=test_client.get_base_url()
-        )
+
+@fixture(scope="session")
+async def spotify_session(authorization_server: HTTPServer) -> SpotifySession:
+    token_request_url = authorization_server.url_for("").rstrip("/")
+    authorization_server.expect_request(
+        uri="/",
+        method="POST",
+        data=f'{GRANT_TYPE}={SpotifyGrantType.CLIENT_CREDENTIALS.value}&{JSON}=True',
+    ).respond_with_json({ACCESS_TOKEN: "bla"})
+
+    raw_session = SpotifySession(
+        token_request_url=token_request_url,
+        client_id="a",
+        client_secret="b",
+        redirect_uri="c",
+    )
+
+    async with raw_session as session:
+        yield session
+
+
+@fixture(scope="session")
+async def spotify_client(test_client: SpotifyTestClient, spotify_session: SpotifySession) -> SpotifyClient:
+    return SpotifyClient.create(
+        session=spotify_session,
+        base_url=test_client.get_base_url()
+    )

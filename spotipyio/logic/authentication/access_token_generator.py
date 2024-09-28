@@ -14,10 +14,12 @@ from spotipyio.utils.web_utils import create_client_session
 
 class AccessTokenGenerator:
     def __init__(self,
+                 token_request_url: str,
                  client_id: Optional[str] = None,
                  client_secret: Optional[str] = None,
                  redirect_uri: Optional[str] = None,
                  session: Optional[ClientSession] = None):
+        self._token_request_url = token_request_url
         self._client_id = client_id or os.environ[SPOTIPY_CLIENT_ID]
         self._client_secret = client_secret or os.environ[SPOTIPY_CLIENT_SECRET]
         self._redirect_uri = redirect_uri or os.environ[SPOTIPY_REDIRECT_URI]
@@ -28,7 +30,7 @@ class AccessTokenGenerator:
         headers = {'Authorization': f"Basic {encoded_header}"}
         data = self._build_request_payload(access_code, grant_type)
 
-        async with self._session.post(url=TOKEN_REQUEST_URL, headers=headers, data=data) as raw_response:
+        async with self._session.post(url=self._token_request_url, headers=headers, data=data) as raw_response:
             raw_response.raise_for_status()
             return await raw_response.json()
 
