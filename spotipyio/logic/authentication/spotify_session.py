@@ -81,8 +81,9 @@ class SpotifySession:
             return
 
     async def __aenter__(self) -> "SpotifySession":
-        raw_session = await self._build_client_session(use_cache=True)
-        self._session = await raw_session.__aenter__()
+        if self._session is None:
+            raw_session = await self._build_client_session(use_cache=True)
+            self._session = await raw_session.__aenter__()
 
         return self
 

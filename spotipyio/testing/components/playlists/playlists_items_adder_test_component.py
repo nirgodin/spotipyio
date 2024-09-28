@@ -5,6 +5,7 @@ from pytest_httpserver import RequestHandler, HTTPServer
 
 from spotipyio.consts.spotify_consts import PLAYLISTS, TRACKS, URIS, POSITION, SNAPSHOT_ID
 from spotipyio.consts.typing_consts import Json
+from spotipyio.models import ChunkSize
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 from spotipyio.tools import DataChunksGenerator
@@ -60,7 +61,7 @@ class PlaylistItemsAdderTestComponent(BaseTestComponent):
                                  position: Optional[int]) -> List[RequestHandler]:
         handlers = []
 
-        for chunk in self._chunks_generator.generate_data_chunks(lst=uris, chunk_size=self._chunk_size):
+        for chunk in self._chunks_generator.generate_data_chunks(lst=uris, chunk_size=ChunkSize.ITEMS_ADDITION.value):
             payload = {
                 URIS: chunk,
                 POSITION: position
@@ -72,7 +73,7 @@ class PlaylistItemsAdderTestComponent(BaseTestComponent):
             handlers.append(handler)
 
             if position is not None:
-                position += self._chunk_size
+                position += ChunkSize.ITEMS_ADDITION.value
 
         return handlers
 
@@ -84,7 +85,3 @@ class PlaylistItemsAdderTestComponent(BaseTestComponent):
                 response_json=response,
                 status=201
             )
-
-    @property
-    def _chunk_size(self) -> int:
-        return 100

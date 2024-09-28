@@ -1,5 +1,6 @@
 from spotipyio.consts.spotify_consts import TRACKS
 from spotipyio.contract import BaseChunksCollector
+from spotipyio.models import ChunkSize
 
 
 class TracksCollector(BaseChunksCollector):
@@ -8,5 +9,5 @@ class TracksCollector(BaseChunksCollector):
         return TRACKS
 
     @property
-    def _chunk_size(self) -> int:
-        return 50
+    def _chunk_size(self) -> ChunkSize:
+        return ChunkSize.TRACKS

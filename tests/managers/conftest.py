@@ -25,6 +25,22 @@ def test_client() -> SpotifyTestClient:
 
 
 @fixture(scope="session")
+def base_url(test_client: SpotifyTestClient) -> str:
+    return test_client.get_base_url()
+
+
+@fixture(scope="session")
+async def spotify_client(base_url: str) -> SpotifyClient:
+    raw_session = create_client_session()
+
+    async with SpotifySession(session=raw_session) as session:
+        yield SpotifyClient.create(
+            session=session,
+            base_url=base_url
+        )
+
+
+@fixture(scope="session")
 def authorization_server() -> HTTPServer:
     with HTTPServer() as mock_authorization_server:
         yield mock_authorization_server
@@ -44,15 +60,4 @@ async def spotify_session(authorization_server: HTTPServer) -> SpotifySession:
         client_id="a",
         client_secret="b",
         redirect_uri="c",
-    )
-
-    async with raw_session as session:
-        yield session
-
-
-@fixture(scope="session")
-async def spotify_client(test_client: SpotifyTestClient, spotify_session: SpotifySession) -> SpotifyClient:
-    return SpotifyClient.create(
-        session=spotify_session,
-        base_url=test_client.get_base_url()
     )

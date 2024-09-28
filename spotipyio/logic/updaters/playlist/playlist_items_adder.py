@@ -3,6 +3,7 @@ from typing import List, Optional
 from spotipyio.consts.spotify_consts import URIS, TRACKS, POSITION, SNAPSHOT_ID
 from spotipyio.contract import BasePlaylistsUpdater
 from spotipyio.logic.authentication.spotify_session import SpotifySession
+from spotipyio.models import ChunkSize
 from spotipyio.tools import DataChunksGenerator
 
 
@@ -17,7 +18,7 @@ class PlaylistItemsAdder(BasePlaylistsUpdater):
     async def run(self, playlist_id: str, uris: List[str], position: Optional[int] = None) -> List[str]:
         chunks = self._chunks_generator.generate_data_chunks(
             lst=uris,
-            chunk_size=self._chunk_size
+            chunk_size=ChunkSize.ITEMS_ADDITION.value
         )
         url = self._build_url(playlist_id)
         snapshots = []
@@ -31,7 +32,7 @@ class PlaylistItemsAdder(BasePlaylistsUpdater):
             snapshots.append(chunk_snapshot)
 
             if position is not None:
-                position += self._chunk_size
+                position += ChunkSize.ITEMS_ADDITION.value
 
         return snapshots
 
@@ -47,7 +48,3 @@ class PlaylistItemsAdder(BasePlaylistsUpdater):
     @property
     def _route(self) -> str:
         return TRACKS
-
-    @property
-    def _chunk_size(self) -> int:
-        return 100

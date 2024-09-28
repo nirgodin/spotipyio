@@ -4,6 +4,7 @@ from typing import List
 from spotipyio.consts.spotify_consts import IDS
 from spotipyio.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.logic.authentication.spotify_session import SpotifySession
+from spotipyio.models import ChunkSize
 from spotipyio.tools import DataChunksGenerator
 from spotipyio.utils.general_utils import chain_iterable
 
@@ -19,7 +20,7 @@ class BaseChunksCollector(ISpotifyComponent, ABC):
             lst=ids,
             func=self._run_single,
             expected_type=list,
-            chunk_size=self._chunk_size
+            chunk_size=self._chunk_size.value
         )
         return chain_iterable(chunks)
 
@@ -29,7 +30,7 @@ class BaseChunksCollector(ISpotifyComponent, ABC):
 
     @property
     @abstractmethod
-    def _chunk_size(self) -> int:
+    def _chunk_size(self) -> ChunkSize:
         raise NotImplementedError
 
     @property
