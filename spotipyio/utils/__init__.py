@@ -9,6 +9,7 @@ __all__ = [
     "chain_iterable",
     "compute_similarity_score",
     "create_client_session",
+    "encode_bearer_token",
     "encode_image_to_base64",
     "extract_first_search_result",
     "get_current_timestamp",

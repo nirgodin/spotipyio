@@ -2,7 +2,7 @@ from typing import Optional, Dict, Any
 
 from aiohttp import ClientSession, ClientResponse, ContentTypeError, ClientResponseError
 
-from spotipyio.consts.api_consts import ACCESS_TOKEN, REFRESH_TOKEN
+from spotipyio.consts.api_consts import ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_REQUEST_URL
 from spotipyio.consts.typing_consts import Json
 from spotipyio.logic.authentication.session_cache_handler_interface import ISessionCacheHandler
 from spotipyio.logic.authentication.access_token_generator import AccessTokenGenerator
@@ -12,6 +12,7 @@ from spotipyio.utils.web_utils import create_client_session
 
 class SpotifySession:
     def __init__(self,
+                 token_request_url: str = TOKEN_REQUEST_URL,
                  client_id: Optional[str] = None,
                  client_secret: Optional[str] = None,
                  redirect_uri: Optional[str] = None,
@@ -19,6 +20,7 @@ class SpotifySession:
                  access_code: Optional[str] = None,
                  session: Optional[ClientSession] = None,
                  session_cache_handler: Optional[ISessionCacheHandler] = None):
+        self._token_request_url = token_request_url
         self._client_id = client_id
         self._client_secret = client_secret
         self._redirect_uri = redirect_uri
@@ -114,17 +116,25 @@ class SpotifySession:
         if cached_response is None:
             return
 
-        async with AccessTokenGenerator(self._client_id, self._client_secret, self._redirect_uri) as token_generator:
+        async with self._build_token_generator() as token_generator:
             return await token_generator.generate(
                 grant_type=SpotifyGrantType.REFRESH_TOKEN,
                 access_code=cached_response[REFRESH_TOKEN]
             )
 
     async def _fetch_new_access_token(self) -> Dict[str, str]:
-        async with AccessTokenGenerator(self._client_id, self._client_secret, self._redirect_uri) as token_generator:
+        async with self._build_token_generator() as token_generator:
             response = await token_generator.generate(self._grant_type, self._access_code)
 
         if self._cache_handler is not None:
             self._cache_handler.set(response)
 
         return response
+
+    def _build_token_generator(self) -> AccessTokenGenerator:
+        return AccessTokenGenerator(
+            token_request_url=self._token_request_url,
+            client_id=self._client_id,
+            client_secret=self._client_secret,
+            redirect_uri=self._redirect_uri
+        )
