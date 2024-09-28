@@ -7,7 +7,6 @@ from pytest_httpserver import HTTPServer
 from spotipyio import SpotifyClient, SpotifySession, SpotifyGrantType
 from spotipyio.consts.api_consts import GRANT_TYPE, JSON, ACCESS_TOKEN
 from spotipyio.testing import SpotifyTestClient
-from spotipyio.utils import create_client_session
 from tests.testing_utils import random_alphanumeric_string, random_localhost_url
 
 
