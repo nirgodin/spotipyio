@@ -13,8 +13,7 @@ from spotipyio.consts.api_consts import GRANT_TYPE, JSON, CODE, REDIRECT_URI, RE
     EXPIRES_IN, SCOPE, TOKEN_TYPE
 from spotipyio.consts.env_consts import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI
 from spotipyio.utils import encode_bearer_token
-from tests.testing_utils import random_alphanumeric_string, build_request_data, random_string_array, \
-    random_localhost_url
+from tests.testing_utils import random_alphanumeric_string, build_request_data, random_string_array
 
 
 class TestAccessTokenGenerator:
@@ -119,18 +118,6 @@ class TestAccessTokenGenerator:
         )
 
         assert actual == expected
-
-    @fixture
-    def redirect_uri(self) -> str:
-        return random_localhost_url()
-
-    @fixture
-    def client_id(self) -> str:
-        return random_alphanumeric_string(32, 32)
-
-    @fixture
-    def client_secret(self) -> str:
-        return random_alphanumeric_string(32, 32)
 
     @fixture
     def client_details(self, client_id: str, client_secret: str, redirect_uri: str) -> Dict[str, str]:

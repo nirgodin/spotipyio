@@ -8,6 +8,7 @@ from spotipyio import SpotifyClient, SpotifySession, SpotifyGrantType
 from spotipyio.consts.api_consts import GRANT_TYPE, JSON, ACCESS_TOKEN
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.utils import create_client_session
+from tests.testing_utils import random_alphanumeric_string, random_localhost_url
 
 
 @fixture(scope="session")
@@ -48,17 +49,38 @@ def token_request_url(authorization_server: HTTPServer) -> str:
 
 
 @fixture(scope="session")
-async def spotify_session(authorization_server: HTTPServer, token_request_url: str) -> SpotifySession:
-    authorization_server.expect_request(
+def redirect_uri() -> str:
+    return random_localhost_url()
+
+
+@fixture(scope="session")
+def client_id() -> str:
+    return random_alphanumeric_string(32, 32)
+
+
+@fixture(scope="session")
+def client_secret() -> str:
+    return random_alphanumeric_string(32, 32)
+
+
+@fixture(scope="session")
+async def spotify_session(authorization_server: HTTPServer,
+                          token_request_url: str,
+                          client_id: str,
+                          client_secret: str,
+                          redirect_uri: str) -> SpotifySession:
+    request_handler = authorization_server.expect_request(
         uri="/",
         method="POST",
         data=f'{GRANT_TYPE}={SpotifyGrantType.CLIENT_CREDENTIALS.value}&{JSON}=True',
-    ).respond_with_json({ACCESS_TOKEN: "bla"})
+    )
+    authorization_server_response = {ACCESS_TOKEN: random_alphanumeric_string()}
+    request_handler.respond_with_json(authorization_server_response)
     raw_session = SpotifySession(
         token_request_url=token_request_url,
-        client_id="a",
-        client_secret="b",
-        redirect_uri="c",
+        client_id=client_id,
+        client_secret=client_secret,
+        redirect_uri=redirect_uri,
     )
 
     async with raw_session as session:
