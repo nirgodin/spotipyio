@@ -62,8 +62,7 @@ class AccessTokenGenerator:
                 JSON: True
             }
 
-        else:
-            raise ValueError('Did not recognize grant type')
+        raise ValueError('Did not recognize grant type')
 
     async def __aenter__(self) -> "AccessTokenGenerator":
         raw_session = create_client_session()

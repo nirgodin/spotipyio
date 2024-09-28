@@ -2,6 +2,7 @@ import os
 from random import choice, randint
 from string import ascii_letters, digits
 from typing import Type, List, Any, Callable, Optional, Dict
+from urllib.parse import urlencode
 
 from spotipyio.consts.typing_consts import EnumType
 
@@ -48,3 +49,20 @@ def random_string_dict(length: Optional[int] = None) -> Dict[str, str]:
 
 def assert_sorted_equal(actual: List[dict], expected: List[dict], sort_by: str) -> None:
     assert sorted(actual, key=lambda x: x[sort_by]) == sorted(expected, key=lambda x: x[sort_by])
+
+
+def build_request_data(data: dict) -> bytes:
+    return bytes(urlencode(data).encode())
+
+
+def random_string_array(length: Optional[int] = None) -> List[str]:
+    n_elements = length or randint(0, 10)
+    return [random_alphanumeric_string() for _ in range(n_elements)]
+
+
+def random_port() -> int:
+    return randint(1000, 10000)
+
+
+def random_localhost_url() -> str:
+    return f"http://localhost:{random_port()}"
