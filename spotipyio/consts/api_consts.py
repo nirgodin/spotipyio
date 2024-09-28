@@ -6,3 +6,6 @@ JSON = 'json'
 REFRESH_TOKEN = 'refresh_token'
 CLIENT_ID = 'client_id'
 ACCESS_TOKEN = 'access_token'
+EXPIRES_IN = "expires_in"
+SCOPE = "scope"
+TOKEN_TYPE = "token_type"

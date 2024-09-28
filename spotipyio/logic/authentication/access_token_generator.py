@@ -1,15 +1,12 @@
-import base64
 import os
 from typing import Dict, Optional
 
 from aiohttp import ClientSession
 
-from spotipyio.consts.api_consts import TOKEN_REQUEST_URL, REDIRECT_URI, CODE, GRANT_TYPE, JSON, REFRESH_TOKEN, \
-    CLIENT_ID
+from spotipyio.consts.api_consts import REDIRECT_URI, CODE, GRANT_TYPE, JSON, REFRESH_TOKEN, CLIENT_ID
 from spotipyio.consts.env_consts import SPOTIPY_CLIENT_SECRET, SPOTIPY_CLIENT_ID, SPOTIPY_REDIRECT_URI
-
 from spotipyio.logic.authentication.spotify_grant_type import SpotifyGrantType
-from spotipyio.utils.web_utils import create_client_session
+from spotipyio.utils import create_client_session, encode_bearer_token
 
 
 class AccessTokenGenerator:
@@ -26,19 +23,13 @@ class AccessTokenGenerator:
         self._session = session
 
     async def generate(self, grant_type: SpotifyGrantType, access_code: Optional[str]) -> Dict[str, str]:
-        encoded_header = self._get_encoded_header()
+        encoded_header = encode_bearer_token(client_id=self._client_id, client_secret=self._client_secret)
         headers = {'Authorization': f"Basic {encoded_header}"}
         data = self._build_request_payload(access_code, grant_type)
 
         async with self._session.post(url=self._token_request_url, headers=headers, data=data) as raw_response:
             raw_response.raise_for_status()
             return await raw_response.json()
-
-    def _get_encoded_header(self) -> str:
-        bytes_auth = bytes(f"{self._client_id}:{self._client_secret}", "ISO-8859-1")
-        b64_auth = base64.b64encode(bytes_auth)
-
-        return b64_auth.decode('ascii')
 
     def _build_request_payload(self, access_code: str, grant_type: SpotifyGrantType) -> dict:
         if grant_type == SpotifyGrantType.AUTHORIZATION_CODE:
