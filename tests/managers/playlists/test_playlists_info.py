@@ -11,7 +11,6 @@ from spotipyio.consts.spotify_consts import ID, TRACKS, ITEMS
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 from spotipyio.testing.utils import RandomPagedResponsesBuilder
-from tests.managers.conftest import base_url
 from tests.testing_utils import assert_sorted_equal
 
 

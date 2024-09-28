@@ -1,5 +1,4 @@
 import asyncio
-import json
 from asyncio import AbstractEventLoop
 
 from _pytest.fixtures import fixture
@@ -30,14 +29,11 @@ def base_url(test_client: SpotifyTestClient) -> str:
 
 
 @fixture(scope="session")
-async def spotify_client(base_url: str) -> SpotifyClient:
-    raw_session = create_client_session()
-
-    async with SpotifySession(session=raw_session) as session:
-        yield SpotifyClient.create(
-            session=session,
-            base_url=base_url
-        )
+async def spotify_client(base_url: str, spotify_session: SpotifySession) -> SpotifyClient:
+    return SpotifyClient.create(
+        session=spotify_session,
+        base_url=base_url
+    )
 
 
 @fixture(scope="session")
@@ -47,17 +43,23 @@ def authorization_server() -> HTTPServer:
 
 
 @fixture(scope="session")
-async def spotify_session(authorization_server: HTTPServer) -> SpotifySession:
-    token_request_url = authorization_server.url_for("").rstrip("/")
+def token_request_url(authorization_server: HTTPServer) -> str:
+    return authorization_server.url_for("").rstrip("/")
+
+
+@fixture(scope="session")
+async def spotify_session(authorization_server: HTTPServer, token_request_url: str) -> SpotifySession:
     authorization_server.expect_request(
         uri="/",
         method="POST",
         data=f'{GRANT_TYPE}={SpotifyGrantType.CLIENT_CREDENTIALS.value}&{JSON}=True',
     ).respond_with_json({ACCESS_TOKEN: "bla"})
-
     raw_session = SpotifySession(
         token_request_url=token_request_url,
         client_id="a",
         client_secret="b",
         redirect_uri="c",
     )
+
+    async with raw_session as session:
+        yield session
