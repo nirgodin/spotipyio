@@ -1,4 +1,4 @@
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, fields, field
 from typing import Optional, Dict, List
 from urllib.parse import quote
 
@@ -10,8 +10,8 @@ from spotipyio.models.search.search_item_metadata import SearchItemMetadata
 @dataclass
 class SearchItem:
     text: Optional[str] = None
-    filters: SearchItemFilters = SearchItemFilters()
-    metadata: SearchItemMetadata = SearchItemMetadata()
+    filters: SearchItemFilters = field(default_factory=lambda: SearchItemFilters())
+    metadata: SearchItemMetadata = field(default_factory=lambda: SearchItemMetadata())
 
     def __post_init__(self):
         self._validate_input()
