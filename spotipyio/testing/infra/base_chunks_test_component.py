@@ -51,7 +51,7 @@ class BaseChunksTestComponent(BaseTestComponent, ABC):
                 f"Number of provided responses ({responses_number}) didn't match number of handlers ({handlers_number})"
             )
 
-        for handler, response_json in zip(handlers, responses, strict=True):
+        for handler, response_json in zip(handlers, responses):
             handler.respond_with_json(
                 status=200,
                 response_json=response_json

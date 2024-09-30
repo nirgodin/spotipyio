@@ -10,7 +10,6 @@ python = ">=3.8,<3.13"
 aiohttp = ">=3.9.0,<4"
 asyncio-pool = ">=0.6,<1.0"
 tqdm = ">=4.65,<5.0"
-dataclasses-json = ">=0.6,<1.0"
 pillow = ">=10.1,<11.0"
 certifi = ">=2023.11,<2024.0"
 pytest-httpserver = { version = ">=1.0.12,<1.1", optional = true }
