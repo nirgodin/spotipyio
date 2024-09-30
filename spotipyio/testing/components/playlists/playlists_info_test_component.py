@@ -29,7 +29,7 @@ class PlaylistsInfoTestComponent(BaseTestComponent):
             expected_pages=expected_pages
         )
 
-        for handler, response in zip(request_handlers, responses, strict=True):
+        for handler, response in zip(request_handlers, responses):
             handler.respond_with_json(response)
 
     def expect_failure(self,
