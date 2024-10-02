@@ -7,6 +7,7 @@ from pytest_httpserver import HTTPServer
 from spotipyio import SpotifyClient, SpotifySession, SpotifyGrantType
 from spotipyio.consts.api_consts import GRANT_TYPE, JSON, ACCESS_TOKEN
 from spotipyio.testing.managers import *
+from spotipyio.utils import random_alphanumeric_string
 
 
 class SpotifyTestClient:
@@ -87,7 +88,7 @@ class SpotifyTestClient:
             method="POST",
             data=bytes(urlencode(payload).encode())
         )
-        authorization_server_response = {ACCESS_TOKEN: "abagada"}  # TODO: Use random
+        authorization_server_response = {ACCESS_TOKEN: random_alphanumeric_string()}
         request_handler.respond_with_json(authorization_server_response)
 
     async def _init_session(self):
