@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 from pytest_httpserver import HTTPServer
 
-from spotipyio import SpotifyClient, SpotifySession, SpotifyGrantType
+from spotipyio import SpotifyClient, SpotifySession, SpotifyGrantType, AuthorizationPayloadBuilder
 from spotipyio.consts.api_consts import GRANT_TYPE, JSON, ACCESS_TOKEN
 from spotipyio.testing.managers import *
 from spotipyio.utils import random_alphanumeric_string
@@ -16,6 +16,7 @@ class SpotifyTestClient:
                  client_secret: str,
                  redirect_uri: str,
                  grant_type: SpotifyGrantType = SpotifyGrantType.CLIENT_CREDENTIALS,
+                 access_code: Optional[str] = None,
                  api_server: Optional[HTTPServer] = None,
                  authorization_server: Optional[HTTPServer] = None,
                  session: Optional[SpotifySession] = None,
@@ -32,6 +33,7 @@ class SpotifyTestClient:
         self._client_secret = client_secret
         self._redirect_uri = redirect_uri
         self._grant_type = grant_type
+        self._access_code = access_code
         self._api_server = api_server
         self._authorization_server = authorization_server
         self._session = session
@@ -82,7 +84,12 @@ class SpotifyTestClient:
             self._authorization_server.start()
 
     def _expect_authorization_request(self) -> None:
-        payload = {GRANT_TYPE: SpotifyGrantType.CLIENT_CREDENTIALS.value, JSON: True}  # TODO: Support other grant types
+        payload = AuthorizationPayloadBuilder.build(
+            grant_type=self._grant_type,
+            access_code=self._access_code,
+            client_id=self._client_id,
+            redirect_uri=self._redirect_uri
+        )
         request_handler = self._authorization_server.expect_request(
             uri="/",
             method="POST",
