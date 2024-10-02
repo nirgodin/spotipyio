@@ -119,6 +119,15 @@ class TestAccessTokenGenerator:
 
         assert actual == expected
 
+    @fixture(scope="class")
+    def authorization_server(self) -> HTTPServer:
+        with HTTPServer() as mock_authorization_server:
+            yield mock_authorization_server
+
+    @fixture(scope="class")
+    def token_request_url(self, authorization_server: HTTPServer) -> str:
+        return authorization_server.url_for("").rstrip("/")
+
     @fixture
     def client_details(self, client_id: str, client_secret: str, redirect_uri: str) -> Dict[str, str]:
         return {

@@ -11,11 +11,11 @@ class BaseTestManager:
         pass
 
     @classmethod
-    def create(cls, server: HTTPServer) -> "BaseManager":
+    def create(cls, server: HTTPServer, headers: Dict[str, str]) -> "BaseManager":
         named_components = {}
 
         for name, component in cls._components().items():
-            named_components[name] = component(server=server)
+            named_components[name] = component(server=server, headers=headers)
 
         return cls(**named_components)
 

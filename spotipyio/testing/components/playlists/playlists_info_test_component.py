@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from pytest_httpserver import RequestHandler, HTTPServer
 
@@ -10,8 +10,8 @@ from spotipyio.testing.utils import RandomPagedResponsesBuilder
 
 
 class PlaylistsInfoTestComponent(BaseTestComponent):
-    def __init__(self, server: HTTPServer):
-        super().__init__(server)
+    def __init__(self, server: HTTPServer, headers: Dict[str, str]):
+        super().__init__(server=server, headers=headers)
         self._paged_responses_builder = RandomPagedResponsesBuilder(
             base_url=self._base_url,
             page_max_size=100

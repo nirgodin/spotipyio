@@ -19,6 +19,7 @@ class SpotifySession:
                  grant_type: SpotifyGrantType = SpotifyGrantType.CLIENT_CREDENTIALS,
                  access_code: Optional[str] = None,
                  session: Optional[ClientSession] = None,
+                 headers: Optional[Dict[str, str]] = None,
                  session_cache_handler: Optional[ISessionCacheHandler] = None):
         self._token_request_url = token_request_url
         self._client_id = client_id
@@ -27,6 +28,7 @@ class SpotifySession:
         self._grant_type = grant_type
         self._access_code = access_code
         self._session = session
+        self._headers = headers
         self._cache_handler = session_cache_handler
 
     async def get(self, url: str, params: Optional[dict] = None) -> Optional[Json]:
@@ -51,6 +53,9 @@ class SpotifySession:
 
         raw_session = await self._build_client_session(use_cache=False)
         self._session = await raw_session.__aenter__()
+
+    def get_authorization_headers(self) -> Dict[str, str]:
+        return self._headers
 
     async def _handle_response(self, response: ClientResponse) -> Optional[Json]:
         if self._is_2xx_successful(response):
@@ -94,13 +99,13 @@ class SpotifySession:
     async def _build_client_session(self, use_cache: bool) -> ClientSession:
         response = await self._fetch_access_token(use_cache)
         access_token = response[ACCESS_TOKEN]
-        headers = {
+        self._headers = {
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": f"Bearer {access_token}"
         }
 
-        return create_client_session(headers)
+        return create_client_session(self._headers)
 
     async def _fetch_access_token(self, use_cache: bool) -> Dict[str, str]:
         if use_cache and self._cache_handler is not None:

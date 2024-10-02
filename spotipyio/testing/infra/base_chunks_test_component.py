@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from pytest_httpserver import HTTPServer, RequestHandler
 
@@ -11,8 +11,11 @@ from spotipyio.tools import DataChunksGenerator
 
 
 class BaseChunksTestComponent(BaseTestComponent, ABC):
-    def __init__(self, server: HTTPServer, chunks_generator: DataChunksGenerator = DataChunksGenerator()):
-        super().__init__(server)
+    def __init__(self,
+                 server: HTTPServer,
+                 headers: Dict[str, str],
+                 chunks_generator: DataChunksGenerator = DataChunksGenerator()):
+        super().__init__(server=server, headers=headers)
         self._chunks_generator = chunks_generator
 
     def expect(self, ids: List[str]) -> List[RequestHandler]:
