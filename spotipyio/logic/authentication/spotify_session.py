@@ -12,16 +12,18 @@ from spotipyio.utils.web_utils import create_client_session
 
 
 class SpotifySession:
-    def __init__(self,
-                 token_request_url: str = TOKEN_REQUEST_URL,
-                 access_token_generator: Optional[AccessTokenGenerator] = None,
-                 client_id: Optional[str] = None,
-                 client_secret: Optional[str] = None,
-                 redirect_uri: Optional[str] = None,
-                 grant_type: SpotifyGrantType = SpotifyGrantType.CLIENT_CREDENTIALS,
-                 access_code: Optional[str] = None,
-                 session: Optional[ClientSession] = None,
-                 session_cache_handler: Optional[ISessionCacheHandler] = None):
+    def __init__(
+        self,
+        token_request_url: str = TOKEN_REQUEST_URL,
+        access_token_generator: Optional[AccessTokenGenerator] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
+        redirect_uri: Optional[str] = None,
+        grant_type: SpotifyGrantType = SpotifyGrantType.CLIENT_CREDENTIALS,
+        access_code: Optional[str] = None,
+        session: Optional[ClientSession] = None,
+        session_cache_handler: Optional[ISessionCacheHandler] = None,
+    ):
         self._token_request_url = token_request_url
         self._access_token_generator = access_token_generator
         self._client_id = client_id
@@ -84,7 +86,7 @@ class SpotifySession:
             history=response.history,
             status=response.status,
             message=f"Spotify request to URL `{response.request_info.url}` with method "
-                    f"`{response.request_info.method}` failed with the following JSON message:\n{json_error_response}"
+            f"`{response.request_info.method}` failed with the following JSON message:\n{json_error_response}",
         )
 
     @staticmethod
@@ -114,7 +116,7 @@ class SpotifySession:
         headers = {
             "Accept": "application/json",
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {access_token}"
+            "Authorization": f"Bearer {access_token}",
         }
 
         return create_client_session(headers)
@@ -133,15 +135,11 @@ class SpotifySession:
 
         if cached_response is not None:
             return await self._generate_access_token(
-                grant_type=SpotifyGrantType.REFRESH_TOKEN,
-                access_code=cached_response[REFRESH_TOKEN]
+                grant_type=SpotifyGrantType.REFRESH_TOKEN, access_code=cached_response[REFRESH_TOKEN]
             )
 
     async def _generate_access_token(self, grant_type: SpotifyGrantType, access_code: str) -> Dict[str, str]:
-        response = await self._access_token_generator.generate(
-            grant_type=grant_type,
-            access_code=access_code
-        )
+        response = await self._access_token_generator.generate(grant_type=grant_type, access_code=access_code)
 
         if self._cache_handler is not None:
             self._cache_handler.set(response)
@@ -153,6 +151,6 @@ class SpotifySession:
             token_request_url=self._token_request_url,
             client_id=self._client_id,
             client_secret=self._client_secret,
-            redirect_uri=self._redirect_uri
+            redirect_uri=self._redirect_uri,
         )
         await self._access_token_generator.__aenter__()

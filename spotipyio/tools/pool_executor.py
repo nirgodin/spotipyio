@@ -12,24 +12,18 @@ class PoolExecutor:
         self._pool_size = pool_size
         self._validate_results = validate_results
 
-    async def run(self,
-                  iterable: Sized,
-                  func: Callable[..., Awaitable[Any]],
-                  expected_type: Optional[Type] = None) -> List[Any]:
+    async def run(
+        self, iterable: Sized, func: Callable[..., Awaitable[Any]], expected_type: Optional[Type] = None
+    ) -> List[Any]:
         if not iterable:
-            logger.warning(f"PoolExecutor did not receive any values in iterable. Returning empty list by default")
+            logger.warning("PoolExecutor did not receive any values in iterable. Returning empty list by default")
             return []
 
-        return await self._execute_in_pool(
-            iterable=iterable,
-            func=func,
-            expected_type=expected_type
-        )
+        return await self._execute_in_pool(iterable=iterable, func=func, expected_type=expected_type)
 
-    async def _execute_in_pool(self,
-                               iterable: Sized,
-                               func: Callable[..., Awaitable[Any]],
-                               expected_type: Optional[Type] = None) -> List[Any]:
+    async def _execute_in_pool(
+        self, iterable: Sized, func: Callable[..., Awaitable[Any]], expected_type: Optional[Type] = None
+    ) -> List[Any]:
         pool = AioPool(self._pool_size)
 
         with tqdm(total=len(iterable)) as progress_bar:

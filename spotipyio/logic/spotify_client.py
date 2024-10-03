@@ -1,21 +1,33 @@
 from __future__ import annotations
 from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL
 from spotipyio.logic.authentication.spotify_session import SpotifySession
-from spotipyio.logic.managers import *
+from spotipyio.logic.managers import (
+    AlbumsManager,
+    ArtistsManager,
+    ChaptersManager,
+    CurrentUserManager,
+    EpisodesManager,
+    PlaylistsManager,
+    SearchManager,
+    TracksManager,
+    UsersManager,
+)
 
 
 class SpotifyClient:
-    def __init__(self,
-                 session: SpotifySession,
-                 albums_manager: AlbumsManager,
-                 artists_manager: ArtistsManager,
-                 chapters_manager: ChaptersManager,
-                 current_user_manager: CurrentUserManager,
-                 episodes_manager: EpisodesManager,
-                 playlists_manager: PlaylistsManager,
-                 search_manager: SearchManager,
-                 tracks_manager: TracksManager,
-                 users_manager: UsersManager,):
+    def __init__(
+        self,
+        session: SpotifySession,
+        albums_manager: AlbumsManager,
+        artists_manager: ArtistsManager,
+        chapters_manager: ChaptersManager,
+        current_user_manager: CurrentUserManager,
+        episodes_manager: EpisodesManager,
+        playlists_manager: PlaylistsManager,
+        search_manager: SearchManager,
+        tracks_manager: TracksManager,
+        users_manager: UsersManager,
+    ):
         self.session = session
         self.albums = albums_manager
         self.artists = artists_manager

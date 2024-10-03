@@ -9,8 +9,4 @@ class PlaylistCreationRequest:
     public: bool
 
     def to_payload(self) -> dict:
-        return {
-            "name": self.name,
-            "description": self.description,
-            "public": self.public
-        }
+        return {"name": self.name, "description": self.description, "public": self.public}

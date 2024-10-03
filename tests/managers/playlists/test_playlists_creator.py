@@ -12,10 +12,9 @@ from tests.testing_utils import random_alphanumeric_string, random_boolean
 
 
 class TestPlaylistsCreator:
-    async def test_run__valid_request__returns_playlist(self,
-                                                        test_client: SpotifyTestClient,
-                                                        spotify_client: SpotifyClient,
-                                                        playlist_request: PlaylistCreationRequest):
+    async def test_run__valid_request__returns_playlist(
+        self, test_client: SpotifyTestClient, spotify_client: SpotifyClient, playlist_request: PlaylistCreationRequest
+    ):
         test_client.playlists.create.expect_success(playlist_request)
 
         actual = await spotify_client.playlists.create.run(playlist_request)
@@ -25,10 +24,9 @@ class TestPlaylistsCreator:
         assert actual[PUBLIC] == playlist_request.public
         assert actual[NAME] == playlist_request.name
 
-    async def test_run__invalid_request__raises_client_response_error(self,
-                                                                      test_client: SpotifyTestClient,
-                                                                      spotify_client: SpotifyClient,
-                                                                      playlist_request: PlaylistCreationRequest):
+    async def test_run__invalid_request__raises_client_response_error(
+        self, test_client: SpotifyTestClient, spotify_client: SpotifyClient, playlist_request: PlaylistCreationRequest
+    ):
         test_client.playlists.create.expect_failure(playlist_request)
 
         with pytest.raises(ClientResponseError):
@@ -40,5 +38,5 @@ class TestPlaylistsCreator:
             user_id=SpotifyMockFactory.spotify_id(),
             name=random_alphanumeric_string(),
             description=random_alphanumeric_string(),
-            public=random_boolean()
+            public=random_boolean(),
         )

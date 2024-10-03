@@ -1,8 +1,22 @@
 from random import randint
 from typing import List, Dict
 
-from spotipyio.consts.spotify_consts import HREF, LIMIT, NEXT, OFFSET, PREVIOUS, TOTAL, ITEMS, ALBUMS, ARTISTS, \
-    AUDIOBOOKS, EPISODES, PLAYLISTS, SHOWS, TRACKS
+from spotipyio.consts.spotify_consts import (
+    HREF,
+    LIMIT,
+    NEXT,
+    OFFSET,
+    PREVIOUS,
+    TOTAL,
+    ITEMS,
+    ALBUMS,
+    ARTISTS,
+    AUDIOBOOKS,
+    EPISODES,
+    PLAYLISTS,
+    SHOWS,
+    TRACKS,
+)
 from spotipyio.models import SpotifySearchType, SearchItem
 
 

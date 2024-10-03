@@ -40,42 +40,34 @@ class BaseTestComponent(ABC):
             params = urlencode(params)
 
         return self._server.expect_request(
-            uri=route,
-            query_string=params,
-            method="GET",
-            handler_type=HandlerType.ONESHOT,
-            headers=self._headers
+            uri=route, query_string=params, method="GET", handler_type=HandlerType.ONESHOT, headers=self._headers
         )
 
     def _expect_post_request(self, route: str, payload: dict) -> RequestHandler:
         return self._server.expect_request(
-            uri=route,
-            method="POST",
-            json=payload,
-            handler_type=HandlerType.ONESHOT,
-            headers=self._headers
+            uri=route, method="POST", json=payload, handler_type=HandlerType.ONESHOT, headers=self._headers
         )
 
     def _expect_delete_request(self, route: str, payload: dict) -> RequestHandler:
         return self._server.expect_request(
-            uri=route,
-            method="DELETE",
-            json=payload,
-            handler_type=HandlerType.ONESHOT,
-            headers=self._headers
+            uri=route, method="DELETE", json=payload, handler_type=HandlerType.ONESHOT, headers=self._headers
         )
 
-    def _expect_put_request(self, route: str, data: Optional[str] = None, payload: Optional[dict] = None) -> RequestHandler:
+    def _expect_put_request(
+        self, route: str, data: Optional[str] = None, payload: Optional[dict] = None
+    ) -> RequestHandler:
         return self._server.expect_request(
             uri=route,
             method="PUT",
             data=data,
             json=payload or UNDEFINED,
             handler_type=HandlerType.ONESHOT,
-            headers=self._headers
+            headers=self._headers,
         )
 
-    def _create_invalid_response(self, status: Optional[int] = None, response_json: Optional[Json] = None) -> Tuple[int, Json]:
+    def _create_invalid_response(
+        self, status: Optional[int] = None, response_json: Optional[Json] = None
+    ) -> Tuple[int, Json]:
         if status is None:
             if response_json is None:
                 return self._generate_random_status_and_message()
@@ -91,11 +83,6 @@ class BaseTestComponent(ABC):
     @staticmethod
     def _generate_random_status_and_message() -> Tuple[int, Dict[str, dict]]:
         status, message = choice(list(INVALID_RESPONSES.items()))
-        json_response = {
-            "error": {
-                "status": status.value,
-                "message": message
-            }
-        }
+        json_response = {"error": {"status": status.value, "message": message}}
 
         return status.value, json_response

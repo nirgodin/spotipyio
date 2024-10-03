@@ -1,7 +1,7 @@
 from typing import List, Dict
 
 from spotipyio import SpotifyClient
-from spotipyio.consts.spotify_consts import ALBUMS, CHAPTERS, EPISODES
+from spotipyio.consts.spotify_consts import EPISODES
 from spotipyio.consts.typing_consts import Json
 from spotipyio.models import ChunkSize
 from spotipyio.testing import SpotifyTestClient

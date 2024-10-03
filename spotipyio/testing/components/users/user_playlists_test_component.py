@@ -18,23 +18,11 @@ class UserPlaylistsTestComponent(BaseTestComponent):
 
         request_handler.respond_with_json(response)
 
-    def expect_failure(self,
-                       user_id: str,
-                       status: Optional[int] = None,
-                       response_json: Optional[Json] = None) -> None:
+    def expect_failure(self, user_id: str, status: Optional[int] = None, response_json: Optional[Json] = None) -> None:
         status, response_json = self._create_invalid_response(status=status, response_json=response_json)
         request_handler = self._create_request_handler(user_id)
 
-        request_handler.respond_with_json(
-            status=status,
-            response_json=response_json
-        )
+        request_handler.respond_with_json(status=status, response_json=response_json)
 
     def _create_request_handler(self, user_id: str) -> RequestHandler:
-        return self._expect_get_request(
-            route=f"/{USERS}/{user_id}/{PLAYLISTS}",
-            params={
-                "offset": "0",
-                "limit": "50"
-            }
-        )
+        return self._expect_get_request(route=f"/{USERS}/{user_id}/{PLAYLISTS}", params={"offset": "0", "limit": "50"})

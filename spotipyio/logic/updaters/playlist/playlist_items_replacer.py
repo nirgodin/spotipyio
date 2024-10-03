@@ -8,10 +8,7 @@ from spotipyio.contract import BasePlaylistsUpdater
 class PlaylistItemsReplacer(BasePlaylistsUpdater):
     async def run(self, playlist_id: str, uris: List[str]) -> Json:
         url = self._build_url(playlist_id)
-        return await self._session.put(
-            url=url,
-            payload={URIS: uris}
-        )
+        return await self._session.put(url=url, payload={URIS: uris})
 
     @property
     def _route(self) -> str:

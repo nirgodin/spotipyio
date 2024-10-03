@@ -19,22 +19,14 @@ class PlaylistsCoverUpdaterTestComponent(BaseTestComponent):
 
         request_handler.respond_with_response(response)
 
-    def expect_failure(self,
-                       playlist_id: str,
-                       image: bytes,
-                       status: Optional[int] = None,
-                       response_json: Optional[Json] = None) -> None:
+    def expect_failure(
+        self, playlist_id: str, image: bytes, status: Optional[int] = None, response_json: Optional[Json] = None
+    ) -> None:
         status, response_json = self._create_invalid_response(status=status, response_json=response_json)
         request_handler = self._create_request_handler(playlist_id, image)
 
-        request_handler.respond_with_json(
-            status=status,
-            response_json=response_json
-        )
+        request_handler.respond_with_json(status=status, response_json=response_json)
 
     def _create_request_handler(self, playlist_id: str, image: bytes) -> RequestHandler:
         data = encode_image_to_base64(image)
-        return self._expect_put_request(
-            route=f"/{PLAYLISTS}/{playlist_id}/{IMAGES}",
-            data=data
-        )
+        return self._expect_put_request(route=f"/{PLAYLISTS}/{playlist_id}/{IMAGES}", data=data)

@@ -12,7 +12,4 @@ class CurrentUserManager(BaseManager):
 
     @staticmethod
     def _components() -> Dict[str, Type[ISpotifyComponent]]:
-        return {
-            "top_items": TopItemsCollector,
-            "profile": CurrentProfileCollector
-        }
+        return {"top_items": TopItemsCollector, "profile": CurrentProfileCollector}

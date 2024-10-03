@@ -8,11 +8,13 @@ from tests.testing_utils import random_alphanumeric_string
 
 
 class RedisTestkit:
-    def __init__(self,
-                 container: Optional[RedisContainer] = None,
-                 image: Optional[str] = None,
-                 port: Optional[int] = None,
-                 password: Optional[str] = None):
+    def __init__(
+        self,
+        container: Optional[RedisContainer] = None,
+        image: Optional[str] = None,
+        port: Optional[int] = None,
+        password: Optional[str] = None,
+    ):
         self.image = image or "redis:7.2"
         self.port = port or 6379
         self.password = password or random_alphanumeric_string()

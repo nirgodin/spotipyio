@@ -12,7 +12,4 @@ class TracksManager(BaseManager):
 
     @staticmethod
     def _components() -> Dict[str, Type[ISpotifyComponent]]:
-        return {
-            "info": TracksCollector,
-            "audio_features": AudioFeaturesCollector
-        }
+        return {"info": TracksCollector, "audio_features": AudioFeaturesCollector}

@@ -22,10 +22,7 @@ class SearchItem:
         else:
             types = [search_type.value for search_type in self.metadata.search_types]
 
-        return {
-            "q": self._build_query(),
-            "type": ",".join(types)
-        }
+        return {"q": self._build_query(), "type": ",".join(types)}
 
     def _build_query(self) -> str:
         query_components = self._get_query_component()
@@ -42,11 +39,11 @@ class SearchItem:
         if self.text is not None:
             query_components.append(self.text)
 
-        for field in fields(self.filters):
-            field_value = getattr(self.filters, field.name)
+        for filter_field in fields(self.filters):
+            field_value = getattr(self.filters, filter_field.name)
 
             if field_value is not None:
-                query_components.append(f"{field.name}:{field_value}")
+                query_components.append(f"{filter_field.name}:{field_value}")
 
         return query_components
 

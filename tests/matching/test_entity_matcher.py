@@ -3,24 +3,22 @@ from random import random, uniform
 import pytest
 from _pytest.fixtures import fixture
 
-from spotipyio import EntityMatcher, MatchingEntity, TrackEntityExtractor, PrimaryArtistEntityExtractor
+from spotipyio.logic.entity_extractors import TrackEntityExtractor, PrimaryArtistEntityExtractor
+from spotipyio.logic.entity_matching import EntityMatcher, MatchingEntity
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 from tests.testing_utils import random_alphanumeric_string, random_string_dict
 
 
 class TestEntityMatcher:
     def test_entity_matcher__extractors_scores_sum_not_one__raises_value_error(self):
-        extractors = {
-            TrackEntityExtractor(): random(),
-            PrimaryArtistEntityExtractor(): random()
-        }
+        extractors = {TrackEntityExtractor(): random(), PrimaryArtistEntityExtractor(): random()}
 
         with pytest.raises(ValueError):
             EntityMatcher(extractors)
 
-    def test_match__not_enough_fields__return_false_and_negative_score(self,
-                                                                       matcher: EntityMatcher,
-                                                                       entity: MatchingEntity):
+    def test_match__not_enough_fields__return_false_and_negative_score(
+        self, matcher: EntityMatcher, entity: MatchingEntity
+    ):
         candidate = random_string_dict()
 
         is_matching, score = matcher.match(entity, candidate)
@@ -28,26 +26,21 @@ class TestEntityMatcher:
         assert not is_matching
         assert score == -1
 
-    def test_match__weighted_score_above_threshold__returns_true_and_score(self,
-                                                                           matcher: EntityMatcher,
-                                                                           entity: MatchingEntity):
-        candidate = SpotifyMockFactory.track(
-            name=entity.track,
-            artists=[SpotifyMockFactory.artist(name=entity.artist)]
-        )
+    def test_match__weighted_score_above_threshold__returns_true_and_score(
+        self, matcher: EntityMatcher, entity: MatchingEntity
+    ):
+        candidate = SpotifyMockFactory.track(name=entity.track, artists=[SpotifyMockFactory.artist(name=entity.artist)])
 
         is_matching, score = matcher.match(entity, candidate)
 
         assert is_matching
         assert score == 1
 
-    def test_match__weighted_score_below_threshold__returns_true_and_score(self,
-                                                                           matcher: EntityMatcher,
-                                                                           entity: MatchingEntity,
-                                                                           threshold: float):
+    def test_match__weighted_score_below_threshold__returns_true_and_score(
+        self, matcher: EntityMatcher, entity: MatchingEntity, threshold: float
+    ):
         candidate = SpotifyMockFactory.track(
-            name=random_alphanumeric_string(),
-            artists=[SpotifyMockFactory.artist(name=random_alphanumeric_string())]
+            name=random_alphanumeric_string(), artists=[SpotifyMockFactory.artist(name=random_alphanumeric_string())]
         )
 
         is_matching, score = matcher.match(entity, candidate)
@@ -60,13 +53,10 @@ class TestEntityMatcher:
         track_extractor_score = random()
         extractors = {
             TrackEntityExtractor(): track_extractor_score,
-            PrimaryArtistEntityExtractor(): 1 - track_extractor_score
+            PrimaryArtistEntityExtractor(): 1 - track_extractor_score,
         }
 
-        return EntityMatcher(
-            extractors=extractors,
-            threshold=threshold
-        )
+        return EntityMatcher(extractors=extractors, threshold=threshold)
 
     @fixture
     def threshold(self) -> float:
@@ -75,6 +65,5 @@ class TestEntityMatcher:
     @fixture
     def entity(self) -> MatchingEntity:
         return MatchingEntity(
-            track=random_alphanumeric_string(min_length=5),
-            artist=random_alphanumeric_string(min_length=5)
+            track=random_alphanumeric_string(min_length=5), artist=random_alphanumeric_string(min_length=5)
         )

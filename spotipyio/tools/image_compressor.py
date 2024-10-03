@@ -13,11 +13,9 @@ from spotipyio.utils import get_current_timestamp, read_image
 
 
 class ImageCompressor:
-    def compress(self,
-                 image: bytes,
-                 target_size_in_kb: int = 256,
-                 quality_interval: int = 5,
-                 file_type: str = "jpeg") -> Optional[bytes]:
+    def compress(
+        self, image: bytes, target_size_in_kb: int = 256, quality_interval: int = 5, file_type: str = "jpeg"
+    ) -> Optional[bytes]:
         with TemporaryDirectory() as dir_path:
             logger.info(f"Starting to compress image. Target size: {target_size_in_kb}")
             serialized_image = self._serialize_image(image)
@@ -26,7 +24,7 @@ class ImageCompressor:
                 dir_path=dir_path,
                 target_size_in_kb=target_size_in_kb,
                 quality_interval=quality_interval,
-                file_type=file_type
+                file_type=file_type,
             )
 
             return self._read_compressed_image(compressed_image_path)
@@ -41,12 +39,9 @@ class ImageCompressor:
 
         return serialized_image
 
-    def _apply_compression_loop(self,
-                                image: Image,
-                                dir_path: str,
-                                target_size_in_kb: int,
-                                quality_interval: int,
-                                file_type: str) -> Optional[str]:
+    def _apply_compression_loop(
+        self, image: Image, dir_path: str, target_size_in_kb: int, quality_interval: int, file_type: str
+    ) -> Optional[str]:
         quality = 100
         image_path = None
         image_size = math.inf
@@ -76,7 +71,7 @@ class ImageCompressor:
             return image_path
 
         else:
-            logger.warn(f"Could not compress image below requested target size. Returning None instead.")
+            logger.warn("Could not compress image below requested target size. Returning None instead.")
 
     @staticmethod
     def _read_compressed_image(path: Optional[str]) -> Optional[bytes]:

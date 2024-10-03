@@ -3,17 +3,16 @@ from typing import Dict, List
 import pytest
 from _pytest.fixtures import fixture
 
-from spotipyio import PrimaryArtistEntityExtractor
 from spotipyio.consts.spotify_consts import ARTISTS
+from spotipyio.logic.entity_extractors import PrimaryArtistEntityExtractor
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 from tests.testing_utils import random_string_dict, random_alphanumeric_string
 
 
 class TestPrimaryArtistEntityExtractor:
-    def test_extract__with_artists__returns_first_artist_name(self,
-                                                              extractor: PrimaryArtistEntityExtractor,
-                                                              primary_artist_name: str,
-                                                              entity: Dict[str, List[Dict[str, str]]]):
+    def test_extract__with_artists__returns_first_artist_name(
+        self, extractor: PrimaryArtistEntityExtractor, primary_artist_name: str, entity: Dict[str, List[Dict[str, str]]]
+    ):
         actual = extractor.extract(entity)
         assert actual == primary_artist_name
 

@@ -1,7 +1,7 @@
 from typing import Type, Dict
 
-from spotipyio.logic import ChaptersCollector
 from spotipyio.contract import BaseManager, ISpotifyComponent
+from spotipyio.logic.collectors import ChaptersCollector
 
 
 class ChaptersManager(BaseManager):

@@ -11,14 +11,16 @@ from spotipyio.logic.updaters.playlist.playlist_items_replacer import PlaylistIt
 
 
 class PlaylistsManager(BaseManager):
-    def __init__(self,
-                 add_items: PlaylistItemsAdder,
-                 create: PlaylistsCreator,
-                 info: PlaylistsCollector,
-                 remove_items: PlaylistItemsRemover,
-                 reorder_items: PlaylistItemsReorder,
-                 replace_items: PlaylistItemsReplacer,
-                 update_cover: PlaylistCoverUpdater):
+    def __init__(
+        self,
+        add_items: PlaylistItemsAdder,
+        create: PlaylistsCreator,
+        info: PlaylistsCollector,
+        remove_items: PlaylistItemsRemover,
+        reorder_items: PlaylistItemsReorder,
+        replace_items: PlaylistItemsReplacer,
+        update_cover: PlaylistCoverUpdater,
+    ):
         super().__init__()
         self.add_items = add_items
         self.create = create

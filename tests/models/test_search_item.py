@@ -10,10 +10,7 @@ class TestSearchItem:
             SearchItem()
 
     def test_to_query_params__quote_false__returns_non_encoded_params_dict(self, search_item: SearchItem):
-        expected = {
-            "q": "Bridge Over Troubled Water artist:Simon & Garfunkel year:1970",
-            "type": "track,album"
-        }
+        expected = {"q": "Bridge Over Troubled Water artist:Simon & Garfunkel year:1970", "type": "track,album"}
         actual = search_item.to_query_params()
         assert actual == expected
 
@@ -21,7 +18,7 @@ class TestSearchItem:
         search_item.metadata.quote = True
         expected = {
             "q": "Bridge%20Over%20Troubled%20Water%20artist%3ASimon%20%26%20Garfunkel%20year%3A1970",
-            "type": "track,album"
+            "type": "track,album",
         }
 
         actual = search_item.to_query_params()
@@ -30,10 +27,7 @@ class TestSearchItem:
 
     def test_to_query_params__text_none__includes_only_filters_in_query(self, search_item: SearchItem):
         search_item.text = None
-        expected = {
-            "q": "artist:Simon & Garfunkel year:1970",
-            "type": "track,album"
-        }
+        expected = {"q": "artist:Simon & Garfunkel year:1970", "type": "track,album"}
 
         actual = search_item.to_query_params()
 
@@ -41,10 +35,7 @@ class TestSearchItem:
 
     def test_to_query_params__no_filters__includes_only_text_in_query(self, search_item: SearchItem):
         search_item.filters = SearchItemFilters()
-        expected = {
-            "q": "Bridge Over Troubled Water",
-            "type": "track,album"
-        }
+        expected = {"q": "Bridge Over Troubled Water", "type": "track,album"}
 
         actual = search_item.to_query_params()
 
@@ -54,12 +45,6 @@ class TestSearchItem:
     def search_item(self) -> SearchItem:
         return SearchItem(
             text="Bridge Over Troubled Water",
-            filters=SearchItemFilters(
-                artist="Simon & Garfunkel",
-                year=1970
-            ),
-            metadata=SearchItemMetadata(
-                search_types=[SpotifySearchType.TRACK, SpotifySearchType.ALBUM],
-                quote=False
-            )
+            filters=SearchItemFilters(artist="Simon & Garfunkel", year=1970),
+            metadata=SearchItemMetadata(search_types=[SpotifySearchType.TRACK, SpotifySearchType.ALBUM], quote=False),
         )

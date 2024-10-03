@@ -12,7 +12,4 @@ class ArtistsTestManager(BaseTestManager):
 
     @staticmethod
     def _components() -> Dict[str, Type[BaseTestComponent]]:
-        return {
-            "info": ArtistsInfoTestComponent,
-            "top_tracks": ArtistsTopTracksTestComponent
-        }
+        return {"info": ArtistsInfoTestComponent, "top_tracks": ArtistsTopTracksTestComponent}
