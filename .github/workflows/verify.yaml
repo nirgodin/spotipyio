@@ -24,11 +24,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -c "import sys; print(sys.version)"
-        pip install poetry==1.6.1
-        poetry export -f requirements.txt --with dev --output requirements.txt --without-hashes --all-extras
-        pip install -r requirements.txt
-        pip install pytest-cov
+        make install
     - name: Test with pytest
       run: |
-        pytest tests --asyncio-mode=auto --doctest-modules --junitxml=junit/test-results.xml --cov=spotipyio tests/ --cov-report=xml --cov-report=html
-        coverage report
+        make test
+        make coverage

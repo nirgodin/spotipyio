@@ -4,7 +4,8 @@ verify:
 
 .PHONY: install
 install:
-	poetry install --all-extras
+	@pip install poetry==1.6.1
+	@poetry install --all-extras
 
 .PHONY: format
 format:
