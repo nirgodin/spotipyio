@@ -12,7 +12,7 @@ format:
 
 .PHONY: lint
 lint:
-	make .format_check .poetry_check
+	make .ruff .format_check .poetry_check
 
 .PHONY: poetry_check
 poetry_check:
@@ -29,3 +29,7 @@ test:
 .PHONY: coverage
 coverage:
 	poetry run coverage report
+
+.PHONY: ruff
+.ruff:
+	poetry run ruff check .
