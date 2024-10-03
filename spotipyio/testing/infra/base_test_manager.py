@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from typing import Dict, Type
 
+from multidict import CIMultiDict
 from pytest_httpserver import HTTPServer
 
 from spotipyio.testing.infra.base_test_component import BaseTestComponent
@@ -11,7 +12,7 @@ class BaseTestManager:
         pass
 
     @classmethod
-    def create(cls, server: HTTPServer, headers: Dict[str, str]) -> "BaseManager":
+    def create(cls, server: HTTPServer, headers: CIMultiDict[str]) -> "BaseManager":
         named_components = {}
 
         for name, component in cls._components().items():

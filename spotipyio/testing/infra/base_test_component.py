@@ -4,6 +4,7 @@ from random import choice
 from typing import Optional, List, Tuple, Dict
 from urllib.parse import urlencode
 
+from multidict import CIMultiDict
 from pytest_httpserver import HTTPServer
 from pytest_httpserver.httpserver import HandlerType, RequestHandler, UNDEFINED
 
@@ -17,7 +18,7 @@ INVALID_RESPONSES = {
 
 
 class BaseTestComponent(ABC):
-    def __init__(self, server: HTTPServer, headers: Dict[str, str]):
+    def __init__(self, server: HTTPServer, headers: CIMultiDict[str]):
         self._server = server
         self._headers = headers
         self._base_url = self._server.url_for("").rstrip("/")
