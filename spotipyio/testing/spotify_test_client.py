@@ -69,6 +69,9 @@ class SpotifyTestClient:
         if self._api_server is not None and self._api_server.is_running():
             self._api_server.stop()
 
+        if self._authorization_server is not None and self._authorization_server.is_running():
+            self._authorization_server.stop()
+
     def _init_api_server(self):
         if self._api_server is None:
             self._api_server = HTTPServer()
