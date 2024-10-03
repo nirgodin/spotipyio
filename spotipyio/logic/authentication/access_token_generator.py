@@ -36,11 +36,18 @@ class AccessTokenGenerator:
             raw_response.raise_for_status()
             return await raw_response.json()
 
-    async def __aenter__(self) -> "AccessTokenGenerator":
+    async def start(self):
         raw_session = create_client_session()
         self._session = await raw_session.__aenter__()
 
         return self
 
+    async def stop(self):
+        if self._session is not None:
+            await self._session.close()
+
+    async def __aenter__(self) -> "AccessTokenGenerator":
+        return await self.start()
+
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
-        await self._session.__aexit__(exc_type, exc_val, exc_tb)
+        await self.stop()
