@@ -20,6 +20,7 @@ pytest = ">=8.0.2,<9.0"
 pytest-asyncio = ">=0.21.1,<0.22"
 testcontainers = ">=3.7.1,<4.0"
 testcontainers-redis = { version = "0.0.1rc1" }
+black = ">=24.8.0,<25"
 
 [tool.poetry.extras]
 testing = ["pytest-httpserver"]
@@ -30,6 +31,9 @@ minversion = "8.0"
 testpaths = ["tests"]
 markers = ["asyncio: mark a test as an asyncio coroutine"]
 addopts = "--asyncio-mode=auto"
+
+[tool.black]
+line-length = 120
 
 [build-system]
 requires = ["poetry-core"]

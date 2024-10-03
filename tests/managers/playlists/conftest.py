@@ -10,6 +10,7 @@ from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 def playlist_id() -> str:
     return SpotifyMockFactory.spotify_id()
 
+
 @fixture
 def uris() -> List[str]:
     length = randint(1, 500)

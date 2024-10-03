@@ -11,5 +11,5 @@ __all__ = [
     "AudioFeaturesCollector",
     "ChaptersCollector",
     "EpisodesCollector",
-    "TracksCollector"
+    "TracksCollector",
 ]

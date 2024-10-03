@@ -22,10 +22,7 @@ class SearchItem:
         else:
             types = [search_type.value for search_type in self.metadata.search_types]
 
-        return {
-            "q": self._build_query(),
-            "type": ",".join(types)
-        }
+        return {"q": self._build_query(), "type": ",".join(types)}
 
     def _build_query(self) -> str:
         query_components = self._get_query_component()

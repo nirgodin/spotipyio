@@ -13,5 +13,5 @@ __all__ = [
     "BasePlaylistsUpdater",
     "BaseSingleCollector",
     "IEntityExtractor",
-    "ISpotifyComponent"
+    "ISpotifyComponent",
 ]

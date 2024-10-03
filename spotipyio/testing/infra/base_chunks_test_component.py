@@ -11,40 +11,26 @@ from spotipyio.tools import DataChunksGenerator
 
 
 class BaseChunksTestComponent(BaseTestComponent, ABC):
-    def __init__(self,
-                 server: HTTPServer,
-                 headers: Dict[str, str],
-                 chunks_generator: DataChunksGenerator = DataChunksGenerator()):
+    def __init__(
+        self, server: HTTPServer, headers: Dict[str, str], chunks_generator: DataChunksGenerator = DataChunksGenerator()
+    ):
         super().__init__(server=server, headers=headers)
         self._chunks_generator = chunks_generator
 
     def expect(self, ids: List[str]) -> List[RequestHandler]:
-        return self._expect_chunks(
-            route=self._route,
-            ids=ids,
-            chunk_size=self._chunk_size.value
-        )
+        return self._expect_chunks(route=self._route, ids=ids, chunk_size=self._chunk_size.value)
 
-    def expect_failure(self, ids: List[str], status: Optional[int] = None, response_json: Optional[Json] = None) -> None:
+    def expect_failure(
+        self, ids: List[str], status: Optional[int] = None, response_json: Optional[Json] = None
+    ) -> None:
         status, response_json = self._create_invalid_response(status=status, response_json=response_json)
-        handlers = self._expect_chunks(
-            route=self._route,
-            ids=ids,
-            chunk_size=self._chunk_size.value
-        )
+        handlers = self._expect_chunks(route=self._route, ids=ids, chunk_size=self._chunk_size.value)
 
         for handler in handlers:
-            handler.respond_with_json(
-                status=status,
-                response_json=response_json
-            )
+            handler.respond_with_json(status=status, response_json=response_json)
 
     def expect_success(self, ids: List[str], responses_json: Optional[List[Json]] = None) -> None:
-        handlers = self._expect_chunks(
-            route=self._route,
-            ids=ids,
-            chunk_size=self._chunk_size.value
-        )
+        handlers = self._expect_chunks(route=self._route, ids=ids, chunk_size=self._chunk_size.value)
         handlers_number = len(handlers)
         responses = responses_json or [self._random_valid_response() for _ in range(handlers_number)]
         responses_number = len(responses)
@@ -55,20 +41,14 @@ class BaseChunksTestComponent(BaseTestComponent, ABC):
             )
 
         for handler, response_json in zip(handlers, responses):
-            handler.respond_with_json(
-                status=200,
-                response_json=response_json
-            )
+            handler.respond_with_json(status=200, response_json=response_json)
 
     def _expect_chunks(self, route: str, ids: List[str], chunk_size: int) -> List[RequestHandler]:
         chunks = self._chunks_generator.generate_data_chunks(lst=ids, chunk_size=chunk_size)
         request_handlers = []
 
         for chunk in chunks:
-            chunk_handler = self._expect_get_request(
-                route=route,
-                params={IDS: ','.join(chunk)}
-            )
+            chunk_handler = self._expect_get_request(route=route, params={IDS: ",".join(chunk)})
             request_handlers.append(chunk_handler)
 
         return request_handlers

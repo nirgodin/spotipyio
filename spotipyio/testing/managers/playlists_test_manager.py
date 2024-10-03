@@ -1,17 +1,24 @@
 from typing import Type, Dict
 
-from spotipyio.testing.components import PlaylistsCreatorTestComponent, PlaylistsInfoTestComponent, \
-    PlaylistItemsAdderTestComponent, PlaylistsItemsRemoverTestComponent, PlaylistsCoverUpdaterTestComponent
+from spotipyio.testing.components import (
+    PlaylistsCreatorTestComponent,
+    PlaylistsInfoTestComponent,
+    PlaylistItemsAdderTestComponent,
+    PlaylistsItemsRemoverTestComponent,
+    PlaylistsCoverUpdaterTestComponent,
+)
 from spotipyio.testing.infra import BaseTestManager, BaseTestComponent
 
 
 class PlaylistsTestManager(BaseTestManager):
-    def __init__(self,
-                 add_items: PlaylistItemsAdderTestComponent,
-                 create: PlaylistsCreatorTestComponent,
-                 info: PlaylistsInfoTestComponent,
-                 remove_items: PlaylistsItemsRemoverTestComponent,
-                 update_cover: PlaylistsCoverUpdaterTestComponent):
+    def __init__(
+        self,
+        add_items: PlaylistItemsAdderTestComponent,
+        create: PlaylistsCreatorTestComponent,
+        info: PlaylistsInfoTestComponent,
+        remove_items: PlaylistsItemsRemoverTestComponent,
+        update_cover: PlaylistsCoverUpdaterTestComponent,
+    ):
         super().__init__()
         self.add_items = add_items
         self.create = create

@@ -3,9 +3,4 @@ from spotipyio.tools.image_compressor import ImageCompressor
 from spotipyio.tools.logging import logger
 from spotipyio.tools.pool_executor import PoolExecutor
 
-__all__ = [
-    "DataChunksGenerator",
-    "ImageCompressor",
-    "logger",
-    "PoolExecutor"
-]
+__all__ = ["DataChunksGenerator", "ImageCompressor", "logger", "PoolExecutor"]

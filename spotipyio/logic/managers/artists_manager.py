@@ -12,7 +12,4 @@ class ArtistsManager(BaseManager):
 
     @staticmethod
     def _components() -> Dict[str, Type[ISpotifyComponent]]:
-        return {
-            "info": ArtistsCollector,
-            "top_tracks": ArtistsTopTracksCollector
-        }
+        return {"info": ArtistsCollector, "top_tracks": ArtistsTopTracksCollector}

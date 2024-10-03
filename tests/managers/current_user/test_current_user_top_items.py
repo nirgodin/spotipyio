@@ -13,34 +13,33 @@ from tests.testing_utils import random_enum_value
 
 
 class TestCurrentUserTopItems:
-    async def test_run__valid_response(self,
-                                       test_client: SpotifyTestClient,
-                                       spotify_client: SpotifyClient,
-                                       items_type: ItemsType,
-                                       time_range: TimeRange,
-                                       limit: int):
+    async def test_run__valid_response(
+        self,
+        test_client: SpotifyTestClient,
+        spotify_client: SpotifyClient,
+        items_type: ItemsType,
+        time_range: TimeRange,
+        limit: int,
+    ):
         expected = SpotifyMockFactory.user_top_items(items_type)
         test_client.current_user.top_items.expect_success(
-            items_type=items_type,
-            time_range=time_range,
-            limit=limit,
-            response_json=expected
+            items_type=items_type, time_range=time_range, limit=limit, response_json=expected
         )
 
         actual = await spotify_client.current_user.top_items.run(
-            items_type=items_type,
-            time_range=time_range,
-            limit=limit
+            items_type=items_type, time_range=time_range, limit=limit
         )
 
         assert actual == expected
 
-    async def test_run__invalid_response__raises_client_response_error(self,
-                                                                       test_client: SpotifyTestClient,
-                                                                       spotify_client: SpotifyClient,
-                                                                       items_type: ItemsType,
-                                                                       time_range: TimeRange,
-                                                                       limit: int):
+    async def test_run__invalid_response__raises_client_response_error(
+        self,
+        test_client: SpotifyTestClient,
+        spotify_client: SpotifyClient,
+        items_type: ItemsType,
+        time_range: TimeRange,
+        limit: int,
+    ):
         test_client.current_user.top_items.expect_failure(
             items_type=items_type,
             time_range=time_range,

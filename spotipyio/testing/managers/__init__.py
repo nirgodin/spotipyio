@@ -17,5 +17,5 @@ __all__ = [
     "PlaylistsTestManager",
     "SearchTestManager",
     "TracksTestManager",
-    "UsersTestManager"
+    "UsersTestManager",
 ]

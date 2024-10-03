@@ -13,18 +13,13 @@ class CurrentProfileTestComponent(BaseTestComponent):
 
     def expect_success(self, response_json: Optional[Json] = None) -> None:
         handler = self._create_request_handler()
-        handler.respond_with_json(
-            response_json=response_json or SpotifyMockFactory.user_profile()
-        )
+        handler.respond_with_json(response_json=response_json or SpotifyMockFactory.user_profile())
 
     def expect_failure(self, status: Optional[int] = None, response_json: Optional[Json] = None) -> None:
         status, response_json = self._create_invalid_response(status, response_json)
         handler = self._create_request_handler()
 
-        handler.respond_with_json(
-            status=status,
-            response_json=response_json
-        )
+        handler.respond_with_json(status=status, response_json=response_json)
 
     def _create_request_handler(self) -> RequestHandler:
         return self._expect_get_request(route=f"/me")

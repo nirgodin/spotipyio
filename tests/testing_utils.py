@@ -29,7 +29,7 @@ def random_alphanumeric_string(min_length: int = 1, max_length: int = 20) -> str
     n_chars = randint(min_length, max_length)
     characters = ascii_letters + digits
 
-    return ''.join(choice(characters) for _ in range(n_chars))
+    return "".join(choice(characters) for _ in range(n_chars))
 
 
 def an_optional(value_generator: Callable[[], Any]) -> Optional[Any]:

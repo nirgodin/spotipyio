@@ -8,10 +8,9 @@ from spotipyio.models.search.spotify_search_type import SpotifySearchType
 __all__ = [
     "ChunkSize",
     "EntityType",
-
     # Search
     "SearchItem",
     "SearchItemFilters",
     "SearchItemMetadata",
-    "SpotifySearchType"
+    "SpotifySearchType",
 ]

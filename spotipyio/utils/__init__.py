@@ -16,5 +16,5 @@ __all__ = [
     "random_alphanumeric_string",
     "read_image",
     "safe_nested_get",
-    "to_uri"
+    "to_uri",
 ]

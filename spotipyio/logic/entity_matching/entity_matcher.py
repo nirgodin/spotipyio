@@ -8,10 +8,12 @@ from spotipyio.utils import compute_similarity_score
 
 
 class EntityMatcher:
-    def __init__(self,
-                 extractors: Optional[Dict[IEntityExtractor, float]] = None,
-                 threshold: float = 0.7,
-                 min_present_fields: int = 2):
+    def __init__(
+        self,
+        extractors: Optional[Dict[IEntityExtractor, float]] = None,
+        threshold: float = 0.7,
+        min_present_fields: int = 2,
+    ):
         self._validate_extractors_scores(extractors)
         self._extractors = extractors or self._get_default_extractors()
         self._threshold = threshold
@@ -52,10 +54,7 @@ class EntityMatcher:
 
     @staticmethod
     def _get_default_extractors() -> Dict[IEntityExtractor, float]:
-        return {
-            TrackEntityExtractor(): 0.65,
-            PrimaryArtistEntityExtractor(): 0.35
-        }
+        return {TrackEntityExtractor(): 0.65, PrimaryArtistEntityExtractor(): 0.35}
 
     def _is_matching(self, scores: List[float]) -> Tuple[bool, float]:
         if len(scores) < self._min_present_fields:

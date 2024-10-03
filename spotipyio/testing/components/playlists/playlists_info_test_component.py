@@ -12,10 +12,7 @@ from spotipyio.testing.utils import RandomPagedResponsesBuilder
 class PlaylistsInfoTestComponent(BaseTestComponent):
     def __init__(self, server: HTTPServer, headers: Dict[str, str]):
         super().__init__(server=server, headers=headers)
-        self._paged_responses_builder = RandomPagedResponsesBuilder(
-            base_url=self._base_url,
-            page_max_size=100
-        )
+        self._paged_responses_builder = RandomPagedResponsesBuilder(base_url=self._base_url, page_max_size=100)
 
     def expect(self, id_: str, expected_pages: int = 1) -> List[RequestHandler]:
         return self._create_request_handlers(id_, expected_pages)
@@ -26,45 +23,38 @@ class PlaylistsInfoTestComponent(BaseTestComponent):
             provided_responses=response_jsons,
             request_handlers=request_handlers,
             playlist_id=id_,
-            expected_pages=expected_pages
+            expected_pages=expected_pages,
         )
 
         for handler, response in zip(request_handlers, responses):
             handler.respond_with_json(response)
 
-    def expect_failure(self,
-                       id_: str,
-                       status: Optional[int] = None,
-                       response_json: Optional[Json] = None,
-                       expected_pages: int = 1) -> None:
+    def expect_failure(
+        self, id_: str, status: Optional[int] = None, response_json: Optional[Json] = None, expected_pages: int = 1
+    ) -> None:
         status, response_json = self._create_invalid_response(status=status, response_json=response_json)
         request_handlers = self._create_request_handlers(id_, expected_pages)
         first_handler = request_handlers[0]
 
-        first_handler.respond_with_json(
-            status=status,
-            response_json=response_json
-        )
+        first_handler.respond_with_json(status=status, response_json=response_json)
 
     def _create_request_handlers(self, id_: str, expected_pages: int) -> List[RequestHandler]:
         handlers = [self._expect_get_request(route=f"/{PLAYLISTS}/{id_}")]
 
         for i in range(1, expected_pages):
-            params = {
-                OFFSET: str(i * 100),
-                LIMIT: "100",
-                ADDITIONAL_TYPES: TRACK
-            }
+            params = {OFFSET: str(i * 100), LIMIT: "100", ADDITIONAL_TYPES: TRACK}
             page_handler = self._expect_get_request(route=f"/{PLAYLISTS}/{id_}/{TRACKS}", params=params)
             handlers.append(page_handler)
 
         return handlers
 
-    def _build_responses(self,
-                         provided_responses: Optional[List[Json]],
-                         request_handlers: List[RequestHandler],
-                         playlist_id: str,
-                         expected_pages: int) -> List[Json]:
+    def _build_responses(
+        self,
+        provided_responses: Optional[List[Json]],
+        request_handlers: List[RequestHandler],
+        playlist_id: str,
+        expected_pages: int,
+    ) -> List[Json]:
         if provided_responses is not None:
             self._validate_provided_responses(provided_responses, request_handlers)
             return provided_responses
@@ -72,8 +62,7 @@ class PlaylistsInfoTestComponent(BaseTestComponent):
         return self._paged_responses_builder.build(playlist_id, expected_pages)
 
     @staticmethod
-    def _validate_provided_responses(provided_responses: List[Json],
-                                     request_handlers: List[RequestHandler]) -> None:
+    def _validate_provided_responses(provided_responses: List[Json], request_handlers: List[RequestHandler]) -> None:
         request_handlers_number = len(request_handlers)
         provided_responses_number = len(provided_responses)
 

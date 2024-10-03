@@ -10,10 +10,9 @@ from tests.testing_utils import random_string_dict, random_alphanumeric_string
 
 
 class TestPrimaryArtistEntityExtractor:
-    def test_extract__with_artists__returns_first_artist_name(self,
-                                                              extractor: PrimaryArtistEntityExtractor,
-                                                              primary_artist_name: str,
-                                                              entity: Dict[str, List[Dict[str, str]]]):
+    def test_extract__with_artists__returns_first_artist_name(
+        self, extractor: PrimaryArtistEntityExtractor, primary_artist_name: str, entity: Dict[str, List[Dict[str, str]]]
+    ):
         actual = extractor.extract(entity)
         assert actual == primary_artist_name
 
