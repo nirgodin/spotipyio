@@ -1,7 +1,7 @@
 from typing import Type, Dict
 
-from spotipyio.logic import EpisodesCollector
 from spotipyio.contract import BaseManager, ISpotifyComponent
+from spotipyio.logic.collectors import EpisodesCollector
 
 
 class EpisodesManager(BaseManager):

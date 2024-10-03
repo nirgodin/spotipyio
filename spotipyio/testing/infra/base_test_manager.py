@@ -12,7 +12,7 @@ class BaseTestManager:
         pass
 
     @classmethod
-    def create(cls, server: HTTPServer, headers: CIMultiDict[str]) -> "BaseManager":
+    def create(cls, server: HTTPServer, headers: CIMultiDict[str]) -> "BaseTestManager":
         named_components = {}
 
         for name, component in cls._components().items():

@@ -1,7 +1,7 @@
 from _pytest.fixtures import fixture
 
-from spotipyio import TrackEntityExtractor
 from spotipyio.consts.spotify_consts import NAME
+from spotipyio.logic.entity_extractors import TrackEntityExtractor
 from tests.testing_utils import random_alphanumeric_string, random_string_dict
 
 

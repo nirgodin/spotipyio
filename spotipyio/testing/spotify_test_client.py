@@ -5,9 +5,20 @@ from urllib.parse import urlencode
 
 from pytest_httpserver import HTTPServer
 
-from spotipyio import SpotifyClient, SpotifySession, SpotifyGrantType, AuthorizationPayloadBuilder
+from spotipyio import SpotifyClient, SpotifySession
 from spotipyio.consts.api_consts import ACCESS_TOKEN
-from spotipyio.testing.managers import *
+from spotipyio.logic.authentication import SpotifyGrantType, AuthorizationPayloadBuilder
+from spotipyio.testing.managers import (
+    AlbumsTestManager,
+    ArtistsTestManager,
+    ChaptersTestManager,
+    CurrentUserTestManager,
+    EpisodesTestManager,
+    PlaylistsTestManager,
+    SearchTestManager,
+    TracksTestManager,
+    UsersTestManager,
+)
 from spotipyio.utils import random_alphanumeric_string
 
 

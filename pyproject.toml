@@ -37,7 +37,7 @@ addopts = "--asyncio-mode=auto"
 line-length = 120
 
 [tool.ruff]
-ignore = [
+lint.ignore = [
     "E501",  # line too long
     "W291",  # trailing whitespaces
 ]
