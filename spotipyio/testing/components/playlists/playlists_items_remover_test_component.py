@@ -1,5 +1,5 @@
 from random import choice
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from pytest_httpserver import RequestHandler, HTTPServer
 
@@ -12,8 +12,11 @@ from spotipyio.tools import DataChunksGenerator
 
 
 class PlaylistsItemsRemoverTestComponent(BaseTestComponent):
-    def __init__(self, server: HTTPServer, chunks_generator: DataChunksGenerator = DataChunksGenerator()):
-        super().__init__(server)
+    def __init__(self,
+                 server: HTTPServer,
+                 headers: Dict[str, str],
+                 chunks_generator: DataChunksGenerator = DataChunksGenerator()):
+        super().__init__(server=server, headers=headers)
         self._chunks_generator = chunks_generator
 
     def expect(self, playlist_id: str, uris: List[str], snapshot_id: str) -> List[RequestHandler]:

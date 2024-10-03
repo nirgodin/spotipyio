@@ -4,6 +4,7 @@ from random import choice
 from typing import Optional, List, Tuple, Dict
 from urllib.parse import urlencode
 
+from multidict import CIMultiDict
 from pytest_httpserver import HTTPServer
 from pytest_httpserver.httpserver import HandlerType, RequestHandler, UNDEFINED
 
@@ -17,8 +18,9 @@ INVALID_RESPONSES = {
 
 
 class BaseTestComponent(ABC):
-    def __init__(self, server: HTTPServer):
+    def __init__(self, server: HTTPServer, headers: CIMultiDict[str]):
         self._server = server
+        self._headers = headers
         self._base_url = self._server.url_for("").rstrip("/")
 
     @abstractmethod
@@ -41,7 +43,8 @@ class BaseTestComponent(ABC):
             uri=route,
             query_string=params,
             method="GET",
-            handler_type=HandlerType.ONESHOT
+            handler_type=HandlerType.ONESHOT,
+            headers=self._headers
         )
 
     def _expect_post_request(self, route: str, payload: dict) -> RequestHandler:
@@ -49,7 +52,8 @@ class BaseTestComponent(ABC):
             uri=route,
             method="POST",
             json=payload,
-            handler_type=HandlerType.ONESHOT
+            handler_type=HandlerType.ONESHOT,
+            headers=self._headers
         )
 
     def _expect_delete_request(self, route: str, payload: dict) -> RequestHandler:
@@ -57,7 +61,8 @@ class BaseTestComponent(ABC):
             uri=route,
             method="DELETE",
             json=payload,
-            handler_type=HandlerType.ONESHOT
+            handler_type=HandlerType.ONESHOT,
+            headers=self._headers
         )
 
     def _expect_put_request(self, route: str, data: Optional[str] = None, payload: Optional[dict] = None) -> RequestHandler:
@@ -66,7 +71,8 @@ class BaseTestComponent(ABC):
             method="PUT",
             data=data,
             json=payload or UNDEFINED,
-            handler_type=HandlerType.ONESHOT
+            handler_type=HandlerType.ONESHOT,
+            headers=self._headers
         )
 
     def _create_invalid_response(self, status: Optional[int] = None, response_json: Optional[Json] = None) -> Tuple[int, Json]:
