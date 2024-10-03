@@ -16,7 +16,7 @@ class PoolExecutor:
         self, iterable: Sized, func: Callable[..., Awaitable[Any]], expected_type: Optional[Type] = None
     ) -> List[Any]:
         if not iterable:
-            logger.warning(f"PoolExecutor did not receive any values in iterable. Returning empty list by default")
+            logger.warning("PoolExecutor did not receive any values in iterable. Returning empty list by default")
             return []
 
         return await self._execute_in_pool(iterable=iterable, func=func, expected_type=expected_type)

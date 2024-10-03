@@ -1,11 +1,12 @@
 from __future__ import annotations
+
 from typing import Optional
 from urllib.parse import urlencode
 
 from pytest_httpserver import HTTPServer
 
 from spotipyio import SpotifyClient, SpotifySession, SpotifyGrantType, AuthorizationPayloadBuilder
-from spotipyio.consts.api_consts import GRANT_TYPE, JSON, ACCESS_TOKEN
+from spotipyio.consts.api_consts import ACCESS_TOKEN
 from spotipyio.testing.managers import *
 from spotipyio.utils import random_alphanumeric_string
 

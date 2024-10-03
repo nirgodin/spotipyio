@@ -71,7 +71,7 @@ class ImageCompressor:
             return image_path
 
         else:
-            logger.warn(f"Could not compress image below requested target size. Returning None instead.")
+            logger.warn("Could not compress image below requested target size. Returning None instead.")
 
     @staticmethod
     def _read_compressed_image(path: Optional[str]) -> Optional[bytes]:

@@ -22,4 +22,4 @@ class CurrentProfileTestComponent(BaseTestComponent):
         handler.respond_with_json(status=status, response_json=response_json)
 
     def _create_request_handler(self) -> RequestHandler:
-        return self._expect_get_request(route=f"/me")
+        return self._expect_get_request(route="/me")

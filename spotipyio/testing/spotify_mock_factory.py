@@ -1,11 +1,8 @@
 from calendar import monthrange
 from datetime import datetime
 from random import randint, choice, random, uniform
-from string import ascii_letters, digits
 from typing import Optional, List, Dict, Callable, Any, Type
 
-from spotipyio.consts.typing_consts import EnumType
-from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, SpotifySearchType
 from spotipyio.consts.spotify_consts import (
     PLAYLISTS,
     USERS,
@@ -25,7 +22,9 @@ from spotipyio.consts.spotify_consts import (
     SHOWS,
     AUDIOBOOKS,
 )
+from spotipyio.consts.typing_consts import EnumType
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
+from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, SpotifySearchType
 from spotipyio.testing.search_response_builder import SearchResponseBuilder
 from spotipyio.utils import random_alphanumeric_string
 

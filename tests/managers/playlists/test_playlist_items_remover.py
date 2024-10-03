@@ -1,6 +1,4 @@
-from math import ceil
-from random import randint
-from typing import List, Optional, Dict
+from typing import List
 
 import pytest
 from _pytest.fixtures import fixture
@@ -9,7 +7,6 @@ from aiohttp import ClientResponseError
 from spotipyio import SpotifyClient
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
-from tests.testing_utils import an_optional
 
 
 class TestPlaylistsItemsRemover:

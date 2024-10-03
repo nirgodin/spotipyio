@@ -1,4 +1,4 @@
-from spotipyio.consts.spotify_consts import ALBUMS, CHAPTERS
+from spotipyio.consts.spotify_consts import CHAPTERS
 from spotipyio.contract import BaseChunksCollector
 from spotipyio.models import ChunkSize
 

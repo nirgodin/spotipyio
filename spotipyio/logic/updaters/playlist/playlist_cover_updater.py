@@ -1,5 +1,3 @@
-from typing import Dict, Optional
-
 from spotipyio.consts.spotify_consts import IMAGES
 from spotipyio.contract import BasePlaylistsUpdater
 from spotipyio.logic.authentication.spotify_session import SpotifySession
