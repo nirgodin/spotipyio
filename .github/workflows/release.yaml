@@ -1,0 +1,25 @@
+name: release
+
+on:
+  pull_request:
+    types: [ "closed" ]
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: (github.event.pull_request.merged == true) && (!git diff --quiet origin/main..HEAD -- spotipyio)
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.merge_commit_sha }}
+        fetch-depth: '0'
+
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CUSTOM_TAG: v$(shell sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml)
