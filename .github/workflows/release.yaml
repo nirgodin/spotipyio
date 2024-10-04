@@ -27,8 +27,8 @@ jobs:
             - 'spotipyio/**'
 
     - name: Bump version and push tag
-      if: steps.filter.outputs.spotipyio == 'true'
+#      if: steps.filter.outputs.spotipyio == 'true'
       uses: anothrNick/github-tag-action@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CUSTOM_TAG: v$(shell sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml)
+        CUSTOM_TAG: v0.1.0
