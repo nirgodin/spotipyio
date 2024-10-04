@@ -14,7 +14,7 @@ class SearchItemTestComponent(BaseTestComponent):
 
     def expect_success(self, search_item: SearchItem, response_json: Optional[Json] = None) -> None:
         handler = self._create_request_handler(search_item)
-        handler.respond_with_json(response_json=response_json or SpotifyMockFactory.user_profile())  # TODO: Fix
+        handler.respond_with_json(response_json=response_json or SpotifyMockFactory.search_response(search_item))
 
     def expect_failure(
         self, search_item: SearchItem, status: Optional[int] = None, response_json: Optional[Json] = None
