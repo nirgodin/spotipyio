@@ -23,6 +23,8 @@ testcontainers = ">=3.7.1,<4.0"
 testcontainers-redis = { version = "0.0.1rc1" }
 black = ">=24.8.0,<25"
 ruff = ">=0.6.8,<1"
+toml = ">=0.10.2,<1"
+GitPython = ">=3.1.43,<4"
 
 [tool.poetry.extras]
 testing = ["pytest-httpserver"]
