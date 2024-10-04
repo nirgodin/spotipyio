@@ -14,7 +14,7 @@ class BaseSingleCollector(ISpotifyComponent, ABC):
 
     async def run(
         self, ids: List[str], **params
-    ) -> List[dict]:  # TODO: Think how to better externalize mandatory params
+    ) -> List[dict]:
         func = partial(self.run_single, params=params)
         return await self._pool_executor.run(iterable=ids, func=func, expected_type=dict)
 
