@@ -25,6 +25,7 @@ jobs:
       run: |
         python -c "import sys; print(sys.version)"
         make install
+        sudo apt-get install git
     - name: Configure Git Authentication
       run: |
         git config --global user.name "github-actions[bot]"
