@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    if: (github.event.pull_request.merged == true) && (!git diff --quiet origin/main..HEAD -- spotipyio)
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
@@ -18,7 +18,16 @@ jobs:
         ref: ${{ github.event.pull_request.merge_commit_sha }}
         fetch-depth: '0'
 
+    - name: Filter files changed in PR
+      id: filter
+      uses: dorny/paths-filter@v2
+      with:
+        filters: |
+          spotipyio:
+            - 'spotipyio/**'
+
     - name: Bump version and push tag
+      if: steps.filter.outputs.spotipyio == 'true'
       uses: anothrNick/github-tag-action@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
