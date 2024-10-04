@@ -43,12 +43,12 @@ class SpotifyMockFactory:
     def paged_playlists(**kwargs) -> dict:
         entity_id = kwargs.get("id", SpotifyMockFactory.spotify_id())
         href = kwargs.get("href") or SpotifyMockFactory.href(
-            entity_type=USERS, entity_id=entity_id, extra_routes=[PLAYLISTS]  # TODO: Improve
+            entity_type=USERS, entity_id=entity_id, extra_routes=[PLAYLISTS]
         )
         return {
             HREF: href,
             LIMIT: kwargs.get(LIMIT, randint(1, 50)),
-            NEXT: "",  # TODO: Improve
+            NEXT: "",
             OFFSET: kwargs.get(OFFSET, randint(1, 200)),
             TOTAL: kwargs.get(TOTAL, randint(1, 1000)),
             ITEMS: kwargs.get(ITEMS, SpotifyMockFactory._some_playlists()),
