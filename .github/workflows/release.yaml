@@ -1,34 +1,23 @@
 name: release
 
 on:
-  pull_request:
-    types: [ "closed" ]
-    branches: [ "main" ]
+  push:
+    tags:
+      - "v*"
 
 permissions:
   contents: write
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-22.04
+    name: Tagged Release
+    runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.pull_request.merge_commit_sha }}
-        fetch-depth: '0'
-
-    - name: Filter files changed in PR
-      id: filter
-      uses: dorny/paths-filter@v2
-      with:
-        filters: |
-          spotipyio:
-            - 'spotipyio/**'
-
-    - name: Bump version and push tag
-#      if: steps.filter.outputs.spotipyio == 'true'
-      uses: anothrNick/github-tag-action@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CUSTOM_TAG: v0.1.0
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          title: ${{ github.event.head_commit.message }}
+          prerelease: false
+          files: |
+            *.jar
