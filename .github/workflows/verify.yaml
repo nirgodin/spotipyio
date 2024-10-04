@@ -25,13 +25,8 @@ jobs:
       run: |
         python -c "import sys; print(sys.version)"
         make install
-        sudo apt-get install git
-    - name: Configure Git Authentication
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global credential.helper store
-        echo "https://${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
+        mkdir safedir
+        git config --global --add safe.directory safedir
     - name: Test with pytest
       run: |
         make test
