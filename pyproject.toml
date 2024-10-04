@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spotipyio"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["nirgodin <70273595+nirgodin@users.noreply.github.com>"]
 readme = "README.md"
