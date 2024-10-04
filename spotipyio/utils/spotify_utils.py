@@ -8,7 +8,7 @@ from spotipyio.utils.general_utils import safe_nested_get
 
 def extract_first_search_result(
     result: dict,
-) -> Optional[dict]:  # TODO: Add search result type parameter instead of hard-coded TRACKS
+) -> Optional[dict]:
     items = safe_nested_get(result, [TRACKS, ITEMS])
     if items:
         return items[0]
