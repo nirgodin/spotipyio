@@ -4,7 +4,7 @@ verify:
 
 .PHONY: install
 install:
-	@pip install poetry==1.6.1
+	@make .poetry_install
 	@poetry install --all-extras
 
 .PHONY: format
@@ -25,7 +25,12 @@ coverage:
 
 .PHONY: build
 build:
-	poetry build
+	@make .poetry_install
+	@poetry build
+
+.PHONY: poetry_install
+.poetry_install:
+	pip install poetry==1.6.1
 
 .PHONY: poetry_check
 .poetry_check:
