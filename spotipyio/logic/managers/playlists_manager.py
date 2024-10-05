@@ -2,7 +2,7 @@ from typing import Dict, Type
 
 from spotipyio.logic.contract import BaseManager, ISpotifyComponent
 from spotipyio.logic.collectors import PlaylistsCollector
-from spotipyio.logic.creators.playlists.playlists_creator import PlaylistsCreator
+from spotipyio.logic.creators import PlaylistsCreator
 from spotipyio.logic.updaters.playlist.playlist_cover_updater import PlaylistCoverUpdater
 from spotipyio.logic.updaters.playlist.playlist_items_adder import PlaylistItemsAdder
 from spotipyio.logic.updaters.playlist.playlist_items_remover import PlaylistItemsRemover

@@ -4,7 +4,7 @@ from aiohttp import ClientResponseError
 
 from spotipyio import SpotifyClient
 from spotipyio.logic.consts.spotify_consts import PUBLIC, NAME, DESCRIPTION, OWNER, ID
-from spotipyio.logic.creators.playlists.playlists_creation_request import PlaylistCreationRequest
+from spotipyio.models import PlaylistCreationRequest
 from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
 from spotipyio.logic.utils import safe_nested_get, random_alphanumeric_string
 from tests.testing_utils import random_boolean
