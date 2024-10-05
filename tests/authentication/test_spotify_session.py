@@ -7,7 +7,8 @@ from _pytest.fixtures import fixture
 
 from spotipyio import SpotifySession
 from spotipyio.consts.api_consts import REFRESH_TOKEN, ACCESS_TOKEN
-from spotipyio.logic.authentication import SpotifyGrantType, AccessTokenGenerator, ISessionCacheHandler
+from spotipyio.auth import SpotifyGrantType, ISessionCacheHandler
+from spotipyio.logic.authorization import AccessTokenGenerator
 from spotipyio.utils import create_client_session
 from tests.testing_utils import random_alphanumeric_string, an_optional, random_string_dict
 

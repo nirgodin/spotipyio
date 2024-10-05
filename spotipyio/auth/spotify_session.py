@@ -5,9 +5,9 @@ from multidict import CIMultiDict
 
 from spotipyio.consts.api_consts import ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_REQUEST_URL
 from spotipyio.consts.typing_consts import Json
-from spotipyio.logic.authentication.session_cache_handler_interface import ISessionCacheHandler
-from spotipyio.logic.authentication.access_token_generator import AccessTokenGenerator
-from spotipyio.logic.authentication.spotify_grant_type import SpotifyGrantType
+from spotipyio.auth.session_cache_handler_interface import ISessionCacheHandler
+from spotipyio.logic.authorization import AccessTokenGenerator
+from spotipyio.auth.spotify_grant_type import SpotifyGrantType
 from spotipyio.utils.web_utils import create_client_session
 
 

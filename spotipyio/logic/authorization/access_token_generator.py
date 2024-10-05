@@ -4,8 +4,8 @@ from typing import Dict, Optional
 from aiohttp import ClientSession
 
 from spotipyio.consts.env_consts import SPOTIPY_CLIENT_SECRET, SPOTIPY_CLIENT_ID, SPOTIPY_REDIRECT_URI
-from spotipyio.logic.authentication.spotify_grant_type import SpotifyGrantType
-from spotipyio.logic.authentication.authorization_payload_builder import AuthorizationPayloadBuilder
+from spotipyio.auth.spotify_grant_type import SpotifyGrantType
+from spotipyio.logic.authorization.authorization_payload_builder import AuthorizationPayloadBuilder
 from spotipyio.utils import create_client_session, encode_bearer_token
 
 

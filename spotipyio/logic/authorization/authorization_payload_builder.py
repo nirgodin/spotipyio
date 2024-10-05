@@ -1,4 +1,4 @@
-from spotipyio.logic.authentication.spotify_grant_type import SpotifyGrantType
+from spotipyio.auth.spotify_grant_type import SpotifyGrantType
 from spotipyio.consts.api_consts import GRANT_TYPE, CODE, REDIRECT_URI, JSON, REFRESH_TOKEN, CLIENT_ID
 
 

@@ -3,7 +3,7 @@ from functools import partial
 from typing import List, Optional
 
 from spotipyio.contract.spotify_component_interface import ISpotifyComponent
-from spotipyio.logic.authentication.spotify_session import SpotifySession
+from spotipyio.auth import SpotifySession
 from spotipyio.tools import PoolExecutor
 
 

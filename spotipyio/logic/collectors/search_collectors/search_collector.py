@@ -1,7 +1,7 @@
 from typing import List
 
 from spotipyio.contract import ISpotifyComponent
-from spotipyio.logic.authentication.spotify_session import SpotifySession
+from spotipyio.auth import SpotifySession
 from spotipyio.models import SearchItem
 from spotipyio.tools import PoolExecutor
 

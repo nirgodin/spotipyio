@@ -7,7 +7,8 @@ from pytest_httpserver import HTTPServer
 
 from spotipyio import SpotifyClient, SpotifySession
 from spotipyio.consts.api_consts import ACCESS_TOKEN
-from spotipyio.logic.authentication import SpotifyGrantType, AuthorizationPayloadBuilder
+from spotipyio.auth import SpotifyGrantType
+from spotipyio.logic.authorization import AuthorizationPayloadBuilder
 from spotipyio.testing.managers import (
     AlbumsTestManager,
     ArtistsTestManager,

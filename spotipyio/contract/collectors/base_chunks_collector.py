@@ -3,7 +3,7 @@ from typing import List
 
 from spotipyio.consts.spotify_consts import IDS
 from spotipyio.contract.spotify_component_interface import ISpotifyComponent
-from spotipyio.logic.authentication.spotify_session import SpotifySession
+from spotipyio.auth import SpotifySession
 from spotipyio.models import ChunkSize
 from spotipyio.tools import DataChunksGenerator
 from spotipyio.utils.general_utils import chain_iterable

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Type, Dict
 
 from spotipyio.contract.spotify_component_interface import ISpotifyComponent
-from spotipyio.logic.authentication.spotify_session import SpotifySession
+from spotipyio.auth import SpotifySession
 
 
 class BaseManager(ABC):

@@ -3,7 +3,7 @@ from typing import Optional, Dict
 
 from redis import Redis
 
-from spotipyio.logic.authentication import ISessionCacheHandler
+from spotipyio.auth import ISessionCacheHandler
 
 
 class RedisSessionCacheHandler(ISessionCacheHandler):
