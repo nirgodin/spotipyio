@@ -12,9 +12,7 @@ class BaseSingleCollector(ISpotifyComponent, ABC):
         super().__init__(base_url=base_url, session=session)
         self._pool_executor = pool_executor
 
-    async def run(
-        self, ids: List[str], **params
-    ) -> List[dict]:
+    async def run(self, ids: List[str], **params) -> List[dict]:
         func = partial(self.run_single, params=params)
         return await self._pool_executor.run(iterable=ids, func=func, expected_type=dict)
 
