@@ -1,5 +1,5 @@
 from __future__ import annotations
-from spotipyio.consts.spotify_consts import SPOTIFY_API_BASE_URL
+from spotipyio.logic.consts.spotify_consts import SPOTIFY_API_BASE_URL
 from spotipyio.auth import SpotifySession
 from spotipyio.logic.managers import (
     AlbumsManager,

@@ -1,6 +1,6 @@
 from typing import Generator, Union, Type, Any, List
 
-from spotipyio.consts.typing_consts import AF, F
+from spotipyio.logic.consts.typing_consts import AF, F
 from spotipyio.tools.pool_executor import PoolExecutor
 
 

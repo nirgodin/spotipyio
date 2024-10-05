@@ -3,7 +3,7 @@ from datetime import datetime
 from random import randint, choice, random, uniform
 from typing import Optional, List, Dict, Callable, Any, Type
 
-from spotipyio.consts.spotify_consts import (
+from spotipyio.logic.consts.spotify_consts import (
     PLAYLISTS,
     USERS,
     LIMIT,
@@ -22,7 +22,7 @@ from spotipyio.consts.spotify_consts import (
     SHOWS,
     AUDIOBOOKS,
 )
-from spotipyio.consts.typing_consts import EnumType
+from spotipyio.logic.consts.typing_consts import EnumType
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
 from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, SpotifySearchType
 from spotipyio.testing.search_response_builder import SearchResponseBuilder

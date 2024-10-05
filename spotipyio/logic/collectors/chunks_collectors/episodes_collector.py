@@ -1,4 +1,4 @@
-from spotipyio.consts.spotify_consts import EPISODES
+from spotipyio.logic.consts.spotify_consts import EPISODES
 from spotipyio.contract import BaseChunksCollector
 from spotipyio.models import ChunkSize
 

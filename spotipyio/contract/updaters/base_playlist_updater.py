@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from spotipyio.consts.spotify_consts import PLAYLISTS
+from spotipyio.logic.consts.spotify_consts import PLAYLISTS
 from spotipyio.contract import ISpotifyComponent
 
 

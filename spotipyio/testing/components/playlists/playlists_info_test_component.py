@@ -2,8 +2,8 @@ from typing import List, Optional, Dict
 
 from pytest_httpserver import RequestHandler, HTTPServer
 
-from spotipyio.consts.spotify_consts import PLAYLISTS, TRACKS, OFFSET, LIMIT, ADDITIONAL_TYPES, TRACK
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.consts.spotify_consts import PLAYLISTS, TRACKS, OFFSET, LIMIT, ADDITIONAL_TYPES, TRACK
+from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 from spotipyio.testing.utils import RandomPagedResponsesBuilder

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from spotipyio.consts.spotify_consts import NAME
+from spotipyio.logic.consts.spotify_consts import NAME
 from spotipyio.contract import IEntityExtractor
 
 

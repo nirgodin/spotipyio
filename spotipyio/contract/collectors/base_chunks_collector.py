@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from spotipyio.consts.spotify_consts import IDS
+from spotipyio.logic.consts.spotify_consts import IDS
 from spotipyio.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.auth import SpotifySession
 from spotipyio.models import ChunkSize

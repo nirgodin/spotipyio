@@ -1,6 +1,6 @@
 from typing import Optional
 
-from spotipyio.consts.spotify_consts import NEXT, ITEMS, PLAYLISTS, USERS
+from spotipyio.logic.consts.spotify_consts import NEXT, ITEMS, PLAYLISTS, USERS
 from spotipyio.contract import BasePaginationCollector
 
 

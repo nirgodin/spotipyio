@@ -1,7 +1,7 @@
 from random import randint
 from typing import List, Dict
 
-from spotipyio.consts.spotify_consts import (
+from spotipyio.logic.consts.spotify_consts import (
     HREF,
     LIMIT,
     NEXT,

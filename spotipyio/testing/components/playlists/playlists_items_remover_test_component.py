@@ -3,8 +3,8 @@ from typing import List, Optional, Dict
 
 from pytest_httpserver import RequestHandler, HTTPServer
 
-from spotipyio.consts.spotify_consts import PLAYLISTS, TRACKS, SNAPSHOT_ID, URI
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.consts.spotify_consts import PLAYLISTS, TRACKS, SNAPSHOT_ID, URI
+from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.models import ChunkSize
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory

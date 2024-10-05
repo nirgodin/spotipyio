@@ -1,5 +1,5 @@
-from spotipyio.consts.spotify_consts import TRACKS, RANGE_START, INSERT_BEFORE, SNAPSHOT_ID, RANGE_LENGTH
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.consts.spotify_consts import TRACKS, RANGE_START, INSERT_BEFORE, SNAPSHOT_ID, RANGE_LENGTH
+from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.contract import BasePlaylistsUpdater
 
 

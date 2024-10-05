@@ -3,7 +3,7 @@ from _pytest.fixtures import fixture
 from aiohttp import ClientResponseError
 
 from spotipyio import SpotifyClient
-from spotipyio.consts.spotify_consts import PUBLIC, NAME, DESCRIPTION, OWNER, ID
+from spotipyio.logic.consts.spotify_consts import PUBLIC, NAME, DESCRIPTION, OWNER, ID
 from spotipyio.logic.creators.playlists.playlists_creation_request import PlaylistCreationRequest
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory

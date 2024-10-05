@@ -4,7 +4,7 @@ from string import ascii_letters, digits
 from typing import Type, List, Any, Callable, Optional, Dict
 from urllib.parse import urlencode
 
-from spotipyio.consts.typing_consts import EnumType
+from spotipyio.logic.consts.typing_consts import EnumType
 
 
 def get_all_enum_values(enum_: Type[EnumType]) -> List[EnumType]:

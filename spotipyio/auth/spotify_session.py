@@ -3,8 +3,8 @@ from typing import Optional, Dict, Any
 from aiohttp import ClientSession, ClientResponse, ContentTypeError, ClientResponseError
 from multidict import CIMultiDict
 
-from spotipyio.consts.api_consts import ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_REQUEST_URL
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.consts.api_consts import ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_REQUEST_URL
+from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.auth.session_cache_handler_interface import ISessionCacheHandler
 from spotipyio.logic.authorization import AccessTokenGenerator
 from spotipyio.auth.spotify_grant_type import SpotifyGrantType

@@ -1,4 +1,4 @@
-from spotipyio.consts.spotify_consts import IMAGES
+from spotipyio.logic.consts.spotify_consts import IMAGES
 from spotipyio.contract import BasePlaylistsUpdater
 from spotipyio.auth import SpotifySession
 from spotipyio.tools import ImageCompressor

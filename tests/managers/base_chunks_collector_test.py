@@ -5,7 +5,7 @@ from typing import List, Dict
 from _pytest.fixtures import fixture
 
 from spotipyio import SpotifyClient
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.models import ChunkSize
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory

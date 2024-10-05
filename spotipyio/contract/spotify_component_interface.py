@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.auth import SpotifySession
 
 
