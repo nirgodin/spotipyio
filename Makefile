@@ -1,6 +1,6 @@
 .PHONY: verify
 verify:
-	lint test coverage
+	make lint test coverage
 
 .PHONY: install
 install:
