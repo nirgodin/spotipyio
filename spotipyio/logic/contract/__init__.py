@@ -8,12 +8,10 @@ __all__ = [
     "BasePaginationCollector",
     "BasePlaylistsUpdater",
     "BaseSingleCollector",
-    "IEntityExtractor",
     "ISpotifyComponent",
 ]
 
 from spotipyio.logic.contract.collectors.base_single_collector import BaseSingleCollector
-from spotipyio.logic.contract.entity_extractor_interface import IEntityExtractor
 from spotipyio.logic.contract.spotify_component_interface import ISpotifyComponent
 
 from spotipyio.logic.contract.updaters.base_playlist_updater import BasePlaylistsUpdater

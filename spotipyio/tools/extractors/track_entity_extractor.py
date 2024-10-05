@@ -1,7 +1,7 @@
 from typing import Optional
 
 from spotipyio.logic.consts.spotify_consts import NAME
-from spotipyio.logic.contract import IEntityExtractor
+from spotipyio.tools.extractors.entity_extractor_interface import IEntityExtractor
 
 
 class TrackEntityExtractor(IEntityExtractor):
