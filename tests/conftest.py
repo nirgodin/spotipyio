@@ -6,7 +6,8 @@ from _pytest.fixtures import fixture
 from spotipyio import SpotifyClient
 from spotipyio.auth import SpotifyGrantType
 from spotipyio.testing import SpotifyTestClient
-from tests.testing_utils import random_alphanumeric_string, random_localhost_url, random_enum_value
+from tests.testing_utils import random_localhost_url, random_enum_value
+from spotipyio.logic.utils import random_alphanumeric_string
 
 
 @fixture(scope="session")

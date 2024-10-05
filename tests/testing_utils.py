@@ -1,10 +1,10 @@
 import os
 from random import choice, randint
-from string import ascii_letters, digits
 from typing import Type, List, Any, Callable, Optional, Dict
 from urllib.parse import urlencode
 
 from spotipyio.logic.consts.typing_consts import EnumType
+from spotipyio.logic.utils import random_alphanumeric_string
 
 
 def get_all_enum_values(enum_: Type[EnumType]) -> List[EnumType]:
@@ -23,13 +23,6 @@ def random_multi_enum_values(enum_: Type[EnumType]) -> List[EnumType]:
 
 def random_boolean() -> bool:
     return choice([True, False])
-
-
-def random_alphanumeric_string(min_length: int = 1, max_length: int = 20) -> str:
-    n_chars = randint(min_length, max_length)
-    characters = ascii_letters + digits
-
-    return "".join(choice(characters) for _ in range(n_chars))
 
 
 def an_optional(value_generator: Callable[[], Any]) -> Optional[Any]:

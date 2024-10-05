@@ -6,7 +6,8 @@ from _pytest.fixtures import fixture
 from spotipyio.logic.consts.spotify_consts import ARTISTS
 from spotipyio.logic.entity_extractors import PrimaryArtistEntityExtractor
 from spotipyio.testing import SpotifyMockFactory
-from tests.testing_utils import random_string_dict, random_alphanumeric_string
+from tests.testing_utils import random_string_dict
+from spotipyio.logic.utils import random_alphanumeric_string
 
 
 class TestPrimaryArtistEntityExtractor:

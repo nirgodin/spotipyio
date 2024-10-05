@@ -9,8 +9,8 @@ from spotipyio import SpotifySession
 from spotipyio.logic.consts.api_consts import REFRESH_TOKEN, ACCESS_TOKEN
 from spotipyio.auth import SpotifyGrantType, ISessionCacheHandler
 from spotipyio.logic.authorization import AccessTokenGenerator
-from spotipyio.logic.utils import create_client_session
-from tests.testing_utils import random_alphanumeric_string, an_optional, random_string_dict
+from spotipyio.logic.utils import create_client_session, random_alphanumeric_string
+from tests.testing_utils import an_optional, random_string_dict
 
 
 class TestSpotifySession:
