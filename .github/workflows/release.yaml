@@ -78,8 +78,7 @@ jobs:
         title: ${{ github.event.head_commit.message }}
         prerelease: false
         files: |
-          ./dist/*.tar.gz
-          ./dist/*.whl
+          ./dist/**
 
   pypi-publish:
     name: Publish to PyPI
