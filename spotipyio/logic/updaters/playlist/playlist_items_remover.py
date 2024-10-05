@@ -3,7 +3,7 @@ from typing import List
 from spotipyio.logic.consts.spotify_consts import TRACKS, URI, SNAPSHOT_ID
 from spotipyio.logic.contract import BasePlaylistsUpdater
 from spotipyio.auth import SpotifySession
-from spotipyio.models import ChunkSize
+from spotipyio.logic.internal_models import ChunkSize
 from spotipyio.logic.internal_tools import DataChunksGenerator
 
 

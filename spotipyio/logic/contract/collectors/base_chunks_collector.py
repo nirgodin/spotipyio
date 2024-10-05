@@ -4,7 +4,7 @@ from typing import List
 from spotipyio.logic.consts.spotify_consts import IDS
 from spotipyio.logic.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.auth import SpotifySession
-from spotipyio.models import ChunkSize
+from spotipyio.logic.internal_models import ChunkSize
 from spotipyio.logic.internal_tools import DataChunksGenerator
 from spotipyio.logic.utils.general_utils import chain_iterable
 
