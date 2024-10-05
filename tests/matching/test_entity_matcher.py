@@ -3,8 +3,9 @@ from random import random, uniform
 import pytest
 from _pytest.fixtures import fixture
 
+from spotipyio.models import MatchingEntity
 from spotipyio.tools.extractors import TrackEntityExtractor, PrimaryArtistEntityExtractor
-from spotipyio.logic.entity_matching import EntityMatcher, MatchingEntity
+from spotipyio.tools.matching import EntityMatcher
 from spotipyio.testing import SpotifyMockFactory
 from tests.testing_utils import random_string_dict
 from spotipyio.logic.utils import random_alphanumeric_string
