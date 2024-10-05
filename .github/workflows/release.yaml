@@ -39,14 +39,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - name: Install pypa/build
-        run: >-
-          python3 -m
-          pip install
-          build
-          --user
       - name: Build a binary wheel and a source tarball
-        run: python3 -m build
+        run: make build
       - name: Store the distribution packages
         uses: actions/upload-artifact@v4
         with:
@@ -64,21 +58,13 @@ jobs:
         ref: ${{ github.event.pull_request.merge_commit_sha }}
         fetch-depth: '0'
 
-    - name: Filter files changed in PR
-      id: filter
-      uses: dorny/paths-filter@v2
-      with:
-        filters: |
-          spotipyio:
-            - 'spotipyio/**'
-
     - name: Get version from pyproject.toml
       id: get_version
       run: |
         PACKAGE_VERSION="v$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml)"
         echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
-    - name: Bump version and push tag
+    - name: Push tag
       uses: anothrNick/github-tag-action@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -92,7 +78,7 @@ jobs:
         title: ${{ github.event.head_commit.message }}
         prerelease: false
         files: |
-          *.gz
+          ./dist/**
 
   pypi-publish:
     name: Publish to PyPI
@@ -100,8 +86,8 @@ jobs:
     runs-on: ubuntu-latest
 
     environment:
-      name: testpypi
-      url: https://test.pypi.org/p/spotipyio
+      name: pypi
+      url: https://pypi.org/p/spotipyio
 
     permissions:
       id-token: write
@@ -114,5 +100,3 @@ jobs:
         path: dist/
     - name: Publish distribution to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/

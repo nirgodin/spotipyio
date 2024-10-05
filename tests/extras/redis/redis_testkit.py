@@ -3,8 +3,8 @@ from typing import Optional
 from redis import Redis
 from testcontainers.redis import RedisContainer
 
-from spotipyio.tools import logger
-from tests.testing_utils import random_alphanumeric_string
+from spotipyio.logic.internal_tools import logger
+from spotipyio.logic.utils import random_alphanumeric_string
 
 
 class RedisTestkit:

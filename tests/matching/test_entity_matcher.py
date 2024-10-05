@@ -3,10 +3,12 @@ from random import random, uniform
 import pytest
 from _pytest.fixtures import fixture
 
-from spotipyio.logic.entity_extractors import TrackEntityExtractor, PrimaryArtistEntityExtractor
-from spotipyio.logic.entity_matching import EntityMatcher, MatchingEntity
-from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
-from tests.testing_utils import random_alphanumeric_string, random_string_dict
+from spotipyio.models import MatchingEntity
+from spotipyio.tools.extractors import TrackEntityExtractor, PrimaryArtistEntityExtractor
+from spotipyio.tools.matching import EntityMatcher
+from spotipyio.testing import SpotifyMockFactory
+from tests.testing_utils import random_string_dict
+from spotipyio.logic.utils import random_alphanumeric_string
 
 
 class TestEntityMatcher:

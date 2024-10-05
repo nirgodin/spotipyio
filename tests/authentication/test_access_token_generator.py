@@ -8,7 +8,7 @@ import pytest
 from _pytest.fixtures import fixture
 from pytest_httpserver import HTTPServer
 
-from spotipyio.consts.api_consts import (
+from spotipyio.logic.consts.api_consts import (
     GRANT_TYPE,
     JSON,
     CODE,
@@ -20,10 +20,11 @@ from spotipyio.consts.api_consts import (
     SCOPE,
     TOKEN_TYPE,
 )
-from spotipyio.consts.env_consts import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI
-from spotipyio.logic.authentication import SpotifyGrantType, AccessTokenGenerator
-from spotipyio.utils import encode_bearer_token
-from tests.testing_utils import random_alphanumeric_string, build_request_data, random_string_array
+from spotipyio.logic.consts.env_consts import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI
+from spotipyio.logic.authorization import AccessTokenGenerator
+from spotipyio.auth import SpotifyGrantType
+from spotipyio.logic.utils import encode_bearer_token, random_alphanumeric_string
+from tests.testing_utils import build_request_data, random_string_array
 
 
 class TestAccessTokenGenerator:

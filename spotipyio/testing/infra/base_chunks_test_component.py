@@ -3,11 +3,11 @@ from typing import List, Optional, Dict
 
 from pytest_httpserver import HTTPServer, RequestHandler
 
-from spotipyio.consts.spotify_consts import IDS
-from spotipyio.consts.typing_consts import Json
-from spotipyio.models import ChunkSize
+from spotipyio.logic.consts.spotify_consts import IDS
+from spotipyio.logic.consts.typing_consts import Json
+from spotipyio.logic.internal_models import ChunkSize
 from spotipyio.testing.infra import BaseTestComponent
-from spotipyio.tools import DataChunksGenerator
+from spotipyio.logic.internal_tools import DataChunksGenerator
 
 
 class BaseChunksTestComponent(BaseTestComponent, ABC):

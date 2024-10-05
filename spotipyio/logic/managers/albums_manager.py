@@ -1,6 +1,6 @@
 from typing import Type, Dict
 
-from spotipyio.contract import BaseManager, ISpotifyComponent
+from spotipyio.logic.contract import BaseManager, ISpotifyComponent
 from spotipyio.logic.collectors import AlbumsCollector
 
 

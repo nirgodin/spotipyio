@@ -1,5 +1,5 @@
-from spotipyio.consts.spotify_consts import TIME_RANGE, LIMIT
-from spotipyio.contract import ISpotifyComponent
+from spotipyio.logic.consts.spotify_consts import TIME_RANGE, LIMIT
+from spotipyio.logic.contract import ISpotifyComponent
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
 from spotipyio.logic.collectors.top_items_collectors.time_range import TimeRange
 

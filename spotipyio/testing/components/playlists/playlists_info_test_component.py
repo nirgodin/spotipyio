@@ -1,16 +1,17 @@
-from typing import List, Optional, Dict
+from typing import List, Optional
 
+from multidict import CIMultiDict
 from pytest_httpserver import RequestHandler, HTTPServer
 
-from spotipyio.consts.spotify_consts import PLAYLISTS, TRACKS, OFFSET, LIMIT, ADDITIONAL_TYPES, TRACK
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.consts.spotify_consts import PLAYLISTS, TRACKS, OFFSET, LIMIT, ADDITIONAL_TYPES, TRACK
+from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
-from spotipyio.testing.utils import RandomPagedResponsesBuilder
+from spotipyio.testing.utils.random_paged_responses_builder import RandomPagedResponsesBuilder
 
 
 class PlaylistsInfoTestComponent(BaseTestComponent):
-    def __init__(self, server: HTTPServer, headers: Dict[str, str]):
+    def __init__(self, server: HTTPServer, headers: CIMultiDict):
         super().__init__(server=server, headers=headers)
         self._paged_responses_builder = RandomPagedResponsesBuilder(base_url=self._base_url, page_max_size=100)
 

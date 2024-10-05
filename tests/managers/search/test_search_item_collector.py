@@ -7,8 +7,7 @@ from pytest_asyncio import fixture
 
 from spotipyio import SpotifyClient
 from spotipyio.models import SearchItem
-from spotipyio.testing import SpotifyTestClient
-from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
+from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
 
 
 class TestSearchItemCollector:

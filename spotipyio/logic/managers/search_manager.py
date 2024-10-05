@@ -1,7 +1,7 @@
 from typing import Type, Dict
 
 from spotipyio.logic.collectors import SearchCollector
-from spotipyio.contract import BaseManager, ISpotifyComponent
+from spotipyio.logic.contract import BaseManager, ISpotifyComponent
 
 
 class SearchManager(BaseManager):

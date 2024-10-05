@@ -1,6 +1,6 @@
-from spotipyio.consts.spotify_consts import AUDIO_FEATURES_ROUTE
-from spotipyio.contract import BaseChunksCollector
-from spotipyio.models import ChunkSize
+from spotipyio.logic.consts.spotify_consts import AUDIO_FEATURES_ROUTE
+from spotipyio.logic.contract import BaseChunksCollector
+from spotipyio.logic.internal_models import ChunkSize
 
 
 class AudioFeaturesCollector(BaseChunksCollector):

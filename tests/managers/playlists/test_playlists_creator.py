@@ -3,12 +3,11 @@ from _pytest.fixtures import fixture
 from aiohttp import ClientResponseError
 
 from spotipyio import SpotifyClient
-from spotipyio.consts.spotify_consts import PUBLIC, NAME, DESCRIPTION, OWNER, ID
-from spotipyio.logic.creators.playlists.playlists_creation_request import PlaylistCreationRequest
-from spotipyio.testing import SpotifyTestClient
-from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
-from spotipyio.utils import safe_nested_get
-from tests.testing_utils import random_alphanumeric_string, random_boolean
+from spotipyio.logic.consts.spotify_consts import PUBLIC, NAME, DESCRIPTION, OWNER, ID
+from spotipyio.models import PlaylistCreationRequest
+from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
+from spotipyio.logic.utils import safe_nested_get, random_alphanumeric_string
+from tests.testing_utils import random_boolean
 
 
 class TestPlaylistsCreator:

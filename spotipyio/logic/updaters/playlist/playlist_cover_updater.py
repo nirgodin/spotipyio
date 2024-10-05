@@ -1,8 +1,8 @@
-from spotipyio.consts.spotify_consts import IMAGES
-from spotipyio.contract import BasePlaylistsUpdater
-from spotipyio.logic.authentication.spotify_session import SpotifySession
-from spotipyio.tools import ImageCompressor
-from spotipyio.utils import encode_image_to_base64
+from spotipyio.logic.consts.spotify_consts import IMAGES
+from spotipyio.logic.contract import BasePlaylistsUpdater
+from spotipyio.auth import SpotifySession
+from spotipyio.logic.internal_tools import ImageCompressor
+from spotipyio.logic.utils import encode_image_to_base64
 
 
 class PlaylistCoverUpdater(BasePlaylistsUpdater):

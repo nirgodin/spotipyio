@@ -7,10 +7,9 @@ from _pytest.fixtures import fixture
 from aiohttp import ClientResponseError
 
 from spotipyio import SpotifyClient
-from spotipyio.consts.spotify_consts import ID, TRACKS, ITEMS
-from spotipyio.testing import SpotifyTestClient
-from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
-from spotipyio.testing.utils import RandomPagedResponsesBuilder
+from spotipyio.logic.consts.spotify_consts import ID, TRACKS, ITEMS
+from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
+from spotipyio.testing.utils.random_paged_responses_builder import RandomPagedResponsesBuilder
 from tests.testing_utils import assert_sorted_equal
 
 

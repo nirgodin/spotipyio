@@ -8,7 +8,7 @@ from multidict import CIMultiDict
 from pytest_httpserver import HTTPServer
 from pytest_httpserver.httpserver import HandlerType, RequestHandler, UNDEFINED
 
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.consts.typing_consts import Json
 
 INVALID_RESPONSES = {
     HTTPStatus.UNAUTHORIZED: "Unauthorized",

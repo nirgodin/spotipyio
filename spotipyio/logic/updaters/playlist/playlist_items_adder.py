@@ -1,10 +1,10 @@
 from typing import List, Optional
 
-from spotipyio.consts.spotify_consts import URIS, TRACKS, POSITION, SNAPSHOT_ID
-from spotipyio.contract import BasePlaylistsUpdater
-from spotipyio.logic.authentication.spotify_session import SpotifySession
-from spotipyio.models import ChunkSize
-from spotipyio.tools import DataChunksGenerator
+from spotipyio.logic.consts.spotify_consts import URIS, TRACKS, POSITION, SNAPSHOT_ID
+from spotipyio.logic.contract import BasePlaylistsUpdater
+from spotipyio.auth import SpotifySession
+from spotipyio.logic.internal_models import ChunkSize
+from spotipyio.logic.internal_tools import DataChunksGenerator
 
 
 class PlaylistItemsAdder(BasePlaylistsUpdater):

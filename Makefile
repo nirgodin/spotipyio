@@ -1,6 +1,6 @@
 .PHONY: verify
 verify:
-	lint test coverage
+	make lint test coverage
 
 .PHONY: install
 install:
@@ -22,6 +22,10 @@ test:
 .PHONY: coverage
 coverage:
 	poetry run coverage report
+
+.PHONY: build
+build:
+	poetry build
 
 .PHONY: poetry_check
 .poetry_check:

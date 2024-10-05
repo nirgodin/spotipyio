@@ -2,9 +2,9 @@ from typing import List, Optional
 
 from pytest_httpserver import RequestHandler
 
-from spotipyio.consts.spotify_consts import PLAYLISTS, USERS
-from spotipyio.consts.typing_consts import Json
-from spotipyio.logic.creators.playlists.playlists_creation_request import PlaylistCreationRequest
+from spotipyio.logic.consts.spotify_consts import PLAYLISTS, USERS
+from spotipyio.logic.consts.typing_consts import Json
+from spotipyio.models import PlaylistCreationRequest
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 

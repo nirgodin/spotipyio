@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pytest_httpserver import RequestHandler
 
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 

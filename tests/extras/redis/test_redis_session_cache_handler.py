@@ -6,7 +6,8 @@ from redis import Redis
 
 from spotipyio.extras.redis import RedisSessionCacheHandler
 from tests.extras.redis.redis_testkit import RedisTestkit
-from tests.testing_utils import random_alphanumeric_string, random_string_dict
+from tests.testing_utils import random_string_dict
+from spotipyio.logic.utils import random_alphanumeric_string
 
 
 class TestRedisSessionCacheHandler:

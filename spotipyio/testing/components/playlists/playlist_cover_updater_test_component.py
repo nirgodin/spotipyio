@@ -3,10 +3,10 @@ from typing import List, Optional
 from pytest_httpserver import RequestHandler
 from werkzeug import Response
 
-from spotipyio.consts.spotify_consts import PLAYLISTS, IMAGES
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.consts.spotify_consts import PLAYLISTS, IMAGES
+from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.testing.infra import BaseTestComponent
-from spotipyio.utils import encode_image_to_base64
+from spotipyio.logic.utils import encode_image_to_base64
 
 
 class PlaylistsCoverUpdaterTestComponent(BaseTestComponent):

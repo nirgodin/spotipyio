@@ -2,7 +2,7 @@ from random import randint
 from typing import List
 from urllib.parse import urlencode
 
-from spotipyio.consts.spotify_consts import OFFSET, LIMIT, PLAYLISTS, TRACKS
+from spotipyio.logic.consts.spotify_consts import OFFSET, LIMIT, PLAYLISTS, TRACKS
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 
 
