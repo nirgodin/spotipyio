@@ -6,7 +6,7 @@ from spotipyio.logic.contract.spotify_component_interface import ISpotifyCompone
 from spotipyio.auth import SpotifySession
 from spotipyio.models import ChunkSize
 from spotipyio.logic.internal_tools import DataChunksGenerator
-from spotipyio.utils.general_utils import chain_iterable
+from spotipyio.logic.utils.general_utils import chain_iterable
 
 
 class BaseChunksCollector(ISpotifyComponent, ABC):

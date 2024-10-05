@@ -6,7 +6,7 @@ from aiohttp import ClientSession
 from spotipyio.logic.consts.env_consts import SPOTIPY_CLIENT_SECRET, SPOTIPY_CLIENT_ID, SPOTIPY_REDIRECT_URI
 from spotipyio.auth.spotify_grant_type import SpotifyGrantType
 from spotipyio.logic.authorization.authorization_payload_builder import AuthorizationPayloadBuilder
-from spotipyio.utils import create_client_session, encode_bearer_token
+from spotipyio.logic.utils import create_client_session, encode_bearer_token
 
 
 class AccessTokenGenerator:

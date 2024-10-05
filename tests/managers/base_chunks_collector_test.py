@@ -9,7 +9,7 @@ from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.models import ChunkSize
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
-from spotipyio.utils import chain_iterable
+from spotipyio.logic.utils import chain_iterable
 
 
 class BaseChunksCollectorTest(ABC):

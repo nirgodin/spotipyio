@@ -20,7 +20,7 @@ from spotipyio.testing.managers import (
     TracksTestManager,
     UsersTestManager,
 )
-from spotipyio.utils import random_alphanumeric_string
+from spotipyio.logic.utils import random_alphanumeric_string
 
 
 class SpotifyTestClient:

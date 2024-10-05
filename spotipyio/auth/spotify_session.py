@@ -8,7 +8,7 @@ from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.auth.session_cache_handler_interface import ISessionCacheHandler
 from spotipyio.logic.authorization import AccessTokenGenerator
 from spotipyio.auth.spotify_grant_type import SpotifyGrantType
-from spotipyio.utils.web_utils import create_client_session
+from spotipyio.logic.utils.web_utils import create_client_session
 
 
 class SpotifySession:

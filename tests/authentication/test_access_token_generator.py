@@ -23,7 +23,7 @@ from spotipyio.logic.consts.api_consts import (
 from spotipyio.logic.consts.env_consts import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI
 from spotipyio.logic.authorization import AccessTokenGenerator
 from spotipyio.auth import SpotifyGrantType
-from spotipyio.utils import encode_bearer_token
+from spotipyio.logic.utils import encode_bearer_token
 from tests.testing_utils import random_alphanumeric_string, build_request_data, random_string_array
 
 

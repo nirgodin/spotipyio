@@ -6,7 +6,7 @@ from spotipyio import SpotifyClient
 from spotipyio.logic.consts.spotify_consts import PUBLIC, NAME, DESCRIPTION, OWNER, ID
 from spotipyio.logic.creators.playlists.playlists_creation_request import PlaylistCreationRequest
 from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
-from spotipyio.utils import safe_nested_get
+from spotipyio.logic.utils import safe_nested_get
 from tests.testing_utils import random_alphanumeric_string, random_boolean
 
 
