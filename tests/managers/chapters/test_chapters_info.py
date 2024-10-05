@@ -4,8 +4,7 @@ from spotipyio import SpotifyClient
 from spotipyio.logic.consts.spotify_consts import CHAPTERS
 from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.models import ChunkSize
-from spotipyio.testing import SpotifyTestClient
-from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
+from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
 from tests.managers.base_chunks_collector_test import BaseChunksCollectorTest
 
 

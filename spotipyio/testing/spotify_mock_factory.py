@@ -25,7 +25,7 @@ from spotipyio.logic.consts.spotify_consts import (
 from spotipyio.logic.consts.typing_consts import EnumType
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
 from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, SpotifySearchType
-from spotipyio.testing.search_response_builder import SearchResponseBuilder
+from spotipyio.testing.utils.search_response_builder import SearchResponseBuilder
 from spotipyio.utils import random_alphanumeric_string
 
 

@@ -7,8 +7,7 @@ from aiohttp import ClientResponseError
 from spotipyio import SpotifyClient
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
 from spotipyio.logic.collectors.top_items_collectors.time_range import TimeRange
-from spotipyio.testing import SpotifyTestClient
-from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
+from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
 from tests.testing_utils import random_enum_value
 
 
