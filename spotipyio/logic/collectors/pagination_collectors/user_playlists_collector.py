@@ -1,7 +1,7 @@
 from typing import Optional
 
 from spotipyio.logic.consts.spotify_consts import NEXT, ITEMS, PLAYLISTS, USERS
-from spotipyio.contract import BasePaginationCollector
+from spotipyio.logic.contract import BasePaginationCollector
 
 
 class UserPlaylistsCollector(BasePaginationCollector):

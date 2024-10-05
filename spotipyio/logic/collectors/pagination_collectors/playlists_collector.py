@@ -1,7 +1,7 @@
 from typing import List, Optional, Dict
 
 from spotipyio.logic.consts.spotify_consts import PLAYLISTS, TRACKS, NEXT, ITEMS, TRACK, ADDITIONAL_TYPES
-from spotipyio.contract import BasePaginationCollector
+from spotipyio.logic.contract import BasePaginationCollector
 from spotipyio.utils import safe_nested_get
 
 

@@ -2,7 +2,7 @@ from abc import abstractmethod, ABC
 from functools import partial
 from typing import List, Optional
 
-from spotipyio.contract.spotify_component_interface import ISpotifyComponent
+from spotipyio.logic.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.auth import SpotifySession
 from spotipyio.tools import PoolExecutor
 

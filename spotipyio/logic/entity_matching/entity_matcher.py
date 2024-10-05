@@ -2,7 +2,7 @@ from dataclasses import fields, Field
 from typing import Tuple, List, Optional, Dict, Any
 
 from spotipyio.logic.entity_extractors import TrackEntityExtractor, PrimaryArtistEntityExtractor
-from spotipyio.contract import IEntityExtractor
+from spotipyio.logic.contract import IEntityExtractor
 from spotipyio.logic.entity_matching.matching_entity import MatchingEntity
 from spotipyio.utils import compute_similarity_score
 

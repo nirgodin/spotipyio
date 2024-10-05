@@ -1,4 +1,4 @@
-from spotipyio.contract import BaseSingleCollector
+from spotipyio.logic.contract import BaseSingleCollector
 
 
 class ArtistsTopTracksCollector(BaseSingleCollector):

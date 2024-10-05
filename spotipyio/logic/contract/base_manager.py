@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Type, Dict
 
-from spotipyio.contract.spotify_component_interface import ISpotifyComponent
+from spotipyio.logic.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.auth import SpotifySession
 
 

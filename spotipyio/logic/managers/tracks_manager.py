@@ -1,7 +1,7 @@
 from typing import Type, Dict
 
 from spotipyio.logic.collectors import TracksCollector, AudioFeaturesCollector
-from spotipyio.contract import BaseManager, ISpotifyComponent
+from spotipyio.logic.contract import BaseManager, ISpotifyComponent
 
 
 class TracksManager(BaseManager):

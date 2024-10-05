@@ -1,5 +1,5 @@
 from spotipyio.logic.consts.spotify_consts import CHAPTERS
-from spotipyio.contract import BaseChunksCollector
+from spotipyio.logic.contract import BaseChunksCollector
 from spotipyio.models import ChunkSize
 
 

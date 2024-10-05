@@ -1,7 +1,7 @@
 from typing import Optional
 
 from spotipyio.logic.consts.spotify_consts import NAME, ARTISTS
-from spotipyio.contract import IEntityExtractor
+from spotipyio.logic.contract import IEntityExtractor
 
 
 class PrimaryArtistEntityExtractor(IEntityExtractor):

@@ -1,5 +1,5 @@
 from spotipyio.logic.consts.spotify_consts import IMAGES
-from spotipyio.contract import BasePlaylistsUpdater
+from spotipyio.logic.contract import BasePlaylistsUpdater
 from spotipyio.auth import SpotifySession
 from spotipyio.tools import ImageCompressor
 from spotipyio.utils import encode_image_to_base64

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from spotipyio.logic.consts.spotify_consts import PLAYLISTS
-from spotipyio.contract import ISpotifyComponent
+from spotipyio.logic.contract import ISpotifyComponent
 
 
 class BasePlaylistsUpdater(ISpotifyComponent, ABC):
