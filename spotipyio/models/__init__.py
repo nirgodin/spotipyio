@@ -8,7 +8,6 @@ from spotipyio.models.search.spotify_search_type import SpotifySearchType
 __all__ = [
     "EntityType",
     "PlaylistCreationRequest",
-
     # Search
     "SearchItem",
     "SearchItemFilters",
