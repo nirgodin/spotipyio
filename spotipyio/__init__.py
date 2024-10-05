@@ -1,4 +1,4 @@
-from spotipyio.logic import SpotifyClient
+from spotipyio.spotify_client import SpotifyClient
 from spotipyio.auth import SpotifySession
 
 __all__ = [
