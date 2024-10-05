@@ -8,7 +8,7 @@ from typing import Optional
 from PIL.Image import open as open_image, Image
 
 from spotipyio.logic.consts.image_consts import RGB
-from spotipyio.tools.logging import logger
+from spotipyio.logic.internal_tools.logging import logger
 from spotipyio.utils import get_current_timestamp, read_image
 
 

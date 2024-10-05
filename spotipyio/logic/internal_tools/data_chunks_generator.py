@@ -1,7 +1,7 @@
 from typing import Generator, Union, Type, Any, List
 
 from spotipyio.logic.consts.typing_consts import AF, F
-from spotipyio.tools.pool_executor import PoolExecutor
+from spotipyio.logic.internal_tools.pool_executor import PoolExecutor
 
 
 class DataChunksGenerator:

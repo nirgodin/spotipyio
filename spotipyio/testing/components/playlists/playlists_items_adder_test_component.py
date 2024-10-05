@@ -8,7 +8,7 @@ from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.models import ChunkSize
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
-from spotipyio.tools import DataChunksGenerator
+from spotipyio.logic.internal_tools import DataChunksGenerator
 
 
 class PlaylistItemsAdderTestComponent(BaseTestComponent):

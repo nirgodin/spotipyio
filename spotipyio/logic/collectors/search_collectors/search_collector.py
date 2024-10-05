@@ -3,7 +3,7 @@ from typing import List
 from spotipyio.logic.contract import ISpotifyComponent
 from spotipyio.auth import SpotifySession
 from spotipyio.models import SearchItem
-from spotipyio.tools import PoolExecutor
+from spotipyio.logic.internal_tools import PoolExecutor
 
 
 class SearchCollector(ISpotifyComponent):

@@ -7,7 +7,7 @@ from spotipyio.logic.consts.spotify_consts import IDS
 from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.models import ChunkSize
 from spotipyio.testing.infra import BaseTestComponent
-from spotipyio.tools import DataChunksGenerator
+from spotipyio.logic.internal_tools import DataChunksGenerator
 
 
 class BaseChunksTestComponent(BaseTestComponent, ABC):

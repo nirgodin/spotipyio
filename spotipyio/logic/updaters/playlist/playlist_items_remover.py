@@ -4,7 +4,7 @@ from spotipyio.logic.consts.spotify_consts import TRACKS, URI, SNAPSHOT_ID
 from spotipyio.logic.contract import BasePlaylistsUpdater
 from spotipyio.auth import SpotifySession
 from spotipyio.models import ChunkSize
-from spotipyio.tools import DataChunksGenerator
+from spotipyio.logic.internal_tools import DataChunksGenerator
 
 
 class PlaylistItemsRemover(BasePlaylistsUpdater):

@@ -4,7 +4,7 @@ from typing import Sized, Any, Awaitable, Callable, List, Optional, Type
 from asyncio_pool import AioPool
 from tqdm import tqdm
 
-from spotipyio.tools.logging import logger
+from spotipyio.logic.internal_tools.logging import logger
 
 
 class PoolExecutor:

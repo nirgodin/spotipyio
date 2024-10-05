@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from spotipyio.logic.contract.spotify_component_interface import ISpotifyComponent
 from spotipyio.auth import SpotifySession
-from spotipyio.tools import PoolExecutor
+from spotipyio.logic.internal_tools import PoolExecutor
 
 
 class BasePaginationCollector(ISpotifyComponent, ABC):
