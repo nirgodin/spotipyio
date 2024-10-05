@@ -33,15 +33,15 @@ class SpotifyTestClient:
         api_server: Optional[HTTPServer] = None,
         authorization_server: Optional[HTTPServer] = None,
         session: Optional[SpotifySession] = None,
-        albums_manager: Optional[AlbumsTestManager] = None,
-        artists_manager: Optional[ArtistsTestManager] = None,
-        chapters_manager: Optional[ChaptersTestManager] = None,
-        current_user_manager: Optional[CurrentUserTestManager] = None,
-        episodes_manager: Optional[EpisodesTestManager] = None,
-        playlists_manager: Optional[PlaylistsTestManager] = None,
-        search_manager: Optional[SearchTestManager] = None,
-        tracks_manager: Optional[TracksTestManager] = None,
-        users_manager: Optional[UsersTestManager] = None,
+        albums: Optional[AlbumsTestManager] = None,
+        artists: Optional[ArtistsTestManager] = None,
+        chapters: Optional[ChaptersTestManager] = None,
+        current_user: Optional[CurrentUserTestManager] = None,
+        episodes: Optional[EpisodesTestManager] = None,
+        playlists: Optional[PlaylistsTestManager] = None,
+        search: Optional[SearchTestManager] = None,
+        tracks: Optional[TracksTestManager] = None,
+        users: Optional[UsersTestManager] = None,
     ):
         self._client_id = client_id
         self._client_secret = client_secret
@@ -51,15 +51,15 @@ class SpotifyTestClient:
         self._api_server = api_server
         self._authorization_server = authorization_server
         self._session = session
-        self.albums = albums_manager
-        self.artists = artists_manager
-        self.chapters = chapters_manager
-        self.current_user = current_user_manager
-        self.episodes = episodes_manager
-        self.playlists = playlists_manager
-        self.search = search_manager
-        self.tracks = tracks_manager
-        self.users = users_manager
+        self.albums = albums
+        self.artists = artists
+        self.chapters = chapters
+        self.current_user = current_user
+        self.episodes = episodes
+        self.playlists = playlists
+        self.search = search
+        self.tracks = tracks
+        self.users = users
 
     def get_base_url(self) -> str:
         return self._api_server.url_for("").rstrip("/")

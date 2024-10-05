@@ -18,38 +18,38 @@ class SpotifyClient:
     def __init__(
         self,
         session: SpotifySession,
-        albums_manager: AlbumsManager,
-        artists_manager: ArtistsManager,
-        chapters_manager: ChaptersManager,
-        current_user_manager: CurrentUserManager,
-        episodes_manager: EpisodesManager,
-        playlists_manager: PlaylistsManager,
-        search_manager: SearchManager,
-        tracks_manager: TracksManager,
-        users_manager: UsersManager,
+        albums: AlbumsManager,
+        artists: ArtistsManager,
+        chapters: ChaptersManager,
+        current_user: CurrentUserManager,
+        episodes: EpisodesManager,
+        playlists: PlaylistsManager,
+        search: SearchManager,
+        tracks: TracksManager,
+        users: UsersManager,
     ):
         self.session = session
-        self.albums = albums_manager
-        self.artists = artists_manager
-        self.chapters = chapters_manager
-        self.current_user = current_user_manager
-        self.episodes = episodes_manager
-        self.playlists = playlists_manager
-        self.search = search_manager
-        self.tracks = tracks_manager
-        self.users = users_manager
+        self.albums = albums
+        self.artists = artists
+        self.chapters = chapters
+        self.current_user = current_user
+        self.episodes = episodes
+        self.playlists = playlists
+        self.search = search
+        self.tracks = tracks
+        self.users = users
 
     @classmethod
     def create(cls, session: SpotifySession, base_url: str = SPOTIFY_API_BASE_URL) -> SpotifyClient:
         return SpotifyClient(
             session=session,
-            artists_manager=ArtistsManager.create(base_url, session),
-            chapters_manager=ChaptersManager.create(base_url, session),
-            current_user_manager=CurrentUserManager.create(base_url, session),
-            episodes_manager=EpisodesManager.create(base_url, session),
-            playlists_manager=PlaylistsManager.create(base_url, session),
-            users_manager=UsersManager.create(base_url, session),
-            albums_manager=AlbumsManager.create(base_url, session),
-            tracks_manager=TracksManager.create(base_url, session),
-            search_manager=SearchManager.create(base_url, session),
+            artists=ArtistsManager.create(base_url, session),
+            chapters=ChaptersManager.create(base_url, session),
+            current_user=CurrentUserManager.create(base_url, session),
+            episodes=EpisodesManager.create(base_url, session),
+            playlists=PlaylistsManager.create(base_url, session),
+            users=UsersManager.create(base_url, session),
+            albums=AlbumsManager.create(base_url, session),
+            tracks=TracksManager.create(base_url, session),
+            search=SearchManager.create(base_url, session),
         )
