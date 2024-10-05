@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict
+from typing import List, Optional
 
 from multidict import CIMultiDict
 from pytest_httpserver import RequestHandler, HTTPServer
