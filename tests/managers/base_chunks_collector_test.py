@@ -5,11 +5,11 @@ from typing import List, Dict
 from _pytest.fixtures import fixture
 
 from spotipyio import SpotifyClient
-from spotipyio.consts.typing_consts import Json
-from spotipyio.models import ChunkSize
+from spotipyio.logic.consts.typing_consts import Json
+from spotipyio.logic.internal_models import ChunkSize
 from spotipyio.testing import SpotifyTestClient
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
-from spotipyio.utils import chain_iterable
+from spotipyio.logic.utils import chain_iterable
 
 
 class BaseChunksCollectorTest(ABC):
@@ -17,9 +17,9 @@ class BaseChunksCollectorTest(ABC):
         actual = await self._run([], spotify_client)
         assert actual == []
 
-    async def test_run__all_responses_unsuccessful__returns_empty_list(self,
-                                                                       test_client: SpotifyTestClient,
-                                                                       spotify_client: SpotifyClient):
+    async def test_run__all_responses_unsuccessful__returns_empty_list(
+        self, test_client: SpotifyTestClient, spotify_client: SpotifyClient
+    ):
         ids = SpotifyMockFactory.some_spotify_ids(length=randint(1, 200))
         self._given_all_responses_unsuccessful(ids, test_client)
 
@@ -27,18 +27,16 @@ class BaseChunksCollectorTest(ABC):
 
         assert actual == []
 
-    async def test_run__all_responses_successful__returns_items_list(self,
-                                                                     ids: List[List[str]],
-                                                                     responses: List[Json],
-                                                                     expected: List[dict],
-                                                                     test_client: SpotifyTestClient,
-                                                                     spotify_client: SpotifyClient):
+    async def test_run__all_responses_successful__returns_items_list(
+        self,
+        ids: List[List[str]],
+        responses: List[Json],
+        expected: List[dict],
+        test_client: SpotifyTestClient,
+        spotify_client: SpotifyClient,
+    ):
         provided_ids = chain_iterable(ids)
-        self._given_all_responses_successful(
-            ids=provided_ids,
-            responses=responses,
-            test_client=test_client
-        )
+        self._given_all_responses_successful(ids=provided_ids, responses=responses, test_client=test_client)
 
         actual = await self._run(provided_ids, spotify_client)
 
@@ -50,16 +48,12 @@ class BaseChunksCollectorTest(ABC):
         responses: List[Json],
         expected: List[dict],
         test_client: SpotifyTestClient,
-        spotify_client: SpotifyClient
+        spotify_client: SpotifyClient,
     ):
         successful_ids = chain_iterable(ids)
         unsuccessful_ids = SpotifyMockFactory.some_spotify_ids(randint(1, 200))
         provided_ids = successful_ids + unsuccessful_ids
-        self._given_all_responses_successful(
-            ids=successful_ids,
-            responses=responses,
-            test_client=test_client
-        )
+        self._given_all_responses_successful(ids=successful_ids, responses=responses, test_client=test_client)
         self._given_all_responses_unsuccessful(unsuccessful_ids, test_client)
 
         actual = await self._run(provided_ids, spotify_client)

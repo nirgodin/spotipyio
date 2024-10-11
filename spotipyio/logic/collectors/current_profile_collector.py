@@ -1,4 +1,4 @@
-from spotipyio.contract import ISpotifyComponent
+from spotipyio.logic.contract import ISpotifyComponent
 
 
 class CurrentProfileCollector(ISpotifyComponent):

@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pytest_httpserver import RequestHandler
 
-from spotipyio.consts.typing_consts import Json
+from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.testing.infra.base_test_component import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 
@@ -27,10 +27,7 @@ class ArtistsTopTracksTestComponent(BaseTestComponent):
         status, response_json = self._create_invalid_response(status=status, response_json=response_json)
         request_handler = self._create_request_handler(id_)
 
-        request_handler.respond_with_json(
-            response_json=response_json,
-            status=status
-        )
+        request_handler.respond_with_json(response_json=response_json, status=status)
 
     def _create_request_handler(self, artist_id: str) -> RequestHandler:
         return self._expect_get_request(f"/artists/{artist_id}/top-tracks")

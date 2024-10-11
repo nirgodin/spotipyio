@@ -1,24 +1,28 @@
 from typing import Dict, Type
 
-from spotipyio.contract import BaseManager, ISpotifyComponent
+from spotipyio.logic.contract import BaseManager, ISpotifyComponent
 from spotipyio.logic.collectors import PlaylistsCollector
-from spotipyio.logic.creators.playlists.playlists_creator import PlaylistsCreator
-from spotipyio.logic.updaters.playlist.playlist_cover_updater import PlaylistCoverUpdater
-from spotipyio.logic.updaters.playlist.playlist_items_adder import PlaylistItemsAdder
-from spotipyio.logic.updaters.playlist.playlist_items_remover import PlaylistItemsRemover
-from spotipyio.logic.updaters.playlist.playlist_items_reorder import PlaylistItemsReorder
-from spotipyio.logic.updaters.playlist.playlist_items_replacer import PlaylistItemsReplacer
+from spotipyio.logic.creators import PlaylistsCreator
+from spotipyio.logic.updaters import (
+    PlaylistCoverUpdater,
+    PlaylistItemsAdder,
+    PlaylistItemsRemover,
+    PlaylistItemsReorder,
+    PlaylistItemsReplacer,
+)
 
 
 class PlaylistsManager(BaseManager):
-    def __init__(self,
-                 add_items: PlaylistItemsAdder,
-                 create: PlaylistsCreator,
-                 info: PlaylistsCollector,
-                 remove_items: PlaylistItemsRemover,
-                 reorder_items: PlaylistItemsReorder,
-                 replace_items: PlaylistItemsReplacer,
-                 update_cover: PlaylistCoverUpdater):
+    def __init__(
+        self,
+        add_items: PlaylistItemsAdder,
+        create: PlaylistsCreator,
+        info: PlaylistsCollector,
+        remove_items: PlaylistItemsRemover,
+        reorder_items: PlaylistItemsReorder,
+        replace_items: PlaylistItemsReplacer,
+        update_cover: PlaylistCoverUpdater,
+    ):
         super().__init__()
         self.add_items = add_items
         self.create = create

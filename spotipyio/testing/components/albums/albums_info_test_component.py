@@ -1,8 +1,6 @@
-from typing import List
-
-from spotipyio.consts.spotify_consts import ALBUMS
-from spotipyio.consts.typing_consts import Json
-from spotipyio.models import ChunkSize
+from spotipyio.logic.consts.spotify_consts import ALBUMS
+from spotipyio.logic.consts.typing_consts import Json
+from spotipyio.logic.internal_models import ChunkSize
 from spotipyio.testing.infra.base_chunks_test_component import BaseChunksTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 

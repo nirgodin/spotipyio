@@ -1,6 +1,6 @@
 import pytest
 
-from spotipyio import MatchingEntity
+from spotipyio.models import MatchingEntity
 
 
 class TestMatchingEntity:

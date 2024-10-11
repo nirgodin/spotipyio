@@ -1,9 +1,9 @@
 from typing import List
 
-from spotipyio.contract import ISpotifyComponent
-from spotipyio.logic.authentication.spotify_session import SpotifySession
-from spotipyio.logic.collectors.search_collectors.search_item import SearchItem
-from spotipyio.tools import PoolExecutor
+from spotipyio.logic.contract import ISpotifyComponent
+from spotipyio.auth import SpotifySession
+from spotipyio.models import SearchItem
+from spotipyio.logic.internal_tools import PoolExecutor
 
 
 class SearchCollector(ISpotifyComponent):
@@ -18,9 +18,5 @@ class SearchCollector(ISpotifyComponent):
         return await self._session.get(url=self._url, params=search_item.to_query_params())
 
     @property
-    def _route(self) -> str:
-        return "search"
-
-    @property
     def _url(self) -> str:
-        return f"{self._base_url}/{self._route}"
+        return f"{self._base_url}/search"

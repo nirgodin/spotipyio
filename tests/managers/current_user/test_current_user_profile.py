@@ -2,8 +2,7 @@ import pytest
 from aiohttp import ClientResponseError
 
 from spotipyio import SpotifyClient
-from spotipyio.testing import SpotifyTestClient
-from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
+from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
 
 
 class TestCurrentUserProfile:
@@ -15,9 +14,9 @@ class TestCurrentUserProfile:
 
         assert actual == expected
 
-    async def test_run__invalid_response__raises_client_response_error(self,
-                                                                       test_client: SpotifyTestClient,
-                                                                       spotify_client: SpotifyClient):
+    async def test_run__invalid_response__raises_client_response_error(
+        self, test_client: SpotifyTestClient, spotify_client: SpotifyClient
+    ):
         test_client.current_user.profile.expect_failure()
 
         with pytest.raises(ClientResponseError):

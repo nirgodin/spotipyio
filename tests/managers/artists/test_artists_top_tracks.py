@@ -6,26 +6,23 @@ from _pytest.fixtures import fixture
 from aiohttp import ClientResponseError
 
 from spotipyio import SpotifyClient
-from spotipyio.testing import SpotifyTestClient
-from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
+from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
 
 
 class TestArtistsTopTracks:
     async def test_run__some_valid_some_invalid_responses__returns_only_valid(
-            self,
-            test_client: SpotifyTestClient,
-            spotify_client: SpotifyClient,
-            artists_ids: List[str],
-            expected: List[dict]
+        self,
+        test_client: SpotifyTestClient,
+        spotify_client: SpotifyClient,
+        artists_ids: List[str],
+        expected: List[dict],
     ):
         actual = await spotify_client.artists.top_tracks.run(artists_ids)
 
         assert all(response in expected for response in actual)
         assert all(response in actual for response in expected)
 
-    async def test_run_single__valid_response(self,
-                                              test_client: SpotifyTestClient,
-                                              spotify_client: SpotifyClient):
+    async def test_run_single__valid_response(self, test_client: SpotifyTestClient, spotify_client: SpotifyClient):
         artist_id = SpotifyMockFactory.spotify_id()
         expected = SpotifyMockFactory.several_tracks()
         test_client.artists.top_tracks.expect_success(id_=artist_id, response_json=expected)
@@ -34,9 +31,9 @@ class TestArtistsTopTracks:
 
         assert actual == expected
 
-    async def test_run_single__invalid_response__raises_client_response_error(self,
-                                                                              test_client: SpotifyTestClient,
-                                                                              spotify_client: SpotifyClient):
+    async def test_run_single__invalid_response__raises_client_response_error(
+        self, test_client: SpotifyTestClient, spotify_client: SpotifyClient
+    ):
         artist_id = SpotifyMockFactory.spotify_id()
         test_client.artists.top_tracks.expect_failure(artist_id)
 
@@ -57,9 +54,7 @@ class TestArtistsTopTracks:
         return ids
 
     @fixture
-    def artists_ids(self,
-                    valid_artists_ids: List[str],
-                    invalid_artists_ids: List[str]) -> List[str]:
+    def artists_ids(self, valid_artists_ids: List[str], invalid_artists_ids: List[str]) -> List[str]:
         ids = valid_artists_ids + invalid_artists_ids
         shuffle(ids)
 

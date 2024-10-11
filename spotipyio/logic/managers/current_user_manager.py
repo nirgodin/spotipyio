@@ -1,6 +1,6 @@
 from typing import Type, Dict
 
-from spotipyio.contract import BaseManager, ISpotifyComponent
+from spotipyio.logic.contract import BaseManager, ISpotifyComponent
 from spotipyio.logic.collectors import CurrentProfileCollector, TopItemsCollector
 
 
@@ -12,7 +12,4 @@ class CurrentUserManager(BaseManager):
 
     @staticmethod
     def _components() -> Dict[str, Type[ISpotifyComponent]]:
-        return {
-            "top_items": TopItemsCollector,
-            "profile": CurrentProfileCollector
-        }
+        return {"top_items": TopItemsCollector, "profile": CurrentProfileCollector}
