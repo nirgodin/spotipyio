@@ -15,7 +15,7 @@ pip install spotipyio
 
 ### Pipenv
 ```bash 
-pipenv add spotipyio
+pipenv install spotipyio
 ```
 
 ### Poetry
@@ -95,4 +95,43 @@ represent a logical subset of the API endpoints. The following sections present 
 * users
 
 ## Testing
-Testing is a central part of software development, but when it comes to 
+Testing is central to software development, but when it comes to external APIs like Spotify's it can be tricky 
+to test our code without sending any actual request. To this end, spotipy introduces `SpotifyTestClient`. This object 
+is designed to help you test components that use the `SpotifyClient` seamlessly, without having to mock or patch 
+anything, or familiarize yourself with the internals of `SpotifyClient`. 
+
+### Installation
+To avoid adding dev dependencies to our production code, the test client sits under a dedicated `testing` module, which 
+requirements' are optional. To install these extra requirements, execute the relevant command.
+
+#### Pip
+```bash 
+pip install spotipyio[testing]
+```
+
+#### Pipenv
+```bash 
+pipenv install spotipyio[testing]
+```
+
+#### Poetry
+```bash 
+poetry add spotipyio[testing]
+```
+
+#### A notice about versions management
+As the test client it is designed only for testing, you should include it in only in your dev dependencies. 
+On a poetry based project, for example, your `pyproject.toml` file should look somewhat like this:
+
+```toml
+[tool.poetry.dependencies]
+spotipyio = { version = ">=1,<2" }
+
+[tool.poetry.group.dev.dependencies]
+spotipyio = { version = "*", extras = ["testing"] }
+```
+
+**Pay attention**: the version is pinned only in the dependencies section. The dev dependencies section should not pin 
+a version, to avoid conflicts between two sections.
+
+### Testing your first component
