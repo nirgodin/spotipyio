@@ -192,7 +192,7 @@ check the actual value returned by the `get_platlist_tracks` function. To check 
 an actual response json we expect. Here's a revised version:
 
 ```python
-async def test_get_playlist_tracks(test_client: SpotifyTestClient):
+async def test_get_playlist_tracks_successful_response(test_client: SpotifyTestClient):
     # Arrange
     expected = ["Bohemian Raphsody", "The Blacker The Berry", "Take Five", "Jhonny B. Goode"]
     response_items = [{"track": {"name": name}} for name in expected]
@@ -220,8 +220,8 @@ start by wrapping our function with a simple try-except block
 
 ```python
 from typing import List
+from aiohttp import ClientResponseError
 from spotipyio import SpotifyClient
-from aiohttp.client_exceptions import ClientResponseError
 
 async def get_playlist_tracks(spotify_client: SpotifyClient, playlist_id: str) -> List[str]:
     try:
@@ -234,3 +234,76 @@ async def get_playlist_tracks(spotify_client: SpotifyClient, playlist_id: str) -
         print("Failed to fetch playlist. Retuning empty list instead")
         return []
 ```
+
+Now, our function will simply print and return an empty list in cases it fails to fetch the API, instead of raising an 
+exception that will fail our entire application. But how will we test it? Let's add another test to our suite.
+
+```python
+async def test_get_playlist_tracks_failed_response(test_client: SpotifyTestClient):
+    # Arrange
+    spotify_client = test_client.create_client()
+    playlist_id = "readme-example"
+    test_client.playlists.info.expect_failure(playlist_id)
+
+    # Act
+    actual = await get_playlist_tracks(spotify_client, playlist_id)
+    
+    # Assert
+    assert actual == []
+```
+
+The only difference here is the usage of `test_client.playlists.info.expect_failure` instead of `expect_success`. This 
+method instructs the test client to response with a failed status code.
+
+Here again, we may also provide it with a specific response. Let's complicate our example by adding different 
+behavior to different exceptions. A typical use case would be to backoff in case we receive a 429 (too many requests) 
+status code. Here is a naive implementation:
+
+```python
+from typing import List
+from aiohttp import ClientResponseError
+from spotipyio import SpotifyClient
+from asyncio import sleep
+
+async def get_playlist_tracks(spotify_client: SpotifyClient, playlist_id: str, retries_left: int = 1) -> List[str]:
+    try:
+        playlist = await spotify_client.playlists.info.run_single(playlist_id)
+        items = playlist["tracks"]["items"]
+
+        return [item["track"]["name"] for item in items]
+
+    except ClientResponseError as e:
+        if e.status == 429 and retries_left > 0:
+            await sleep(1)
+            return await get_playlist_tracks(spotify_client, playlist_id, retries_left - 1)
+
+        print("Failed to fetch playlist. Retuning empty list instead")
+        return []
+```
+
+How might we test this? By providing our test client a specific status code. This final example will incorporate all 
+use cases we saw by now. We will have to call the test client twice: first to set it to return a custom 429 response, 
+then to return a successful response. This test will now look like this:
+
+```python
+async def test_get_playlist_tracks_first_fail_than_success(test_client: SpotifyTestClient):
+    # Arrange
+    spotify_client = test_client.create_client()
+    playlist_id = "readme-example"
+    test_client.playlists.info.expect_failure(playlist_id, status=429)
+    expected = ["The Fool on the Hill", "Relax (Take It Easy)", "The Real Slim Shady"]
+    response_items = [{"track": {"name": name}} for name in expected]
+    response_json = {"tracks": {"items": response_items}}
+    playlist_id = "readme-example"
+    test_client.playlists.info.expect_success(playlist_id, [response_json])
+
+    # Act
+    actual = await get_playlist_tracks(spotify_client, playlist_id)
+    
+    # Assert
+    assert actual == expected
+```
+
+**Please notice**: The test client expects ordered expectations. Here we are first setting a failed response 
+expectation, then only a successful response. If we will first call the `expect_success` method, our code will simply 
+not reach the except block.
