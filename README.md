@@ -1,9 +1,7 @@
-from zoneinfo import reset_tzpathfrom aiohttp import ClientResponseErrorfrom tests.conftest import spotify_clientfrom tests.managers.playlists.conftest import playlist_idfrom spotipyio.auth import SpotifyGrantTypefrom spotipyio import SpotifyClient
-
 # Spotipyio
 An async Python wrapper to the Spotify API
 
-## Before Starting
+## Before Start
 In case you don't already own a Spotify API account including a `client_id`, `client_secret` and a `redirect_uri`, please 
 go first to the [Spotify developers page]() and create one.
 
@@ -186,6 +184,17 @@ method, which sets up a client that shares the exact same settings as the test c
 4. Finally, we make sure our playlist request will be successful by calling `test_client.playlists.info.expect_success`.
 This makes sure our request to the specific playlist id we're providing will be answered with a 200 status code.
 
+#### SpotifyTestClient blueprint
+In case you've noticed, the test client has the exact same blueprint as `SpotifyClient`. In our example, the tested 
+function calls `spotify_client.playlists.info.run`, and our test calls `test_client.playlists.info.expect_success`. 
+This identity is not an accident but lies in the core of the `SpotifyTestClient` blueprint. Every module in 
+`SpotifyClient` has an equivalent in `SpotifyTestClient`. This makes testing easier then ever. All you have to do is 
+check which methods are used by your production code, and call them during test setup with your test client.
+
+The only difference between the two blueprints is in the 
+methods they implement. Whereas `SpotifyClient` methods implements the `run` method, `SpotifyTestClient` methods 
+implement the `expect_success` and `expect_failure` methods.
+
 #### Setting the response json
 This test, of course, is not very good. Mainly, it only validates the return value is a list, but it doesn't **really** 
 check the actual value returned by the `get_platlist_tracks` function. To check this functionality, let's provide it 
@@ -213,10 +222,10 @@ json that will be returned from the API. Than, we provide the test client with t
 when a request to fetch the `readme-example` playlist will be received, this will be the exact json that will be 
 returned. Notice that now our assertion is much stronger - we expect the actual value to be equal to our expectation.
 
-#### Testing exception handling
+#### Testing failures
 Up until now we've been focusing only on testing successful scenarios. But what about exception handling? Handling 
 exceptions is absolutely a must when it comes to work with external APIs like Spotify's. How should we test it? Let's 
-start by wrapping our function with a simple try-except block
+start by wrapping our function with a simple `try-except` block
 
 ```python
 from typing import List
