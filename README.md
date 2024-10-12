@@ -1,3 +1,5 @@
+from zoneinfo import reset_tzpathfrom aiohttp import ClientResponseErrorfrom tests.conftest import spotify_clientfrom tests.managers.playlists.conftest import playlist_idfrom spotipyio.auth import SpotifyGrantTypefrom spotipyio import SpotifyClient
+
 # Spotipyio
 An async Python wrapper to the Spotify API
 
@@ -135,3 +137,100 @@ spotipyio = { version = "*", extras = ["testing"] }
 a version, to avoid conflicts between two sections.
 
 ### Testing your first component
+Imagine having a simple function that should fetch a playlist from Spotify and return a list of the 
+playlist's tracks names. This function should look something like this:
+```python
+from typing import List
+from spotipyio import SpotifyClient
+
+async def get_playlist_tracks(spotify_client: SpotifyClient, playlist_id: str) -> List[str]:
+    playlist = await spotify_client.playlists.info.run_single(playlist_id)
+    items = playlist["tracks"]["items"]
+    
+    return [item["track"]["name"] for item in items]
+```
+
+Now, Let's test it:
+```python
+import pytest
+
+from spotipyio.testing import SpotifyTestClient
+
+
+@pytest.fixture
+async def test_client() -> SpotifyTestClient:
+    async with SpotifyTestClient() as client:
+        yield client
+
+
+async def test_get_playlist_tracks(test_client: SpotifyTestClient):
+    # Arrange
+    spotify_client = test_client.create_client()
+    playlist_id = "readme-example"
+    test_client.playlists.info.expect_success(playlist_id)
+
+    # Act
+    actual = await get_playlist_tracks(spotify_client, playlist_id)
+
+    # Assert
+    assert isinstance(actual, list)
+```
+
+What do we have here? Let's break it down step by step
+1. First, we import `SpotifyTestClient` from the previously mentioned `spotipyio.testing` module. Notice that if you 
+didn't install the package including the `testing` extra you will encounter an `ImportError` at this stage.
+2. We create a fixture of `SpotifyTestClient`. Notice we use a `yield` statement instead of `return`, to keep 
+the fixture context alive until teardown
+3. We use the test client to instantiate a `SpotifyClient` instance. This is done using a simple `create_client` 
+method, which sets up a client that shares the exact same settings as the test client.
+4. Finally, we make sure our playlist request will be successful by calling `test_client.playlists.info.expect_success`.
+This makes sure our request to the specific playlist id we're providing will be answered with a 200 status code.
+
+#### Setting the response json
+This test, of course, is not very good. Mainly, it only validates the return value is a list, but it doesn't **really** 
+check the actual value returned by the `get_platlist_tracks` function. To check this functionality, let's provide it 
+an actual response json we expect. Here's a revised version:
+
+```python
+async def test_get_playlist_tracks(test_client: SpotifyTestClient):
+    # Arrange
+    expected = ["Bohemian Raphsody", "The Blacker The Berry", "Take Five", "Jhonny B. Goode"]
+    response_items = [{"track": {"name": name}} for name in expected]
+    response_json = {"tracks": {"items": response_items}}
+    spotify_client = test_client.create_client()
+    playlist_id = "readme-example"
+    test_client.playlists.info.expect_success(playlist_id, [response_json])
+
+    # Act
+    actual = await get_playlist_tracks(spotify_client, playlist_id)
+    
+    # Assert
+    assert actual == expected
+```
+
+We've added our arrange block three lines where we define our expected value, than use it to create a mock playlist 
+json that will be returned from the API. Than, we provide the test client with this response json, making sure that 
+when a request to fetch the `readme-example` playlist will be received, this will be the exact json that will be 
+returned. Notice that now our assertion is much stronger - we expect the actual value to be equal to our expectation.
+
+#### Testing exception handling
+Up until now we've been focusing only on testing successful scenarios. But what about exception handling? Handling 
+exceptions is absolutely a must when it comes to work with external APIs like Spotify's. How should we test it? Let's 
+start by wrapping our function with a simple try-except block
+
+```python
+from typing import List
+from spotipyio import SpotifyClient
+from aiohttp.client_exceptions import ClientResponseError
+
+async def get_playlist_tracks(spotify_client: SpotifyClient, playlist_id: str) -> List[str]:
+    try:
+        playlist = await spotify_client.playlists.info.run_single(playlist_id)
+        items = playlist["tracks"]["items"]
+        
+        return [item["track"]["name"] for item in items]
+    
+    except ClientResponseError:
+        print("Failed to fetch playlist. Retuning empty list instead")
+        return []
+```
