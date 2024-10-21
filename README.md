@@ -1,13 +1,17 @@
-# Spotipyio
-An async Python wrapper to the Spotify API
+<h1 style="font-size: 3em; text-align: center">Spotipyio</h1>
+<p style="font-size: medium; font-weight: bold; text-align: center">A FREE async Python wrapper to the Spotify API</p>
 
-## Before Start
-In case you don't already own a Spotify API account including a `client_id`, `client_secret` and a `redirect_uri`, please 
-go first to the [Spotify developers page]() and create one.
+# ⚙️ Before Start
+In case you haven't already registered a Spotify API app, please go first to the 
+[Spotify developers page](https://developer.spotify.com/documentation/web-api/tutorials/getting-started#create-an-app) 
+and create one. You must possess the following credentials before start:
+* client_id
+* client_secret
+* redirect_uri
 
-Successfully created the account? Great, let's start cooking
+Do you have your credentials? Great, let's start cooking 👨‍🍳
 
-## Installation
+# 💾 Installation
 ### Pip
 ```bash 
 pip install spotipyio
@@ -23,8 +27,9 @@ pipenv install spotipyio
 poetry add spotipyio
 ```
 
-## Getting Started
-### Sending your first request
+# 🚀 Getting Started
+## Sending your first request
+Here is a simple function that fetches tracks information and prints it
 
 ```python
 import asyncio
@@ -32,7 +37,7 @@ from spotipyio import SpotifyClient, SpotifySession
 from typing import List
 
 
-async def fetch_tracks_info(tracks_ids: List[str]) -> List[dict]:
+async def fetch_tracks_info(tracks_ids: List[str]):
     spotify_session = SpotifySession(
         client_id="<your-spotify-client-session>",
         client_secret="<your-spotify-client-secret>",
@@ -41,23 +46,25 @@ async def fetch_tracks_info(tracks_ids: List[str]) -> List[dict]:
     
     async with spotify_session as session:
         client = SpotifyClient.create(session)
+        tracks = await client.tracks.info.run(tracks_ids)
         
-        return await client.tracks.info.run(tracks_ids)
+        print(tracks) 
 
 
-if __name__ == '__main__':
-    tracks_ids = [""]
+if __name__ == "__main__":
+    tracks_ids = ["0ntQJM78wzOLVeCUAW7Y45", "5FVd6KXrgO9B3JPmC8OPst"]  # Sex On Fire, Do I Wanna Know?
     loop = asyncio.get_event_loop()
     loop.run_until_complete(fetch_tracks_info(tracks_ids))
 ```
 
+## 🦶 Walkthrough
 Let's walk through this example one line by another.
 
 ### The SpotifySession
 The `SpotifySession` object is used to instantiate the aiohttp ClientSession used to send asynchronous requests to the 
-Spotify API. This objects creates and stores the authorization headers required by the Spotify API. This session is 
-instantiated using the Spotify API `client_id`, `client_secret` and `redirect_uri` you created in the Before Starting 
-section.
+Spotify API. This object creates and stores the authorization headers required by the Spotify API. This session is 
+instantiated using the Spotify API `client_id`, `client_secret` and `redirect_uri` you created in the 
+[Before Start](#-before-start) section.
 
 **Pay attention:** The `SpotifySession` object is an async context manager. This means that all your code must be 
 indented under the `async with spotify_session as session` block. Once the code exists the indentation block, the 
@@ -76,45 +83,136 @@ data - can receive any number of tracks ids. It automatically takes care of opti
 to 50 ids chunks and parallelizing the requests.
 
 ## Deep Dive
-### SpotifySession
-#### Grant Type
-#### Caching
+## SpotifySession
+### Grant Type
+### Caching
 
-### SpotifyClient
+## SpotifyClient
 The `SpotifyClient` object is built with two principles in mind. First, it aims to offer an API that is both intuitive 
 and matches as far as possible the actual Spotify API structure as presented in the 
 [official documentation](https://developer.spotify.com/documentation/web-api/reference). 
 To this end, the client doesn't holds any logic by itself, but only hosts a variety of objects, each designed to 
 represent a logical subset of the API endpoints. The following sections present each object's methods.
-* albums
-* artists
-* current_user
-* playlists
-* search
-* tracks
-* users
+<details>
+<summary style="font-size: large">💿 Albums</summary>
+<h3>ℹ️ Info</h3>
 
-## Testing
+**Description**
+
+Get Spotify catalog information for multiple albums identified by their Spotify IDs.
+
+**Example**
+```python
+from spotipyio import SpotifyClient
+import asyncio
+
+async def fetch_albums_info(spotify_client: SpotifyClient):
+    artists_ids = ["6l3HvQ5sa6mXTsMTB19rO5", "1vyhD5VmyZ7KMfW5gqLgo5"]  # J Cole, J Balvin
+    albums_info = await spotify_client.artists.info.run(artists_ids)
+    
+    print(albums_info)
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(fetch_albums_info)
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-multiple-artists)
+</details>
+
+<details>
+<summary style="font-size: large">👨‍🎤 Artists</summary>
+<h3>ℹ️ Info</h3>
+
+**Description**
+
+Get Spotify catalog information for several artists based on their Spotify IDs.
+
+**Example**
+```python
+from spotipyio import SpotifyClient
+import asyncio
+
+async def fetch_artists_info(spotify_client: SpotifyClient):
+    artists_ids = ["6l3HvQ5sa6mXTsMTB19rO5", "1vyhD5VmyZ7KMfW5gqLgo5"]  # J Cole, J Balvin
+    artists_info = await spotify_client.artists.info.run(artists_ids)
+    
+    print(artists_info)
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(fetch_artists_info)
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-multiple-artists)
+
+<h3>🔝 Top Tracks</h3>
+
+**Description**
+
+Get Spotify catalog information about an artist's top tracks.
+
+**Example**
+```python
+from spotipyio import SpotifyClient
+import asyncio
+
+async def fetch_artists_top_tracks(spotify_client: SpotifyClient):
+    artists_ids = ["6ra4GIOgCZQZMOaUECftGN", "1Mxqyy3pSjf8kZZL4QVxS0"]  # Frank Zappa, Frank Sinatra
+    artists_top_tracks = await spotify_client.artists.top_tracks.run(artists_ids)
+    
+    print(artists_top_tracks)
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(fetch_artists_top_tracks)
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-top-tracks)
+
+</details>
+
+<details>
+<summary style="font-size: large">👨‍💻 Current User</summary>
+</details>
+
+<details>
+<summary style="font-size: large">📻 Playlists</summary>
+</details>
+
+<details>
+<summary style="font-size: large">🔎 Search</summary>
+</details>
+
+<details>
+<summary style="font-size: large">🎷 Tracks</summary>
+</details>
+
+<details>
+<summary style="font-size: large">👥 Users</summary>
+</details>
+
+# Testing
 Testing is central to software development, but when it comes to external APIs like Spotify's it can be tricky 
 to test our code without sending any actual request. To this end, spotipy introduces `SpotifyTestClient`. This object 
 is designed to help you test components that use the `SpotifyClient` seamlessly, without having to mock or patch 
 anything, or familiarize yourself with the internals of `SpotifyClient`. 
 
-### Installation
+## Installation
 To avoid adding dev dependencies to our production code, the test client sits under a dedicated `testing` module, which 
 requirements' are optional. To install these extra requirements, execute the relevant command.
 
-#### Pip
+### Pip
 ```bash 
 pip install spotipyio[testing]
 ```
 
-#### Pipenv
+### Pipenv
 ```bash 
 pipenv install spotipyio[testing]
 ```
 
-#### Poetry
+### Poetry
 ```bash 
 poetry add spotipyio[testing]
 ```
@@ -134,7 +232,7 @@ spotipyio = { version = "*", extras = ["testing"] }
 **Pay attention**: the version is pinned only in the dependencies section. The dev dependencies section should not pin 
 a version, to avoid conflicts between two sections.
 
-### Testing your first component
+## Testing your first component
 Imagine having a simple function that should fetch a playlist from Spotify and return a list of the 
 playlist's tracks names. This function should look something like this:
 ```python
