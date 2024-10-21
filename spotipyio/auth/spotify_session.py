@@ -4,6 +4,7 @@ from typing import Optional, Dict, Any
 from aiohttp import ClientSession, ClientResponse, ContentTypeError, ClientResponseError
 from multidict import CIMultiDict
 
+from spotipyio.auth.client_credentials import ClientCredentials
 from spotipyio.logic.consts.api_consts import ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_REQUEST_URL
 from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.auth.session_cache_handler_interface import ISessionCacheHandler
@@ -16,22 +17,14 @@ class SpotifySession:
     def __init__(
         self,
         token_request_url: str = TOKEN_REQUEST_URL,
+        credentials: Optional[ClientCredentials] = None,
         access_token_generator: Optional[AccessTokenGenerator] = None,
-        client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
-        redirect_uri: Optional[str] = None,
-        grant_type: SpotifyGrantType = SpotifyGrantType.CLIENT_CREDENTIALS,
-        access_code: Optional[str] = None,
         session: Optional[ClientSession] = None,
         session_cache_handler: Optional[ISessionCacheHandler] = None,
     ):
         self._token_request_url = token_request_url
+        self._credentials = credentials or ClientCredentials()
         self._access_token_generator = access_token_generator
-        self._client_id = client_id
-        self._client_secret = client_secret
-        self._redirect_uri = redirect_uri
-        self._grant_type = grant_type
-        self._access_code = access_code
         self._session = session
         self._cache_handler = session_cache_handler
 
@@ -55,8 +48,7 @@ class SpotifySession:
         if self._session is not None:
             await self._session.close()
 
-        raw_session = await self._build_client_session(use_cache=False)
-        self._session = await raw_session.__aenter__()
+        self._session = await self._build_client_session(use_cache=False)
 
     async def start(self) -> None:
         if self._session is None:
@@ -128,7 +120,9 @@ class SpotifySession:
             if response is not None:
                 return response
 
-        return await self._generate_access_token(grant_type=self._grant_type, access_code=self._access_code)
+        return await self._generate_access_token(
+            grant_type=self._credentials.grant_type, access_code=self._credentials.access_code
+        )
 
     async def _retrieve_access_token_from_cache(self) -> Optional[Dict[str, str]]:
         cached_response = self._cache_handler.get()
@@ -149,8 +143,8 @@ class SpotifySession:
     async def _init_token_generator(self) -> None:
         self._access_token_generator = AccessTokenGenerator(
             token_request_url=self._token_request_url,
-            client_id=self._client_id,
-            client_secret=self._client_secret,
-            redirect_uri=self._redirect_uri,
+            client_id=self._credentials.client_id,
+            client_secret=self._credentials.client_secret,
+            redirect_uri=self._credentials.redirect_uri,
         )
-        await self._access_token_generator.__aenter__()
+        await self._access_token_generator.start()

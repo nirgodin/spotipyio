@@ -6,11 +6,11 @@ import pytest
 from _pytest.fixtures import fixture
 
 from spotipyio import SpotifySession
-from spotipyio.logic.consts.api_consts import REFRESH_TOKEN, ACCESS_TOKEN
-from spotipyio.auth import SpotifyGrantType, ISessionCacheHandler
+from spotipyio.auth import SpotifyGrantType, ISessionCacheHandler, ClientCredentials
 from spotipyio.logic.authorization import AccessTokenGenerator
-from spotipyio.logic.utils import create_client_session, random_alphanumeric_string
-from tests.testing_utils import an_optional, random_string_dict
+from spotipyio.logic.consts.api_consts import REFRESH_TOKEN, ACCESS_TOKEN
+from spotipyio.logic.utils import create_client_session, random_alphanumeric_string, random_client_credentials
+from tests.testing_utils import random_string_dict
 
 
 class TestSpotifySession:
@@ -35,15 +35,16 @@ class TestSpotifySession:
         self,
         session: SpotifySession,
         mock_cache_handler: MagicMock,
-        grant_type: SpotifyGrantType,
-        access_code: str,
+        client_credentials: ClientCredentials,
         regular_access_token: str,
         mock_token_generator: AsyncMock,
     ):
         self._given_cached_response_is(mock_cache_handler, cached_response=None)
 
         async with session as spotify_session:
-            mock_token_generator.generate.assert_called_once_with(grant_type=grant_type, access_code=access_code)
+            mock_token_generator.generate.assert_called_once_with(
+                grant_type=client_credentials.grant_type, access_code=client_credentials.access_code
+            )
             self._assert_expected_bearer_token(session=spotify_session, expected=regular_access_token)
             self._assert_expected_response_cached(cache_handler=mock_cache_handler, expected=regular_access_token)
 
@@ -51,22 +52,27 @@ class TestSpotifySession:
         self,
         session_without_cache: SpotifySession,
         mock_cache_handler: MagicMock,
-        grant_type: SpotifyGrantType,
-        access_code: str,
+        client_credentials: ClientCredentials,
         regular_access_token: str,
         mock_token_generator: AsyncMock,
     ):
         async with session_without_cache as spotify_session:
-            mock_token_generator.generate.assert_called_once_with(grant_type=grant_type, access_code=access_code)
+            mock_token_generator.generate.assert_called_once_with(
+                grant_type=client_credentials.grant_type, access_code=client_credentials.access_code
+            )
             self._assert_expected_bearer_token(session=spotify_session, expected=regular_access_token)
             mock_cache_handler.set.assert_not_called()
 
-    async def test_aenter__existing_client_session__doesnt_generate_new_token(self, mock_token_generator: AsyncMock):
+    async def test_aenter__existing_client_session__doesnt_generate_new_token(
+        self, mock_token_generator: AsyncMock, client_credentials: ClientCredentials
+    ):
         bearer_token = random_alphanumeric_string()
         headers = {"Authorization": f"Bearer {bearer_token}"}
         client_session = create_client_session(headers)
 
-        async with SpotifySession(session=client_session, access_token_generator=mock_token_generator) as session:
+        async with SpotifySession(
+            session=client_session, access_token_generator=mock_token_generator, credentials=client_credentials
+        ) as session:
             mock_token_generator.generate.assert_not_called()
             self._assert_expected_bearer_token(session=session, expected=bearer_token)
 
@@ -74,14 +80,15 @@ class TestSpotifySession:
         self,
         session_without_cache: SpotifySession,
         mock_cache_handler: MagicMock,
-        grant_type: SpotifyGrantType,
-        access_code: str,
+        client_credentials: ClientCredentials,
         regular_access_token: str,
         mock_token_generator: AsyncMock,
     ):
         await session_without_cache.refresh()
 
-        mock_token_generator.generate.assert_called_once_with(grant_type=grant_type, access_code=access_code)
+        mock_token_generator.generate.assert_called_once_with(
+            grant_type=client_credentials.grant_type, access_code=client_credentials.access_code
+        )
         self._assert_expected_bearer_token(session=session_without_cache, expected=regular_access_token)
         mock_cache_handler.set.assert_not_called()
 
@@ -91,8 +98,7 @@ class TestSpotifySession:
         cached_response: Optional[Dict[str, str]],
         session: SpotifySession,
         mock_cache_handler: MagicMock,
-        grant_type: SpotifyGrantType,
-        access_code: str,
+        client_credentials: ClientCredentials,
         regular_access_token: str,
         mock_token_generator: AsyncMock,
     ):
@@ -100,42 +106,39 @@ class TestSpotifySession:
 
         await session.refresh()
 
-        mock_token_generator.generate.assert_called_once_with(grant_type=grant_type, access_code=access_code)
+        mock_token_generator.generate.assert_called_once_with(
+            grant_type=client_credentials.grant_type, access_code=client_credentials.access_code
+        )
         self._assert_expected_bearer_token(session=session, expected=regular_access_token)
         self._assert_expected_response_cached(cache_handler=mock_cache_handler, expected=regular_access_token)
 
     @fixture
-    def grant_type(self) -> SpotifyGrantType:
-        return choice([SpotifyGrantType.CLIENT_CREDENTIALS, SpotifyGrantType.AUTHORIZATION_CODE])
+    def client_credentials(self) -> ClientCredentials:
+        credentials = random_client_credentials()
+        credentials.grant_type = choice([SpotifyGrantType.CLIENT_CREDENTIALS, SpotifyGrantType.AUTHORIZATION_CODE])
 
-    @fixture
-    def access_code(self) -> Optional[str]:
-        return an_optional(random_alphanumeric_string)
+        return credentials
 
     @fixture
     async def session(
         self,
         mock_token_generator: AsyncMock,
         mock_cache_handler: MagicMock,
-        grant_type: SpotifyGrantType,
-        access_code: str,
+        client_credentials: ClientCredentials,
     ) -> SpotifySession:
         session = SpotifySession(
             access_token_generator=mock_token_generator,
             session_cache_handler=mock_cache_handler,
-            grant_type=grant_type,
-            access_code=access_code,
+            credentials=client_credentials,
         )
         yield session
         await session.stop()
 
     @fixture
     async def session_without_cache(
-        self, mock_token_generator: AsyncMock, grant_type: SpotifyGrantType, access_code: str
+        self, mock_token_generator: AsyncMock, client_credentials: ClientCredentials
     ) -> SpotifySession:
-        session = SpotifySession(
-            access_token_generator=mock_token_generator, grant_type=grant_type, access_code=access_code
-        )
+        session = SpotifySession(access_token_generator=mock_token_generator, credentials=client_credentials)
         yield session
         await session.stop()
 

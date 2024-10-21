@@ -58,14 +58,14 @@ class SpotifyClient:
             tracks=TracksManager.create(base_url, session),
             search=SearchManager.create(base_url, session),
         )
-    
+
     async def start(self) -> SpotifyClient:
         if self.session is None:
             session = SpotifySession()
             await session.start()
         else:
             session = self.session
-        
+
         return SpotifyClient(
             session=session,
             artists=ArtistsManager.create(self._base_url, session),
@@ -78,14 +78,14 @@ class SpotifyClient:
             tracks=TracksManager.create(self._base_url, session),
             search=SearchManager.create(self._base_url, session),
         )
-    
+
     async def stop(self) -> None:
         if self.session is not None:
             await self.session.stop()
-    
+
     async def __aenter__(self) -> SpotifyClient:
         await self.start()
         return self
-    
+
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self.stop()
