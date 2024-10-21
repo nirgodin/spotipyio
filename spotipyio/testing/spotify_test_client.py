@@ -65,8 +65,9 @@ class SpotifyTestClient:
     def get_base_url(self) -> str:
         return self._api_server.url_for("").rstrip("/")
 
-    def create_client(self) -> SpotifyClient:
-        return SpotifyClient.create(session=self._session, base_url=self.get_base_url())
+    async def create_client(self) -> SpotifyClient:
+        client = SpotifyClient(session=self._session, base_url=self.get_base_url())
+        return await client.start()
 
     async def __aenter__(self) -> "SpotifyTestClient":
         self._init_api_server()

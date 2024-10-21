@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Optional, Dict, Any
 
 from aiohttp import ClientSession, ClientResponse, ContentTypeError, ClientResponseError
@@ -57,11 +58,9 @@ class SpotifySession:
         raw_session = await self._build_client_session(use_cache=False)
         self._session = await raw_session.__aenter__()
 
-    async def start(self) -> "SpotifySession":
+    async def start(self) -> None:
         if self._session is None:
             self._session = await self._build_client_session(use_cache=True)
-
-        return self
 
     async def stop(self) -> None:
         if self._session is not None:
@@ -101,8 +100,9 @@ class SpotifySession:
         except ContentTypeError:
             return
 
-    async def __aenter__(self) -> "SpotifySession":
-        return await self.start()
+    async def __aenter__(self) -> SpotifySession:
+        await self.start()
+        return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self.stop()
