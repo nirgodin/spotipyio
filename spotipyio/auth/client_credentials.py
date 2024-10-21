@@ -30,15 +30,17 @@ class ClientCredentials:
 
     def _set_default_or_raise(self, field_name: str, env_var: str) -> None:
         field_value = getattr(self, field_name)
+        if field_value is not None:
+            return
 
-        if field_value is None:
-            default_value = os.getenv(env_var)
+        default_value = os.getenv(env_var)
+        if default_value is None:
+            raise ValueError(
+                f"Missing credential for field `{field_name}`! You must explicitly set this field or set the "
+                f"`{env_var}` environment variable."
+            )
 
-            if default_value is None:
-                raise ValueError(
-                    f"Missing credential for field `{field_name}`! You must explicitly set this field or set the "
-                    f"`{env_var}` environment variable."
-                )
+        setattr(self, field_name, default_value)
 
     def _validate_access_code(self) -> None:
         if self.grant_type != SpotifyGrantType.CLIENT_CREDENTIALS and self.access_code is None:

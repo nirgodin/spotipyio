@@ -10,7 +10,7 @@ from spotipyio.logic.utils import random_alphanumeric_string
 
 
 class TestClientCredentials:
-    def test_init__no_explicit_client_details_with_env_vars__creates_successfully(self):
+    def test_init__no_explicit_client_details_with_env_vars__creates_successfully_and_sets_env_var_as_attributes(self):
         mock_env_vars = {
             SPOTIPY_CLIENT_ID: random_alphanumeric_string(),
             SPOTIPY_CLIENT_SECRET: random_alphanumeric_string(),
@@ -18,7 +18,11 @@ class TestClientCredentials:
         }
 
         with patch.dict(os.environ, mock_env_vars):
-            ClientCredentials()
+            credentials = ClientCredentials()
+
+        assert credentials.client_id == mock_env_vars[SPOTIPY_CLIENT_ID]
+        assert credentials.client_secret == mock_env_vars[SPOTIPY_CLIENT_SECRET]
+        assert credentials.redirect_uri == mock_env_vars[SPOTIPY_REDIRECT_URI]
 
     def test_init__missing_client_details_without_env_var__raises_value_error(self):
         client_details = {
