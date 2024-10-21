@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from random import randint
 from typing import Optional
 from urllib.parse import urlencode
 
@@ -26,9 +27,9 @@ from spotipyio.logic.utils import random_alphanumeric_string
 class SpotifyTestClient:
     def __init__(
         self,
-        client_id: str,
-        client_secret: str,
-        redirect_uri: str,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
+        redirect_uri: Optional[str] = None,
         grant_type: SpotifyGrantType = SpotifyGrantType.CLIENT_CREDENTIALS,
         access_code: Optional[str] = None,
         api_server: Optional[HTTPServer] = None,
@@ -44,9 +45,9 @@ class SpotifyTestClient:
         tracks: Optional[TracksTestManager] = None,
         users: Optional[UsersTestManager] = None,
     ):
-        self._client_id = client_id
-        self._client_secret = client_secret
-        self._redirect_uri = redirect_uri
+        self._client_id = client_id or random_alphanumeric_string()
+        self._client_secret = client_secret or random_alphanumeric_string()
+        self._redirect_uri = redirect_uri or f"http://localhost:{randint(1000, 9999)}"  # TODO: Revise
         self._grant_type = grant_type
         self._access_code = access_code
         self._api_server = api_server
