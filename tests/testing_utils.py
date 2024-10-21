@@ -4,16 +4,7 @@ from typing import Type, List, Any, Callable, Optional, Dict
 from urllib.parse import urlencode
 
 from spotipyio.logic.consts.typing_consts import EnumType
-from spotipyio.logic.utils import random_alphanumeric_string
-
-
-def get_all_enum_values(enum_: Type[EnumType]) -> List[EnumType]:
-    return [v for v in enum_]
-
-
-def random_enum_value(enum_: Type[EnumType]) -> EnumType:
-    enum_values = get_all_enum_values(enum_)
-    return choice(enum_values)
+from spotipyio.logic.utils import get_all_enum_values, random_alphanumeric_string
 
 
 def random_multi_enum_values(enum_: Type[EnumType]) -> List[EnumType]:

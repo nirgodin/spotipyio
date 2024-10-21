@@ -1,9 +1,8 @@
-import os
+from __future__ import annotations
 from typing import Dict, Optional
 
 from aiohttp import ClientSession
 
-from spotipyio.logic.consts.env_consts import SPOTIPY_CLIENT_SECRET, SPOTIPY_CLIENT_ID, SPOTIPY_REDIRECT_URI
 from spotipyio.auth.spotify_grant_type import SpotifyGrantType
 from spotipyio.logic.authorization.authorization_payload_builder import AuthorizationPayloadBuilder
 from spotipyio.logic.utils import create_client_session, encode_bearer_token
@@ -19,9 +18,9 @@ class AccessTokenGenerator:
         session: Optional[ClientSession] = None,
     ):
         self._token_request_url = token_request_url
-        self._client_id = client_id or os.environ[SPOTIPY_CLIENT_ID]
-        self._client_secret = client_secret or os.environ[SPOTIPY_CLIENT_SECRET]
-        self._redirect_uri = redirect_uri or os.environ[SPOTIPY_REDIRECT_URI]
+        self._client_id = client_id
+        self._client_secret = client_secret
+        self._redirect_uri = redirect_uri
         self._session = session
 
     async def generate(self, grant_type: SpotifyGrantType, access_code: Optional[str]) -> Dict[str, str]:
@@ -35,18 +34,18 @@ class AccessTokenGenerator:
             raw_response.raise_for_status()
             return await raw_response.json()
 
-    async def start(self):
-        raw_session = create_client_session()
-        self._session = await raw_session.__aenter__()
+    async def start(self) -> None:
+        if self._session is None:
+            raw_session = create_client_session()
+            self._session = await raw_session.__aenter__()
 
-        return self
-
-    async def stop(self):
+    async def stop(self) -> None:
         if self._session is not None:
             await self._session.close()
 
-    async def __aenter__(self) -> "AccessTokenGenerator":
-        return await self.start()
+    async def __aenter__(self) -> AccessTokenGenerator:
+        await self.start()
+        return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self.stop()
