@@ -1,5 +1,5 @@
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 from spotipyio.auth.spotify_grant_type import SpotifyGrantType
@@ -11,7 +11,7 @@ class ClientCredentials:
     client_id: Optional[str] = None
     client_secret: Optional[str] = None
     redirect_uri: Optional[str] = None
-    grant_type: Optional[SpotifyGrantType] = SpotifyGrantType.CLIENT_CREDENTIALS
+    grant_type: Optional[SpotifyGrantType] = field(default_factory=lambda: SpotifyGrantType.CLIENT_CREDENTIALS)
     access_code: Optional[str] = None
 
     def __post_init__(self) -> None:
