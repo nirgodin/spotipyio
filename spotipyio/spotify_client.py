@@ -59,32 +59,28 @@ class SpotifyClient:
             search=SearchManager.create(base_url, session),
         )
 
-    async def start(self) -> SpotifyClient:
+    async def start(self) -> None:
         if self.session is None:
-            session = SpotifySession()
-            await session.start()
-        else:
-            session = self.session
+            self.session = SpotifySession()
+            await self.session.start()
 
-        return SpotifyClient(
-            session=session,
-            artists=ArtistsManager.create(self._base_url, session),
-            chapters=ChaptersManager.create(self._base_url, session),
-            current_user=CurrentUserManager.create(self._base_url, session),
-            episodes=EpisodesManager.create(self._base_url, session),
-            playlists=PlaylistsManager.create(self._base_url, session),
-            users=UsersManager.create(self._base_url, session),
-            albums=AlbumsManager.create(self._base_url, session),
-            tracks=TracksManager.create(self._base_url, session),
-            search=SearchManager.create(self._base_url, session),
-        )
+        self.artists = ArtistsManager.create(self._base_url, self.session)
+        self.chapters = ChaptersManager.create(self._base_url, self.session)
+        self.current_user = CurrentUserManager.create(self._base_url, self.session)
+        self.episodes = EpisodesManager.create(self._base_url, self.session)
+        self.playlists = PlaylistsManager.create(self._base_url, self.session)
+        self.users = UsersManager.create(self._base_url, self.session)
+        self.albums = AlbumsManager.create(self._base_url, self.session)
+        self.tracks = TracksManager.create(self._base_url, self.session)
+        self.search = SearchManager.create(self._base_url, self.session)
 
     async def stop(self) -> None:
         if self.session is not None:
             await self.session.stop()
 
     async def __aenter__(self) -> SpotifyClient:
-        return await self.start()
+        await self.start()
+        return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self.stop()
