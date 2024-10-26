@@ -5,9 +5,9 @@
 In case you haven't already registered a Spotify API app, please go first to the 
 [Spotify developers page](https://developer.spotify.com/documentation/web-api/tutorials/getting-started#create-an-app) 
 and create one. You must possess the following credentials before start:
-* client_id
-* client_secret
-* redirect_uri
+* Client ID
+* Client secret
+* Redirect URI
 
 Do you have your credentials? Great, let's start cooking 👨‍🍳
 
@@ -28,61 +28,89 @@ poetry add spotipyio
 ```
 
 # 🚀 Getting Started
-## Sending your first request
+## 🐣 Sending your first request
 Here is a simple function that fetches tracks information and prints it
 
 ```python
 import asyncio
-from spotipyio import SpotifyClient, SpotifySession
+from spotipyio import SpotifyClient
 from typing import List
 
 
 async def fetch_tracks_info(tracks_ids: List[str]):
-    spotify_session = SpotifySession(
-        client_id="<your-spotify-client-session>",
-        client_secret="<your-spotify-client-secret>",
-        redirect_uri="<your-spotify-redirect-uri>"
-    )
-    
-    async with spotify_session as session:
-        client = SpotifyClient.create(session)
-        tracks = await client.tracks.info.run(tracks_ids)
-        
-        print(tracks) 
+    async with SpotifyClient() as client:  # Assuming you set your credentials as env variables
+        tracks = await client.tracks.info.run(tracks_ids)        
+        print(tracks)
 
 
 if __name__ == "__main__":
-    tracks_ids = ["0ntQJM78wzOLVeCUAW7Y45", "5FVd6KXrgO9B3JPmC8OPst"]  # Sex On Fire, Do I Wanna Know?
+    ids = ["0ntQJM78wzOLVeCUAW7Y45", "5FVd6KXrgO9B3JPmC8OPst"]  # Sex On Fire, Do I Wanna Know?
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(fetch_tracks_info(tracks_ids))
+    loop.run_until_complete(fetch_tracks_info(ids))
 ```
 
 ## 🦶 Walkthrough
 Let's walk through this example one line by another.
 
-### The SpotifySession
-The `SpotifySession` object is used to instantiate the aiohttp ClientSession used to send asynchronous requests to the 
-Spotify API. This object creates and stores the authorization headers required by the Spotify API. This session is 
-instantiated using the Spotify API `client_id`, `client_secret` and `redirect_uri` you created in the 
-[Before Start](#-before-start) section.
+### Env Setup
+First, we must ensure our [client credentials](#-before-start) are accessible to our code. The easiest way to do so is by simply 
+configuring them as environment variables:
 
-**Pay attention:** The `SpotifySession` object is an async context manager. This means that all your code must be 
-indented under the `async with spotify_session as session` block. Once the code exists the indentation block, the 
-client session will close and you will no longer be able to use it to send requests.
+| Credential    | Env Variable          |
+|---------------|-----------------------|
+| Client ID     | SPOTIPY_CLIENT_ID     |
+| Client secret | SPOTIPY_CLIENT_SECRET |
+| Redirect URI  | SPOTIPY_REDIRECT_URI  |
 
-### The SpotifyClient
-The `SpotifyClient` object is the single object you need to use to execute your business logic. Once created, you will 
-not have to use any other object to send requests. In the above example, we are using it to fetch tracks information. 
-The easiest way to create it is by using the `.create` classmethod as is done above.
+### SpotifyClient
+Once our environment is configured, we can create our `SpotifyClient`. The `SpotifyClient` object is the single object 
+you need to use to execute your business logic. Once created, you will not have to use any other object to send requests. 
+In the above example, we are using it to fetch tracks information. The easiest way to instantiate it 
+([but not the only](#session-management)) is as an async context manager, as done here.
 
-Pay attention we are providing the `tracks.info.run` method not a single track id but a list of ids. This is 
-one of the greatest benefits the package is offering to the user. If you're familiar with the Spotify API you might 
-already know it doesn't offer this kind of functionality, but only a single track endpoint or several_tracks endpoint 
-limited to maximum 50 tracks ids. The `tracks.info.run` method - as well as other similar methods for other types of 
-data - can receive any number of tracks ids. It automatically takes care of optimizing your requests by splitting it 
-to 50 ids chunks and parallelizing the requests.
+### Run
+Our request is then sent using the `run` method. All objects within the `SpotifyClient` send requests using this method, 
+ensuring a standardized way to execute each object's main functionality. Pay attention we are feeding the `run` method 
+not a single track id but a list of ids. This is one of the greatest benefits the package is offering to the user. 
+If you're familiar with the Spotify API you might already know it doesn't offer this kind of functionality, but only 
+a single track endpoint or several_tracks endpoint limited to maximum 50 tracks ids. The `tracks.info.run` method - as 
+well as other similar methods for other types of data - can receive any number of tracks ids. It automatically takes 
+care of optimizing your requests by splitting it to 50 ids chunks and parallelizing them.
 
-## Deep Dive
+## 🔐 Sending your second (authorized) request
+In our first request, we didn't configure which 
+[OAuth flow](https://developer.spotify.com/documentation/web-api/concepts/authorization) to use. In this case, the 
+[Client Credentials](https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow) flow is 
+chosen by default, which is suitable for endpoints that don't hold private information, such as tracks' and artists' 
+information. But how can we send authorized requests to engage with endpoint that require such authorization, such as 
+[current user's profile](https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile)? 
+Let's see an example:
+
+```python
+import asyncio
+
+from spotipyio import SpotifySession, SpotifyClient
+from spotipyio.auth import ClientCredentials, SpotifyGrantType
+
+
+async def get_current_user_profile(access_code: str):
+    credentials = ClientCredentials(
+        grant_type=SpotifyGrantType.AUTHORIZATION_CODE,
+        access_code=access_code
+    )
+    
+    async with SpotifySession(credentials=credentials) as session:
+        async with SpotifyClient(session=session) as client:
+            profile = await client.current_user.profile.run()
+            print(profile)
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(get_current_user_profile("<your-access-code>"))
+```
+
+# 🥽 Deep Dive
 ## SpotifySession
 ### Grant Type
 ### Caching
@@ -93,6 +121,8 @@ and matches as far as possible the actual Spotify API structure as presented in 
 [official documentation](https://developer.spotify.com/documentation/web-api/reference). 
 To this end, the client doesn't holds any logic by itself, but only hosts a variety of objects, each designed to 
 represent a logical subset of the API endpoints. The following sections present each object's methods.
+
+### Blueprint
 <details>
 <summary style="font-size: large">💿 Albums</summary>
 <h3>ℹ️ Info</h3>
@@ -106,15 +136,17 @@ Get Spotify catalog information for multiple albums identified by their Spotify 
 from spotipyio import SpotifyClient
 import asyncio
 
-async def fetch_albums_info(spotify_client: SpotifyClient):
-    artists_ids = ["6l3HvQ5sa6mXTsMTB19rO5", "1vyhD5VmyZ7KMfW5gqLgo5"]  # J Cole, J Balvin
-    albums_info = await spotify_client.artists.info.run(artists_ids)
-    
+async def fetch_albums_info():
+    async with SpotifyClient() as client:
+        albums_ids = ["4LH4d3cOWNNsVw41Gqt2kv", "0E4xv5gPjykrwBgBZzI8XG"]  # The Dark Side of the Moon, Back to Black
+        albums_info = await client.albums.info.run(albums_ids)        
+
     print(albums_info)
+
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(fetch_albums_info)
+    loop.run_until_complete(fetch_albums_info())
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-multiple-artists)
@@ -191,6 +223,37 @@ if __name__ == '__main__':
 <details>
 <summary style="font-size: large">👥 Users</summary>
 </details>
+
+### Session Management
+The easiest way to create and control the session is by using the SpotifyClient as an async context manager as done 
+[above](#-sending-your-first-request). Alternatively, you can control the session yourself by using the `start` and 
+`stop` methods.
+
+```python
+import asyncio
+from spotipyio import SpotifyClient
+from typing import List
+
+
+async def fetch_tracks_info(tracks_ids: List[str]):
+    client = SpotifyClient()
+    await client.start()
+    tracks = await client.tracks.info.run(tracks_ids)        
+    await client.stop()
+    print(tracks)
+
+
+if __name__ == "__main__":
+    ids = ["0ntQJM78wzOLVeCUAW7Y45", "5FVd6KXrgO9B3JPmC8OPst"]  # Sex On Fire, Do I Wanna Know?
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(fetch_tracks_info(ids))
+```
+
+If you do decide to use it as an async context manager, you must ensure all your code is indented under the 
+`async with SpotifyClient() as client` block. Once the code exists the indentation block, the client session will close 
+and you will no longer be able to use it to send requests.
+
+<p style="font-weight: bold; font-size: 21px">Interface</p>
 
 # Testing
 Testing is central to software development, but when it comes to external APIs like Spotify's it can be tricky 
