@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from random import randint
 from typing import Optional
 from urllib.parse import urlencode
 
 from pytest_httpserver import HTTPServer
 
 from spotipyio import SpotifyClient, SpotifySession
-from spotipyio.logic.consts.api_consts import ACCESS_TOKEN
-from spotipyio.auth import SpotifyGrantType
+from spotipyio.auth import ClientCredentials
 from spotipyio.logic.authorization import AuthorizationPayloadBuilder
+from spotipyio.logic.consts.api_consts import ACCESS_TOKEN
+from spotipyio.logic.utils import random_alphanumeric_string, random_client_credentials
 from spotipyio.testing.managers import (
     AlbumsTestManager,
     ArtistsTestManager,
@@ -21,17 +21,12 @@ from spotipyio.testing.managers import (
     TracksTestManager,
     UsersTestManager,
 )
-from spotipyio.logic.utils import random_alphanumeric_string
 
 
 class SpotifyTestClient:
     def __init__(
         self,
-        client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
-        redirect_uri: Optional[str] = None,
-        grant_type: SpotifyGrantType = SpotifyGrantType.CLIENT_CREDENTIALS,
-        access_code: Optional[str] = None,
+        credentials: Optional[ClientCredentials] = None,
         api_server: Optional[HTTPServer] = None,
         authorization_server: Optional[HTTPServer] = None,
         session: Optional[SpotifySession] = None,
@@ -45,11 +40,7 @@ class SpotifyTestClient:
         tracks: Optional[TracksTestManager] = None,
         users: Optional[UsersTestManager] = None,
     ):
-        self._client_id = client_id or random_alphanumeric_string()
-        self._client_secret = client_secret or random_alphanumeric_string()
-        self._redirect_uri = redirect_uri or f"http://localhost:{randint(1000, 9999)}"  # TODO: Revise
-        self._grant_type = grant_type
-        self._access_code = access_code
+        self._credentials = credentials or random_client_credentials()
         self._api_server = api_server
         self._authorization_server = authorization_server
         self._session = session
@@ -66,8 +57,9 @@ class SpotifyTestClient:
     def get_base_url(self) -> str:
         return self._api_server.url_for("").rstrip("/")
 
-    def create_client(self) -> SpotifyClient:
-        return SpotifyClient.create(session=self._session, base_url=self.get_base_url())
+    async def create_client(self) -> SpotifyClient:
+        client = SpotifyClient(session=self._session, base_url=self.get_base_url())
+        return await client.start()
 
     async def __aenter__(self) -> "SpotifyTestClient":
         self._init_api_server()
@@ -101,10 +93,10 @@ class SpotifyTestClient:
 
     def _expect_authorization_request(self) -> None:
         payload = AuthorizationPayloadBuilder.build(
-            grant_type=self._grant_type,
-            access_code=self._access_code,
-            client_id=self._client_id,
-            redirect_uri=self._redirect_uri,
+            grant_type=self._credentials.grant_type,
+            access_code=self._credentials.access_code,
+            client_id=self._credentials.client_id,
+            redirect_uri=self._credentials.redirect_uri,
         )
         request_handler = self._authorization_server.expect_request(
             uri="/", method="POST", data=bytes(urlencode(payload).encode())
@@ -116,10 +108,7 @@ class SpotifyTestClient:
         if self._session is None:
             self._session = SpotifySession(
                 token_request_url=self._authorization_server.url_for("").rstrip("/"),
-                client_id=self._client_id,
-                client_secret=self._client_secret,
-                redirect_uri=self._redirect_uri,
-                grant_type=self._grant_type,
+                credentials=self._credentials,
             )
 
         self._session = await self._session.__aenter__()
