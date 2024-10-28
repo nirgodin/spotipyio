@@ -102,13 +102,26 @@ async def get_current_user_profile(access_code: str):
     async with SpotifySession(credentials=credentials) as session:
         async with SpotifyClient(session=session) as client:
             profile = await client.current_user.profile.run()
-            print(profile)
+    
+    print(profile)
 
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     loop.run_until_complete(get_current_user_profile("<your-access-code>"))
 ```
+Let's drill into the differences between this example and the previous:
+1. First, our method now expects an `access_code` argument. An access code is mandatory - you will not be able to 
+proceed without creating one first. Read more about authorization codes and how to get them in the 
+[official documentation](https://developer.spotify.com/documentation/web-api/tutorials/code-flow), or simply fetch one 
+to start with using the [access code fetcher](#access-code-fetcher) tool this package provides.
+2. Secondly, We can no longer use the default `SpotifyClient` configuration, so we have to create one ourselves. 
+Initially, we have to create a custom `ClientCredentials` object and provide it with the relevant grant type 
+(authorization code) and with the access_code we fetched.
+3. Then, we create a new `SpotifySession` using the credentials we just created. Pay attention that similar to the 
+`SpotifyClient` class, a `SpotifySession` is also created using an async context manager.
+4. Finally, we instantiate our `SpotifyClient` using the session. Now, we're good to use it on any endpoint, authorized 
+or not.
 
 # 🥽 Deep Dive
 ## SpotifySession
@@ -255,7 +268,12 @@ and you will no longer be able to use it to send requests.
 
 <p style="font-weight: bold; font-size: 21px">Interface</p>
 
-# Testing
+# 🛠️ Tools
+### Access Code Fetcher
+
+### Entity Matcher
+
+# 🧪 Testing
 Testing is central to software development, but when it comes to external APIs like Spotify's it can be tricky 
 to test our code without sending any actual request. To this end, spotipy introduces `SpotifyTestClient`. This object 
 is designed to help you test components that use the `SpotifyClient` seamlessly, without having to mock or patch 
