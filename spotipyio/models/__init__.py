@@ -12,14 +12,12 @@ __all__ = [
     "EntityType",
     "MatchingEntity",
     "PlaylistCreationRequest",
-
     # Search
     "SearchItem",
     "SearchItemFilters",
     "SearchItemMetadata",
     "SpotifySearchType",
-
     # Top Items
     "ItemsType",
-    "TimeRange"
+    "TimeRange",
 ]
