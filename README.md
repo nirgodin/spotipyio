@@ -202,9 +202,10 @@ Get Spotify catalog information about an artist's top tracks.
 from spotipyio import SpotifyClient
 import asyncio
 
-async def fetch_artists_top_tracks(spotify_client: SpotifyClient):
-    artists_ids = ["6ra4GIOgCZQZMOaUECftGN", "1Mxqyy3pSjf8kZZL4QVxS0"]  # Frank Zappa, Frank Sinatra
-    artists_top_tracks = await spotify_client.artists.top_tracks.run(artists_ids)
+async def fetch_artists_top_tracks():
+    async with SpotifyClient() as client:
+        artists_ids = ["6ra4GIOgCZQZMOaUECftGN", "1Mxqyy3pSjf8kZZL4QVxS0"]  # Frank Zappa, Frank Sinatra
+        artists_top_tracks = await client.artists.top_tracks.run(artists_ids)
     
     print(artists_top_tracks)
 
@@ -219,6 +220,73 @@ if __name__ == '__main__':
 
 <details>
 <summary style="font-size: large">👨‍💻 Current User</summary>
+<h3>🔝️ Top Items</h3>
+
+**Description**
+
+Get the current user's top artists or tracks based on calculated affinity.
+
+**Example**
+```python
+from spotipyio import SpotifySession, SpotifyClient
+from spotipyio.auth import ClientCredentials, SpotifyGrantType
+from spotipyio.models import ItemsType, TimeRange
+import asyncio
+
+async def fetch_current_user_top_artists(access_code: str):
+    credentials = ClientCredentials(
+        grant_type=SpotifyGrantType.AUTHORIZATION_CODE,
+        access_code=access_code
+    )
+    
+    async with SpotifySession(credentials=credentials) as session:
+        async with SpotifyClient(session=session) as client:
+            top_items = await client.current_user.top_items.run(
+                items_type=ItemsType.ARTISTS,
+                time_range=TimeRange.SHORT_TERM
+            )
+            
+    print(top_items)
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(fetch_current_user_top_artists)
+```
+
+<h3>🔝️ Profile</h3>
+
+**Description**
+
+Get detailed profile information about the current user.
+
+**Example**
+
+```python
+import asyncio
+
+from spotipyio import SpotifySession, SpotifyClient
+from spotipyio.auth import ClientCredentials, SpotifyGrantType
+
+
+async def fetch_current_user_profile(access_code: str):
+    credentials = ClientCredentials(
+        grant_type=SpotifyGrantType.AUTHORIZATION_CODE,
+        access_code=access_code
+    )
+
+    async with SpotifySession(credentials=credentials) as session:
+        async with SpotifyClient(session=session) as client:
+            profile = await client.current_user.profile.run()
+
+    print(profile)
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(fetch_current_user_profile)
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile)
 </details>
 
 <details>
