@@ -186,7 +186,7 @@ async def fetch_artists_info(spotify_client: SpotifyClient):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(fetch_artists_info)
+    loop.run_until_complete(fetch_artists_info())
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-multiple-artists)
@@ -211,7 +211,7 @@ async def fetch_artists_top_tracks():
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(fetch_artists_top_tracks)
+    loop.run_until_complete(fetch_artists_top_tracks())
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-top-tracks)
@@ -250,10 +250,10 @@ async def fetch_current_user_top_artists(access_code: str):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(fetch_current_user_top_artists)
+    loop.run_until_complete(fetch_current_user_top_artists())
 ```
 
-<h3>🔝️ Profile</h3>
+<h3>👤️ Profile</h3>
 
 **Description**
 
@@ -283,7 +283,7 @@ async def fetch_current_user_profile(access_code: str):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(fetch_current_user_profile)
+    loop.run_until_complete(fetch_current_user_profile())
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile)
@@ -295,10 +295,105 @@ if __name__ == '__main__':
 
 <details>
 <summary style="font-size: large">🔎 Search</summary>
+
+**Description**
+
+Get Spotify catalog information about albums, artists, playlists, tracks, shows, episodes or audiobooks that match a 
+keyword string.
+
+**Example**
+
+```python
+import asyncio
+
+from spotipyio import SpotifyClient
+from spotipyio.models import SearchItem, SearchItemMetadata, SearchItemFilters, SpotifySearchType
+
+
+async def search_bob_dylan_bootlegs():
+    search_item = SearchItem(
+        text="Bootleg",
+        filters=SearchItemFilters(
+            artist="Bob Dylan"
+        ),
+        metadata=SearchItemMetadata(
+            search_types=[SpotifySearchType.ALBUM]
+        )
+    )
+
+    async with SpotifyClient() as client:
+        search_results = await client.search.search_item.run([search_item])
+
+    print(search_results)
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(search_bob_dylan_bootlegs())
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/search)
 </details>
 
 <details>
 <summary style="font-size: large">🎷 Tracks</summary>
+<h3>ℹ️ Info</h3>
+
+**Description**
+
+Get Spotify catalog information for multiple tracks based on their Spotify IDs.
+
+**Example**
+
+```python
+import asyncio
+from spotipyio import SpotifyClient
+from typing import List
+
+
+async def fetch_tracks_info(tracks_ids: List[str]):
+    async with SpotifyClient() as client:
+        tracks = await client.tracks.info.run(tracks_ids)        
+        print(tracks)
+
+
+if __name__ == "__main__":
+    ids = ["2MuWTIM3b0YEAskbeeFE1i", "7xVpkVkd1klTzLJEysIR7z"]  # Master Of Puppets, Masters Of War
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(fetch_tracks_info(ids))
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-several-tracks)
+
+<h3>🔊️ Audio Features</h3>
+
+**Description**
+
+Get Spotify catalog information for multiple tracks based on their Spotify IDs.
+
+**Example**
+
+```python
+import asyncio
+from spotipyio import SpotifyClient
+
+
+async def fetch_tracks_audio_features():
+    tracks_ids = ["5W3cjX2J3tjhG8zb6u0qHn", "6Sy9BUbgFse0n0LPA5lwy5"]  # Harder Better Faster Stronger, Sandstorm
+
+    async with SpotifyClient() as client:
+        tracks = await client.tracks.audio_features.run(tracks_ids)        
+
+    print(tracks)
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(fetch_tracks_audio_features())
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-several-audio-features)
+
 </details>
 
 <details>
