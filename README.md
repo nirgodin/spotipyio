@@ -291,6 +291,97 @@ if __name__ == '__main__':
 
 <details>
 <summary style="font-size: large">📻 Playlists</summary>
+<h3>➕ Add Items</h3>
+
+**Description**
+
+Add one or more items to a user's playlist.
+
+**Example**
+
+```python
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/add-tracks-to-playlist)
+
+<h3>✨ Create Playlist</h3>
+
+**Description**
+
+Create a playlist for a Spotify user.
+
+**Example**
+
+```python
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/create-playlist)
+
+<h3>ℹ️ Info</h3>
+
+**Description**
+
+Get playlists owned by Spotify users.
+
+**Example**
+
+```python
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-playlist)
+
+<h3>➖ Remove Items</h3>
+
+**Description**
+
+Remove one or more items from a user's playlist.
+
+**Example**
+
+```python
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/remove-tracks-playlist)
+
+<h3>↕️ Reorder Items</h3>
+
+**Description**
+
+Reorder one or more items from a user's playlist.
+
+**Example**
+
+```python
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/reorder-or-replace-playlists-tracks)
+
+<h3>🔄️ Replace Items</h3>
+
+**Description**
+
+Replace one or more items from a user's playlist with other provided items.
+
+**Example**
+
+```python
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/reorder-or-replace-playlists-tracks)
+
+<h3>🖼️️ Update Cover</h3>
+
+**Description**
+
+Replace the image used to represent a specific playlist.
+
+**Example**
+
+```python
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/upload-custom-playlist-cover)
+
 </details>
 
 <details>
@@ -393,11 +484,38 @@ if __name__ == "__main__":
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-several-audio-features)
-
 </details>
 
 <details>
 <summary style="font-size: large">👥 Users</summary>
+
+<h3>🔀 Users' Playlists</h3>
+**Description**
+
+Get a list of the playlists owned or followed by Spotify users.
+
+**Example**
+
+```python
+import asyncio
+from spotipyio import SpotifyClient
+
+
+async def fetch_users_playlists():
+    users = ["billboard.com", "pitchfork"]
+
+    async with SpotifyClient() as client:
+        users_playlists = await client.users.playlists.run(users)        
+
+    print(users_playlists)
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(fetch_users_playlists())
+```
+
+[**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists)
 </details>
 
 ### Session Management
