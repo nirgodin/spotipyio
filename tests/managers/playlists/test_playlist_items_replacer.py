@@ -4,7 +4,6 @@ import pytest
 from aiohttp import ClientResponseError
 
 from spotipyio import SpotifyClient
-from spotipyio.logic.consts.spotify_consts import SNAPSHOT_ID
 from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
 
 
@@ -16,7 +15,7 @@ class TestPlaylistsItemsReplacer:
         playlist_id: str,
         uris: List[str],
     ):
-        expected = {SNAPSHOT_ID: SpotifyMockFactory.snapshot_id()}
+        expected = SpotifyMockFactory.snapshot_response()
         test_client.playlists.replace_items.expect_success(playlist_id=playlist_id, uris=uris, response_json=expected)
 
         actual = await spotify_client.playlists.replace_items.run(playlist_id, uris)

@@ -63,5 +63,5 @@ class PlaylistItemsAdderTestComponent(BaseTestComponent):
     @staticmethod
     def _set_handlers_success(request_handlers: List[RequestHandler]) -> None:
         for handler in request_handlers:
-            response = {SNAPSHOT_ID: SpotifyMockFactory.snapshot_id()}
+            response = SpotifyMockFactory.snapshot_response()
             handler.respond_with_json(response_json=response, status=201)

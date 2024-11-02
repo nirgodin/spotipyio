@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pytest_httpserver import RequestHandler
 
-from spotipyio.logic.consts.spotify_consts import PLAYLISTS, TRACKS, URIS, SNAPSHOT_ID
+from spotipyio.logic.consts.spotify_consts import PLAYLISTS, TRACKS, URIS
 from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
@@ -15,7 +15,7 @@ class PlaylistItemsReplacerTestComponent(BaseTestComponent):
 
     def expect_success(self, playlist_id: str, uris: List[str], response_json: Optional[Json] = None) -> None:
         request_handler = self._create_request_handler(playlist_id=playlist_id, uris=uris)
-        response = response_json or {SNAPSHOT_ID: SpotifyMockFactory.snapshot_id()}
+        response = response_json or SpotifyMockFactory.snapshot_response()
 
         request_handler.respond_with_json(response)
 
