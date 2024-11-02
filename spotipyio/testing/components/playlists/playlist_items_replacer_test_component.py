@@ -31,7 +31,5 @@ class PlaylistItemsReplacerTestComponent(BaseTestComponent):
 
         request_handler.respond_with_json(status=status, response_json=response_json)
 
-    def _create_request_handler(
-        self, playlist_id: str, uris: List[str]
-    ) -> RequestHandler:
+    def _create_request_handler(self, playlist_id: str, uris: List[str]) -> RequestHandler:
         return self._expect_put_request(route=f"/{PLAYLISTS}/{playlist_id}/{TRACKS}", payload={URIS: uris})

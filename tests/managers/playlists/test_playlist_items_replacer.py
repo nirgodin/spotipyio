@@ -10,7 +10,11 @@ from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
 
 class TestPlaylistsItemsReplacer:
     async def test_run__valid_request__returns_snapshot_id(
-        self, test_client: SpotifyTestClient, spotify_client: SpotifyClient, playlist_id: str, uris: List[str],
+        self,
+        test_client: SpotifyTestClient,
+        spotify_client: SpotifyClient,
+        playlist_id: str,
+        uris: List[str],
     ):
         expected = {SNAPSHOT_ID: SpotifyMockFactory.snapshot_id()}
         test_client.playlists.replace_items.expect_success(playlist_id=playlist_id, uris=uris, response_json=expected)

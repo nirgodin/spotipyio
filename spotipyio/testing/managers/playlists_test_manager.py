@@ -6,7 +6,7 @@ from spotipyio.testing.components import (
     PlaylistItemsAdderTestComponent,
     PlaylistsItemsRemoverTestComponent,
     PlaylistsCoverUpdaterTestComponent,
-    PlaylistItemsReplacerTestComponent
+    PlaylistItemsReplacerTestComponent,
 )
 from spotipyio.testing.infra import BaseTestManager, BaseTestComponent
 
