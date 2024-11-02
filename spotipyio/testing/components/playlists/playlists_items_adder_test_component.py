@@ -1,19 +1,20 @@
 from random import choice
-from typing import List, Optional, Dict
+from typing import List, Optional
 
+from multidict import CIMultiDict
 from pytest_httpserver import RequestHandler, HTTPServer
 
 from spotipyio.logic.consts.spotify_consts import PLAYLISTS, TRACKS, URIS, POSITION, SNAPSHOT_ID
 from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.logic.internal_models import ChunkSize
+from spotipyio.logic.internal_tools import DataChunksGenerator
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
-from spotipyio.logic.internal_tools import DataChunksGenerator
 
 
 class PlaylistItemsAdderTestComponent(BaseTestComponent):
     def __init__(
-        self, server: HTTPServer, headers: Dict[str, str], chunks_generator: DataChunksGenerator = DataChunksGenerator()
+        self, server: HTTPServer, headers: CIMultiDict[str], chunks_generator: DataChunksGenerator = DataChunksGenerator()
     ):
         super().__init__(server=server, headers=headers)
         self._chunks_generator = chunks_generator

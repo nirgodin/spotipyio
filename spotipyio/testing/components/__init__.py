@@ -9,6 +9,7 @@ from spotipyio.testing.components.playlists import (
     PlaylistsInfoTestComponent,
     PlaylistItemsAdderTestComponent,
     PlaylistsItemsRemoverTestComponent,
+    PlaylistItemsReplacerTestComponent,
 )
 from spotipyio.testing.components.search import SearchItemTestComponent
 from spotipyio.testing.components.tracks import TracksAudioFeaturesTestComponent, TracksInfoTestComponent
@@ -34,6 +35,7 @@ __all__ = [
     "PlaylistsInfoTestComponent",
     "PlaylistItemsAdderTestComponent",
     "PlaylistsItemsRemoverTestComponent",
+    "PlaylistItemsReplacerTestComponent",
     # Search
     "SearchItemTestComponent",
     # Tracks
