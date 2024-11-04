@@ -250,7 +250,7 @@ async def fetch_current_user_top_artists(access_code: str):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(fetch_current_user_top_artists())
+    loop.run_until_complete(fetch_current_user_top_artists("<your-access-code>"))
 ```
 
 <h3>👤️ Profile</h3>
@@ -283,7 +283,7 @@ async def fetch_current_user_profile(access_code: str):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(fetch_current_user_profile())
+    loop.run_until_complete(fetch_current_user_profile("<your-access-code>"))
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile)
@@ -300,6 +300,34 @@ Add one or more items to a user's playlist.
 **Example**
 
 ```python
+import asyncio
+
+from spotipyio import SpotifySession, SpotifyClient
+from spotipyio.auth import ClientCredentials, SpotifyGrantType
+
+async def add_playlist_items(access_code: str, playlist_id: str):
+    credentials = ClientCredentials(
+        grant_type=SpotifyGrantType.AUTHORIZATION_CODE,
+        access_code=access_code
+    )
+    uris = [
+        "spotify:track:3Um9toULmYFGCpvaIPFw7l", # What's Going On
+        "spotify:track:7tqhbajSfrz2F7E1Z75ASX"  # Ain't No Mountain High Enough
+    ]
+
+    async with SpotifySession(credentials=credentials) as session:
+        async with SpotifyClient(session=session) as client:
+            response = await client.playlists.add_items.run(
+                playlist_id=playlist_id,
+                uris=uris
+            )
+
+    print(response)
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(add_playlist_items("<your-access-code>", "<your-playlist-id>"))
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/add-tracks-to-playlist)
@@ -313,6 +341,34 @@ Create a playlist for a Spotify user.
 **Example**
 
 ```python
+import asyncio
+
+from spotipyio import SpotifySession, SpotifyClient
+from spotipyio.auth import ClientCredentials, SpotifyGrantType
+from spotipyio.models import PlaylistCreationRequest
+
+async def create_marvin_gay_hits_playlist(access_code: str, user_id: str):
+    credentials = ClientCredentials(
+        grant_type=SpotifyGrantType.AUTHORIZATION_CODE,
+        access_code=access_code
+    )
+    playlist_request = PlaylistCreationRequest(
+        user_id=user_id,
+        name="Marvin’s Magic",
+        description="A soulful mix of Marvin Gaye’s timeless tracks",
+        public=True
+    )
+
+    async with SpotifySession(credentials=credentials) as session:
+        async with SpotifyClient(session=session) as client:
+            response = await client.playlists.create.run(playlist_request)
+
+    print(response)
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(create_marvin_gay_hits_playlist("<your-access-code>", "<your-user-id>"))
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/create-playlist)
@@ -326,6 +382,23 @@ Get playlists owned by Spotify users.
 **Example**
 
 ```python
+from spotipyio import SpotifyClient
+import asyncio
+
+async def fetch_playlists_info():
+    async with SpotifyClient() as client:
+        playlists_ids = [
+            "37i9dQZF1DX70TzPK5buVf",  # Funk Outta Here
+            "37i9dQZF1EFGVVd09MO7iM",  # Written by Pharrell Williams
+        ]
+        playlists_info = await client.playlists.info.run(playlists_ids)        
+
+    print(playlists_info)
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(fetch_playlists_info())
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-playlist)
