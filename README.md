@@ -385,6 +385,7 @@ Get playlists owned by Spotify users.
 from spotipyio import SpotifyClient
 import asyncio
 
+
 async def fetch_playlists_info():
     async with SpotifyClient() as client:
         playlists_ids = [
@@ -412,6 +413,42 @@ Remove one or more items from a user's playlist.
 **Example**
 
 ```python
+import asyncio
+
+from spotipyio import SpotifySession, SpotifyClient
+from spotipyio.auth import ClientCredentials, SpotifyGrantType
+
+
+async def remove_playlist_items(access_code: str, playlist_id: str, snapshot_id: str):
+    credentials = ClientCredentials(
+        grant_type=SpotifyGrantType.AUTHORIZATION_CODE,
+        access_code=access_code
+    )
+    uris = [
+        "spotify:track:1z6WtY7X4HQJvzxC4UgkSf",  # Love on Top
+        "spotify:track:6dOtVTDdiauQNBQEDOtlAB"  # Birds of a Feather
+    ]
+
+    async with SpotifySession(credentials=credentials) as session:
+        async with SpotifyClient(session=session) as client:
+            response = await client.playlists.remove_items.run(
+                playlist_id=playlist_id,
+                uris=uris,
+                snapshot_id=snapshot_id
+            )
+
+    print(response)
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(
+        remove_playlist_items(
+            access_code="<your-access-code>",
+            playlist_id="<your-playlist-id>",
+            snapshot_id="<playlist-snapshot-id>"  # Not sure what's the snapshot id?, fetch it using the info method
+        )
+    )
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/remove-tracks-playlist)
@@ -451,6 +488,39 @@ Replace the image used to represent a specific playlist.
 **Example**
 
 ```python
+import asyncio
+
+from spotipyio import SpotifySession, SpotifyClient
+from spotipyio.auth import ClientCredentials, SpotifyGrantType
+
+
+async def update_playlist_cover(access_code: str, playlist_id: str, image_path: str):
+    credentials = ClientCredentials(
+        grant_type=SpotifyGrantType.AUTHORIZATION_CODE,
+        access_code=access_code
+    )
+    with open(image_path, "rb") as f:
+        image = f.read()
+        
+    async with SpotifySession(credentials=credentials) as session:
+        async with SpotifyClient(session=session) as client:
+            response = await client.playlists.update_cover.run(
+                playlist_id=playlist_id,
+                image=image
+            )
+
+    print(response)
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(
+        update_playlist_cover(
+            access_code="<your-access-code>",
+            playlist_id="<your-playlist-id>",
+            image_path="<path/to/your/image.jpeg>"  # Should be a JPEG image
+        )
+    )
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/upload-custom-playlist-cover)
@@ -846,6 +916,6 @@ async def test_get_playlist_tracks_first_fail_than_success(test_client: SpotifyT
     assert actual == expected
 ```
 
-**Please notice**: The test client expects ordered expectations. Here we are first setting a failed response 
+**Please notice**: The test client expects ordered expectations. Here we first set a failed response 
 expectation, then only a successful response. If we will first call the `expect_success` method, our code will simply 
 not reach the except block.
