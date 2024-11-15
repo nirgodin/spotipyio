@@ -124,18 +124,7 @@ Initially, we have to create a custom `ClientCredentials` object and provide it 
 or not.
 
 # 🥽 Deep Dive
-## SpotifySession
-### Grant Type
-### Caching
-
 ## SpotifyClient
-The `SpotifyClient` object is built with two principles in mind. First, it aims to offer an API that is both intuitive 
-and matches as far as possible the actual Spotify API structure as presented in the 
-[official documentation](https://developer.spotify.com/documentation/web-api/reference). 
-To this end, the client doesn't holds any logic by itself, but only hosts a variety of objects, each designed to 
-represent a logical subset of the API endpoints. The following sections present each object's methods.
-
-### Blueprint
 <details>
 <summary style="font-size: large">💿 Albums</summary>
 <h3>ℹ️ Info</h3>
@@ -661,42 +650,6 @@ if __name__ == "__main__":
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists)
 </details>
 
-### Session Management
-The easiest way to create and control the session is by using the SpotifyClient as an async context manager as done 
-[above](#-sending-your-first-request). Alternatively, you can control the session yourself by using the `start` and 
-`stop` methods.
-
-```python
-import asyncio
-from spotipyio import SpotifyClient
-from typing import List
-
-
-async def fetch_tracks_info(tracks_ids: List[str]):
-    client = SpotifyClient()
-    await client.start()
-    tracks = await client.tracks.info.run(tracks_ids)        
-    await client.stop()
-    print(tracks)
-
-
-if __name__ == "__main__":
-    ids = ["0ntQJM78wzOLVeCUAW7Y45", "5FVd6KXrgO9B3JPmC8OPst"]  # Sex On Fire, Do I Wanna Know?
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(fetch_tracks_info(ids))
-```
-
-If you do decide to use it as an async context manager, you must ensure all your code is indented under the 
-`async with SpotifyClient() as client` block. Once the code exists the indentation block, the client session will close 
-and you will no longer be able to use it to send requests.
-
-<p style="font-weight: bold; font-size: 21px">Interface</p>
-
-# 🛠️ Tools
-### Access Code Fetcher
-
-### Entity Matcher
-
 # 🧪 Testing
 Testing is central to software development, but when it comes to external APIs like Spotify's it can be tricky 
 to test our code without sending any actual request. To this end, spotipy introduces `SpotifyTestClient`. This object 
@@ -787,7 +740,8 @@ method, which sets up a client that shares the exact same settings as the test c
 4. Finally, we make sure our playlist request will be successful by calling `test_client.playlists.info.expect_success`.
 This makes sure our request to the specific playlist id we're providing will be answered with a 200 status code.
 
-#### SpotifyTestClient blueprint
+## Testing Deep Dive
+### SpotifyTestClient blueprint
 In case you've noticed, the test client has the exact same blueprint as `SpotifyClient`. In our example, the tested 
 function calls `spotify_client.playlists.info.run`, and our test calls `test_client.playlists.info.expect_success`. 
 This identity is not an accident but lies in the core of the `SpotifyTestClient` blueprint. Every module in 
@@ -798,7 +752,7 @@ The only difference between the two blueprints is in the
 methods they implement. Whereas `SpotifyClient` methods implements the `run` method, `SpotifyTestClient` methods 
 implement the `expect_success` and `expect_failure` methods.
 
-#### Setting the response json
+### Setting the response json
 This test, of course, is not very good. Mainly, it only validates the return value is a list, but it doesn't **really** 
 check the actual value returned by the `get_platlist_tracks` function. To check this functionality, let's provide it 
 an actual response json we expect. Here's a revised version:
@@ -825,7 +779,7 @@ json that will be returned from the API. Than, we provide the test client with t
 when a request to fetch the `readme-example` playlist will be received, this will be the exact json that will be 
 returned. Notice that now our assertion is much stronger - we expect the actual value to be equal to our expectation.
 
-#### Testing failures
+### Testing failures
 Up until now we've been focusing only on testing successful scenarios. But what about exception handling? Handling 
 exceptions is absolutely a must when it comes to work with external APIs like Spotify's. How should we test it? Let's 
 start by wrapping our function with a simple `try-except` block
