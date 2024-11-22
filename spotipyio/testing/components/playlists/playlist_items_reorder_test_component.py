@@ -4,7 +4,7 @@ from pytest_httpserver import RequestHandler
 
 from spotipyio.logic.consts.spotify_consts import PLAYLISTS, TRACKS
 from spotipyio.logic.consts.typing_consts import Json
-from spotipyio.models.playlist_reorder_request import PlaylistReorderRequest
+from spotipyio.models import PlaylistReorderRequest
 from spotipyio.testing.infra import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 

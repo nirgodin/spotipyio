@@ -5,7 +5,7 @@ from _pytest.fixtures import fixture
 from aiohttp import ClientResponseError
 
 from spotipyio import SpotifyClient
-from spotipyio.models.playlist_reorder_request import PlaylistReorderRequest
+from spotipyio.models import PlaylistReorderRequest
 from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
 
 

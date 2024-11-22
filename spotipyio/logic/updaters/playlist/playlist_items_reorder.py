@@ -1,7 +1,7 @@
 from spotipyio.logic.consts.spotify_consts import TRACKS
 from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.logic.contract import BasePlaylistsUpdater
-from spotipyio.models.playlist_reorder_request import PlaylistReorderRequest
+from spotipyio.models import PlaylistReorderRequest
 
 
 class PlaylistItemsReorder(BasePlaylistsUpdater):
