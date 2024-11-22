@@ -126,7 +126,7 @@ or not.
 # 🥽 Deep Dive
 ## SpotifyClient
 <details>
-<summary style="font-size: large">💿 Albums</summary>
+<summary style="font-size: large; font-weight: bold">💿 Albums</summary>
 <h3>ℹ️ Info</h3>
 
 **Description**
@@ -155,7 +155,7 @@ if __name__ == '__main__':
 </details>
 
 <details>
-<summary style="font-size: large">👨‍🎤 Artists</summary>
+<summary style="font-size: large; font-weight: bold">👨‍🎤 Artists</summary>
 <h3>ℹ️ Info</h3>
 
 **Description**
@@ -208,7 +208,7 @@ if __name__ == '__main__':
 </details>
 
 <details>
-<summary style="font-size: large">👨‍💻 Current User</summary>
+<summary style="font-size: large; font-weight: bold">👨‍💻 Current User</summary>
 <h3>🔝️ Top Items</h3>
 
 **Description**
@@ -279,7 +279,7 @@ if __name__ == '__main__':
 </details>
 
 <details>
-<summary style="font-size: large">📻 Playlists</summary>
+<summary style="font-size: large; font-weight: bold">📻 Playlists</summary>
 <h3>➕ Add Items</h3>
 
 **Description**
@@ -451,6 +451,42 @@ Reorder one or more items from a user's playlist.
 **Example**
 
 ```python
+import asyncio
+
+from spotipyio import SpotifySession, SpotifyClient
+from spotipyio.auth import ClientCredentials, SpotifyGrantType
+from spotipyio.models import PlaylistReorderRequest
+
+
+async def reorder_first_item_to_last(access_code: str, playlist_id: str, snapshot_id: str):
+    credentials = ClientCredentials(
+        grant_type=SpotifyGrantType.AUTHORIZATION_CODE,
+        access_code=access_code
+    )
+    request = PlaylistReorderRequest(
+        playlist_id=playlist_id,
+        range_start=0,
+        insert_before=10,  # Assuming the playlist consists of 10 items
+        snapshot_id=snapshot_id,
+        range_length=1
+    )
+
+    async with SpotifySession(credentials=credentials) as session:
+        async with SpotifyClient(session=session) as client:
+            response = await client.playlists.reorder_items.run(request)
+
+    print(response)
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(
+        reorder_first_item_to_last(
+            access_code="<your-access-code>",
+            playlist_id="<your-playlist-id>",
+            snapshot_id="<playlist-snapshot-id>"  # Not sure what's the snapshot id?, fetch it using the info method
+        )
+    )
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/reorder-or-replace-playlists-tracks)
@@ -464,6 +500,36 @@ Replace one or more items from a user's playlist with other provided items.
 **Example**
 
 ```python
+import asyncio
+
+from spotipyio import SpotifySession, SpotifyClient
+from spotipyio.auth import ClientCredentials, SpotifyGrantType
+
+
+async def replace_all_playlist_items_by_uptown_funk(access_code: str, playlist_id: str):
+    credentials = ClientCredentials(
+        grant_type=SpotifyGrantType.AUTHORIZATION_CODE,
+        access_code=access_code
+    )
+
+    async with SpotifySession(credentials=credentials) as session:
+        async with SpotifyClient(session=session) as client:
+            response = await client.playlists.replace_items.run(
+                playlist_id=playlist_id,
+                uris=["spotify:track:32OlwWuMpZ6b0aN2RZOeMS"]  # Uptown Funk
+            )
+
+    print(response)
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(
+        replace_all_playlist_items_by_uptown_funk(
+            access_code="<your-access-code>",
+            playlist_id="<your-playlist-id>",
+        )
+    )
 ```
 
 [**Reference**](https://developer.spotify.com/documentation/web-api/reference/reorder-or-replace-playlists-tracks)
@@ -517,7 +583,7 @@ if __name__ == '__main__':
 </details>
 
 <details>
-<summary style="font-size: large">🔎 Search</summary>
+<summary style="font-size: large; font-weight: bold">🔎 Search</summary>
 
 **Description**
 
@@ -559,7 +625,7 @@ if __name__ == '__main__':
 </details>
 
 <details>
-<summary style="font-size: large">🎷 Tracks</summary>
+<summary style="font-size: large; font-weight: bold">🎷 Tracks</summary>
 <h3>ℹ️ Info</h3>
 
 **Description**
@@ -619,7 +685,7 @@ if __name__ == "__main__":
 </details>
 
 <details>
-<summary style="font-size: large">👥 Users</summary>
+<summary style="font-size: large; font-weight: bold">👥 Users</summary>
 
 <h3>🔀 Users' Playlists</h3>
 **Description**
@@ -741,7 +807,8 @@ method, which sets up a client that shares the exact same settings as the test c
 This makes sure our request to the specific playlist id we're providing will be answered with a 200 status code.
 
 ## Testing Deep Dive
-### SpotifyTestClient blueprint
+<details>
+<summary style="font-size: large; font-weight: bold">🐾 SpotifyTestClient blueprint</summary>
 In case you've noticed, the test client has the exact same blueprint as `SpotifyClient`. In our example, the tested 
 function calls `spotify_client.playlists.info.run`, and our test calls `test_client.playlists.info.expect_success`. 
 This identity is not an accident but lies in the core of the `SpotifyTestClient` blueprint. Every module in 
@@ -751,8 +818,10 @@ check which methods are used by your production code, and call them during test 
 The only difference between the two blueprints is in the 
 methods they implement. Whereas `SpotifyClient` methods implements the `run` method, `SpotifyTestClient` methods 
 implement the `expect_success` and `expect_failure` methods.
+</details>
 
-### Setting the response json
+<details>
+<summary style="font-size: large; font-weight: bold">📥 Setting the response json</summary>
 This test, of course, is not very good. Mainly, it only validates the return value is a list, but it doesn't **really** 
 check the actual value returned by the `get_platlist_tracks` function. To check this functionality, let's provide it 
 an actual response json we expect. Here's a revised version:
@@ -778,8 +847,10 @@ We've added our arrange block three lines where we define our expected value, th
 json that will be returned from the API. Than, we provide the test client with this response json, making sure that 
 when a request to fetch the `readme-example` playlist will be received, this will be the exact json that will be 
 returned. Notice that now our assertion is much stronger - we expect the actual value to be equal to our expectation.
+</details>
 
-### Testing failures
+<details>
+<summary style="font-size: large; font-weight: bold">⚠️ Testing failures</summary>
 Up until now we've been focusing only on testing successful scenarios. But what about exception handling? Handling 
 exceptions is absolutely a must when it comes to work with external APIs like Spotify's. How should we test it? Let's 
 start by wrapping our function with a simple `try-except` block
@@ -873,3 +944,4 @@ async def test_get_playlist_tracks_first_fail_than_success(test_client: SpotifyT
 **Please notice**: The test client expects ordered expectations. Here we first set a failed response 
 expectation, then only a successful response. If we will first call the `expect_success` method, our code will simply 
 not reach the except block.
+</details>
