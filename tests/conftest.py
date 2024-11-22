@@ -29,7 +29,9 @@ def base_url(test_client: SpotifyTestClient) -> str:
 
 @fixture(scope="session")
 async def spotify_client(test_client: SpotifyTestClient) -> SpotifyClient:
-    return await test_client.create_client()
+    client = await test_client.create_client()
+    yield client
+    await client.stop()
 
 
 @fixture(scope="session")

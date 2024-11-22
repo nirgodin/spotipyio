@@ -21,6 +21,7 @@ from spotipyio.logic.consts.spotify_consts import (
     EPISODES,
     SHOWS,
     AUDIOBOOKS,
+    SNAPSHOT_ID,
 )
 from spotipyio.logic.consts.typing_consts import EnumType
 from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
@@ -105,6 +106,10 @@ class SpotifyMockFactory:
             "is_local": SpotifyMockFactory._random_boolean(),
             "track": SpotifyMockFactory.track(),
         }
+
+    @staticmethod
+    def snapshot_response(snapshot_id: Optional[str] = None) -> Dict[str, str]:
+        return {SNAPSHOT_ID: snapshot_id or SpotifyMockFactory.snapshot_id()}
 
     @staticmethod
     def snapshot_id() -> str:

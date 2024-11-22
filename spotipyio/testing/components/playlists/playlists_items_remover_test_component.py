@@ -110,7 +110,7 @@ class PlaylistsItemsRemoverTestComponent(BaseTestComponent):
     def _set_handlers_success(request_handlers: List[RequestHandler], snapshots_ids: List[str]) -> None:
         for i, handler in enumerate(request_handlers):
             snapshot_id = snapshots_ids[i + 1]
-            response = {SNAPSHOT_ID: snapshot_id}
+            response = SpotifyMockFactory.snapshot_response(snapshot_id)
             handler.respond_with_json(response_json=response, status=200)
 
     def _set_handlers_failure(
