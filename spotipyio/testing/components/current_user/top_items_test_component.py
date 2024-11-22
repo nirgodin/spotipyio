@@ -4,8 +4,7 @@ from pytest_httpserver import RequestHandler
 
 from spotipyio.logic.consts.spotify_consts import TIME_RANGE, LIMIT
 from spotipyio.logic.consts.typing_consts import Json
-from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
-from spotipyio.logic.collectors.top_items_collectors.time_range import TimeRange
+from spotipyio.models import ItemsType, TimeRange
 from spotipyio.testing.infra.base_test_component import BaseTestComponent
 from spotipyio.testing.spotify_mock_factory import SpotifyMockFactory
 

@@ -5,8 +5,7 @@ from _pytest.fixtures import fixture
 from aiohttp import ClientResponseError
 
 from spotipyio import SpotifyClient
-from spotipyio.logic.collectors.top_items_collectors.items_type import ItemsType
-from spotipyio.logic.collectors.top_items_collectors.time_range import TimeRange
+from spotipyio.models import ItemsType, TimeRange
 from spotipyio.testing import SpotifyTestClient, SpotifyMockFactory
 from spotipyio.logic.utils import random_enum_value
 
