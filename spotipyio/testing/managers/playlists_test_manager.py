@@ -8,6 +8,7 @@ from spotipyio.testing.components import (
     PlaylistsCoverUpdaterTestComponent,
     PlaylistItemsReplacerTestComponent,
 )
+from spotipyio.testing.components.playlists import PlaylistItemsReorderTestComponent
 from spotipyio.testing.infra import BaseTestManager, BaseTestComponent
 
 
@@ -18,6 +19,7 @@ class PlaylistsTestManager(BaseTestManager):
         create: PlaylistsCreatorTestComponent,
         info: PlaylistsInfoTestComponent,
         remove_items: PlaylistsItemsRemoverTestComponent,
+        reorder_items: PlaylistItemsReorderTestComponent,
         replace_items: PlaylistItemsReplacerTestComponent,
         update_cover: PlaylistsCoverUpdaterTestComponent,
     ):
@@ -26,6 +28,7 @@ class PlaylistsTestManager(BaseTestManager):
         self.create = create
         self.info = info
         self.remove_items = remove_items
+        self.reorder_items = reorder_items
         self.replace_items = replace_items
         self.update_cover = update_cover
 
@@ -36,6 +39,7 @@ class PlaylistsTestManager(BaseTestManager):
             "create": PlaylistsCreatorTestComponent,
             "info": PlaylistsInfoTestComponent,
             "remove_items": PlaylistsItemsRemoverTestComponent,
+            "reorder_items": PlaylistItemsReorderTestComponent,
             "replace_items": PlaylistItemsReplacerTestComponent,
             "update_cover": PlaylistsCoverUpdaterTestComponent,
         }

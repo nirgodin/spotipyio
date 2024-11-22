@@ -1,6 +1,9 @@
 from spotipyio.testing.components.playlists.playlist_cover_updater_test_component import (
     PlaylistsCoverUpdaterTestComponent,
 )
+from spotipyio.testing.components.playlists.playlist_items_reorder_test_component import (
+    PlaylistItemsReorderTestComponent,
+)
 from spotipyio.testing.components.playlists.playlist_items_replacer_test_component import (
     PlaylistItemsReplacerTestComponent,
 )
@@ -17,5 +20,6 @@ __all__ = [
     "PlaylistsInfoTestComponent",
     "PlaylistItemsAdderTestComponent",
     "PlaylistsItemsRemoverTestComponent",
+    "PlaylistItemsReorderTestComponent",
     "PlaylistItemsReplacerTestComponent",
 ]

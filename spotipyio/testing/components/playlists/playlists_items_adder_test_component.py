@@ -4,7 +4,7 @@ from typing import List, Optional
 from multidict import CIMultiDict
 from pytest_httpserver import RequestHandler, HTTPServer
 
-from spotipyio.logic.consts.spotify_consts import PLAYLISTS, TRACKS, URIS, POSITION, SNAPSHOT_ID
+from spotipyio.logic.consts.spotify_consts import PLAYLISTS, TRACKS, URIS, POSITION
 from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.logic.internal_models import ChunkSize
 from spotipyio.logic.internal_tools import DataChunksGenerator
