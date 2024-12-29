@@ -1,3 +1,5 @@
+from typing import List
+
 from spotipyio.logic.consts.spotify_consts import AUDIO_FEATURES_ROUTE
 from spotipyio.logic.consts.typing_consts import Json
 from spotipyio.logic.internal_models import ChunkSize
@@ -15,5 +17,5 @@ class TracksAudioFeaturesTestComponent(BaseChunksTestComponent):
         return ChunkSize.AUDIO_FEATURES
 
     @staticmethod
-    def _random_valid_response() -> Json:
-        return SpotifyMockFactory.several_audio_features()
+    def _random_valid_response(ids: List[str]) -> Json:
+        return SpotifyMockFactory.several_audio_features(ids)
