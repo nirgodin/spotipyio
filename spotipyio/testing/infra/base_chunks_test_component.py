@@ -13,7 +13,10 @@ from spotipyio.testing.infra import BaseTestComponent
 
 class BaseChunksTestComponent(BaseTestComponent, ABC):
     def __init__(
-        self, server: HTTPServer, headers: CIMultiDict[str], chunks_generator: DataChunksGenerator = DataChunksGenerator()
+        self,
+        server: HTTPServer,
+        headers: CIMultiDict[str],
+        chunks_generator: DataChunksGenerator = DataChunksGenerator(),
     ):
         super().__init__(server=server, headers=headers)
         self._chunks_generator = chunks_generator
