@@ -1,9 +1,10 @@
 from dataclasses import fields, Field
 from typing import Tuple, List, Optional, Dict, Any
 
-from spotipyio.tools.extractors import IEntityExtractor, TrackEntityExtractor, PrimaryArtistEntityExtractor
-from spotipyio.models import MatchingEntity
 from spotipyio.logic.utils import compute_similarity_score
+from spotipyio.models import MatchingEntity
+from spotipyio.tools.extractors import IEntityExtractor, TrackEntityExtractor
+from spotipyio.tools.extractors.artists_entity_extractor import ArtistsEntityExtractor
 
 
 class EntityMatcher:
@@ -46,14 +47,13 @@ class EntityMatcher:
     @staticmethod
     def _compute_raw_field_score(extractor: IEntityExtractor, raw_candidate: Any, entity: str) -> Optional[float]:
         if raw_candidate is not None:
-            candidate = extractor.extract(raw_candidate)
-
-            if candidate is not None:
-                return compute_similarity_score(candidate, entity)
+            candidates = extractor.extract(raw_candidate)
+            scores = [compute_similarity_score(candidate, entity) for candidate in candidates]
+            return max(scores) if scores else None
 
     @staticmethod
     def _get_default_extractors() -> Dict[IEntityExtractor, float]:
-        return {TrackEntityExtractor(): 0.65, PrimaryArtistEntityExtractor(): 0.35}
+        return {TrackEntityExtractor(): 0.65, ArtistsEntityExtractor(): 0.35}
 
     def _is_matching(self, scores: List[float]) -> Tuple[bool, float]:
         if len(scores) < self._min_present_fields:
