@@ -2,6 +2,8 @@ from dataclasses import dataclass, fields, field
 from typing import Optional, Dict, List
 from urllib.parse import quote
 
+from spotipyio.logic.consts.spotify_consts import OFFSET, LIMIT
+from spotipyio.logic.internal_models import ChunkSize
 from spotipyio.models.search.spotify_search_type import SpotifySearchType
 from spotipyio.models.search.search_item_filters import SearchItemFilters
 from spotipyio.models.search.search_item_metadata import SearchItemMetadata
@@ -22,7 +24,7 @@ class SearchItem:
         else:
             types = [search_type.value for search_type in self.metadata.search_types]
 
-        return {"q": self._build_query(), "type": ",".join(types)}
+        return {"q": self._build_query(), "type": ",".join(types), OFFSET: "0", LIMIT: f"{ChunkSize.SEARCH.value}"}
 
     def _build_query(self) -> str:
         query_components = self._get_query_component()
