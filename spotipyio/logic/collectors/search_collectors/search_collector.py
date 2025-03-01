@@ -1,5 +1,5 @@
 from functools import partial
-from typing import List, Dict, Optional
+from typing import List, Dict
 
 from spotipyio.auth import SpotifySession
 from spotipyio.logic.consts.spotify_consts import NEXT, ITEMS

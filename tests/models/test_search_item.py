@@ -1,6 +1,7 @@
 import pytest
 from _pytest.fixtures import fixture
 
+from spotipyio.logic.consts.spotify_consts import OFFSET, LIMIT
 from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, SpotifySearchType
 
 
@@ -10,7 +11,12 @@ class TestSearchItem:
             SearchItem()
 
     def test_to_query_params__quote_false__returns_non_encoded_params_dict(self, search_item: SearchItem):
-        expected = {"q": "Bridge Over Troubled Water artist:Simon & Garfunkel year:1970", "type": "track,album"}
+        expected = {
+            "q": "Bridge Over Troubled Water artist:Simon & Garfunkel year:1970",
+            "type": "track,album",
+            OFFSET: "0",
+            LIMIT: "50",
+        }
         actual = search_item.to_query_params()
         assert actual == expected
 
@@ -19,6 +25,8 @@ class TestSearchItem:
         expected = {
             "q": "Bridge%20Over%20Troubled%20Water%20artist%3ASimon%20%26%20Garfunkel%20year%3A1970",
             "type": "track,album",
+            OFFSET: "0",
+            LIMIT: "50",
         }
 
         actual = search_item.to_query_params()
@@ -27,7 +35,7 @@ class TestSearchItem:
 
     def test_to_query_params__text_none__includes_only_filters_in_query(self, search_item: SearchItem):
         search_item.text = None
-        expected = {"q": "artist:Simon & Garfunkel year:1970", "type": "track,album"}
+        expected = {"q": "artist:Simon & Garfunkel year:1970", "type": "track,album", OFFSET: "0", LIMIT: "50"}
 
         actual = search_item.to_query_params()
 
@@ -35,7 +43,7 @@ class TestSearchItem:
 
     def test_to_query_params__no_filters__includes_only_text_in_query(self, search_item: SearchItem):
         search_item.filters = SearchItemFilters()
-        expected = {"q": "Bridge Over Troubled Water", "type": "track,album"}
+        expected = {"q": "Bridge Over Troubled Water", "type": "track,album", OFFSET: "0", LIMIT: "50"}
 
         actual = search_item.to_query_params()
 
