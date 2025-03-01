@@ -9,4 +9,5 @@ class ChunkSize(Enum):
     EPISODES = 50
     ITEMS_ADDITION = 100
     ITEMS_REMOVAL = 100
+    SEARCH = 50
     TRACKS = 50
