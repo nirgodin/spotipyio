@@ -1,5 +1,6 @@
 from spotipyio.models.entity_type import EntityType
-from spotipyio.models.matching_entity import MatchingEntity
+from spotipyio.models.matching.matching_entity import MatchingEntity
+from spotipyio.models.matching.matching_method import MatchingMethod
 from spotipyio.models.playlist_creation_request import PlaylistCreationRequest
 from spotipyio.models.playlist_reorder_request import PlaylistReorderRequest
 from spotipyio.models.search.search_item import SearchItem
@@ -11,9 +12,11 @@ from spotipyio.models.top_items.time_range import TimeRange
 
 __all__ = [
     "EntityType",
-    "MatchingEntity",
     "PlaylistCreationRequest",
     "PlaylistReorderRequest",
+    # Matching
+    "MatchingEntity",
+    "MatchingMethod",
     # Search
     "SearchItem",
     "SearchItemFilters",
