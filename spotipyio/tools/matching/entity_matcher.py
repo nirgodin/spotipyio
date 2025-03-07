@@ -3,8 +3,7 @@ from typing import Tuple, List, Optional, Dict, Any
 
 from spotipyio.logic.utils import compute_similarity_score
 from spotipyio.models import MatchingEntity
-from spotipyio.tools.extractors import IEntityExtractor, TrackEntityExtractor
-from spotipyio.tools.extractors.artists_entity_extractor import ArtistsEntityExtractor
+from spotipyio.tools.extractors import IEntityExtractor, TrackEntityExtractor, ArtistsEntityExtractor
 
 
 class EntityMatcher:
