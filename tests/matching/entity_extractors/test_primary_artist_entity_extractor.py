@@ -15,12 +15,12 @@ class TestPrimaryArtistEntityExtractor:
         self, extractor: PrimaryArtistEntityExtractor, primary_artist_name: str, entity: Dict[str, List[Dict[str, str]]]
     ):
         actual = extractor.extract(entity)
-        assert actual == primary_artist_name
+        assert actual == [primary_artist_name]
 
     @pytest.mark.parametrize("entity", [random_string_dict(), {ARTISTS: []}, {ARTISTS: [random_string_dict()]}])
     def test_extract__no_artists__returns_none(self, entity: dict, extractor: PrimaryArtistEntityExtractor):
         actual = extractor.extract(entity)
-        assert actual is None
+        assert actual == []
 
     @fixture
     def extractor(self) -> PrimaryArtistEntityExtractor:

@@ -25,7 +25,14 @@ from spotipyio.logic.consts.spotify_consts import (
 )
 from spotipyio.logic.consts.typing_consts import EnumType
 
-from spotipyio.models import SearchItem, SearchItemFilters, SearchItemMetadata, SpotifySearchType, ItemsType
+from spotipyio.models import (
+    SearchItem,
+    SearchItemFilters,
+    SearchItemMetadata,
+    SpotifySearchType,
+    ItemsType,
+    MatchingEntity,
+)
 from spotipyio.testing.utils.search_response_builder import SearchResponseBuilder
 from spotipyio.logic.utils import random_alphanumeric_string
 
@@ -642,6 +649,13 @@ class SpotifyMockFactory:
     @staticmethod
     def narrator(**kwargs) -> dict:
         return {"name": kwargs.get("name", SpotifyMockFactory.name())}
+
+    @staticmethod
+    def matching_entity(**kwargs) -> MatchingEntity:
+        return MatchingEntity(
+            track=kwargs.get("track", random_alphanumeric_string()),
+            artist=kwargs.get("artist", random_alphanumeric_string()),
+        )
 
     @staticmethod
     def _optional_random_alphanumeric_string() -> Optional[str]:

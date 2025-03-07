@@ -1,16 +1,13 @@
-from typing import Optional
+from typing import List
 
-from spotipyio.logic.consts.spotify_consts import NAME, ARTISTS
+from spotipyio.logic.utils.spotify_utils import extract_artists_names
 from spotipyio.tools.extractors.entity_extractor_interface import IEntityExtractor
 
 
 class PrimaryArtistEntityExtractor(IEntityExtractor):
-    def extract(self, entity: dict) -> Optional[str]:
-        items = entity.get(ARTISTS)
-
-        if items:
-            primary_artist = items[0]
-            return primary_artist.get(NAME)
+    def extract(self, entity: dict) -> List[str]:
+        artists_names = extract_artists_names(entity)
+        return [artists_names[0]] if artists_names else []
 
     @property
     def name(self) -> str:

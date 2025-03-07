@@ -1,7 +1,9 @@
 from base64 import b64encode
 from random import randint
+from typing import List
 
 from spotipyio.auth import ClientCredentials, SpotifyGrantType
+from spotipyio.logic.consts.spotify_consts import ARTISTS, NAME
 from spotipyio.logic.utils.general_utils import random_enum_value
 from spotipyio.logic.utils.string_utils import random_alphanumeric_string
 from spotipyio.models import EntityType
@@ -27,3 +29,16 @@ def random_client_credentials() -> ClientCredentials:
         grant_type=random_enum_value(SpotifyGrantType),
         access_code=random_alphanumeric_string(),
     )
+
+
+def extract_artists_names(entity: dict) -> List[str]:
+    artists_names = []
+    artists = entity.get(ARTISTS, [])
+
+    for artist in artists:
+        artist_name = artist.get(NAME)
+
+        if isinstance(artist_name, str):
+            artists_names.append(artist_name)
+
+    return artists_names
