@@ -13,9 +13,12 @@ def safe_nested_get(dct: dict, paths: list, default: Optional[Any] = None) -> An
     value = dct.get(paths[0], {})
 
     for path in paths[1:]:
+        if not isinstance(value, dict):
+            value = {}
+
         value = value.get(path, {})
 
-    return value if value else default
+    return value if value != {} else default
 
 
 def random_enum_value(enum_: Type[EnumType]) -> EnumType:
